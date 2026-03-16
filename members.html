@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <base target="_top">
@@ -76,7 +76,7 @@
       position: sticky; top: 0; z-index: 1000;
     }
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #6c5ce7; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #6c5ce7; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: none; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -137,7 +137,7 @@
     /* Tab Content */
     .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(128, 139, 168, 0.92); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
     .tab-content.active { display: block; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #6c5ce7; text-shadow: 0 2px 8px #000a; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #6c5ce7; text-shadow: none; }
     h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #2c2f45; }
     h3 { color: #6c5ce7; }
     .loading { text-align: center; padding: 32px; color: #2c2f45; }
@@ -269,8 +269,8 @@
     }
     th.sortable { cursor: pointer; user-select: none; }
     th.sortable:hover { color: #ffc933; }
-    th.sorted-asc::after { content: ' ↑'; }
-    th.sorted-desc::after { content: ' ↓'; }
+    th.sorted-asc::after { content: ' ?'; }
+    th.sorted-desc::after { content: ' ?'; }
     td { 
       padding: 12px 8px; 
       border-bottom: 1px solid #c0c4d8; 
@@ -485,7 +485,7 @@
 <body>
   <!-- Google Translate Widget -->
   <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#6c5ce7;font-size:18px;cursor:pointer;">🌐</button>
+  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#6c5ce7;font-size:18px;cursor:pointer;">??</button>
   <style>
     @media (max-width: 800px) {
       #google_translate_element {
@@ -687,7 +687,7 @@
         if (nav && !document.getElementById('signInManageBtn')) {
           const btn = document.createElement('button');
           btn.id = 'signInManageBtn';
-          btn.textContent = '🔑 Sign in to Manage';
+          btn.textContent = '?? Sign in to Manage';
           btn.style = 'margin-left:16px;padding:8px 18px;background:#1a73e8;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
           btn.onclick = showGoogleLogin;
           nav.appendChild(btn);
@@ -742,7 +742,7 @@
           <span class="tab-label mobile-only">Bank</span>
         </a>
       </div>
-      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
+      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">?? Read-Only Mode</div>
       <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #6c5ce7; border: 1px solid #c0c4d8;"></div>
       <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
     </div>
@@ -755,20 +755,20 @@
       <div class="stat-card"><h3>Total Might</h3><div class="value" id="memberTotalMight">-</div></div>
       <div class="stat-card"><h3>Average Might</h3><div class="value" id="memberAverageMight">-</div></div>
     </div>
-    <div class="controls"><div class="search-box"><input type="text" id="memberSearchInput" placeholder="🔍 Search by member name..."></div><button class="btn" onclick="MembersTab.loadMembers()">🔄 Refresh</button></div>
+    <div class="controls"><div class="search-box"><input type="text" id="memberSearchInput" placeholder="?? Search by member name..."></div><button class="btn" onclick="MembersTab.loadMembers()">?? Refresh</button></div>
 
     <div class="tabs-container">
       <div class="tabs">
-        <button class="tab active" onclick="MembersTab.switchTab('mightTab', event)">📊 Track Might</button>
-        <button class="tab" onclick="MembersTab.switchTab('addMemberTab', event)">➕ Add Member</button>
-        <button class="tab" onclick="MembersTab.switchTab('nameTab', event)">✏️ Change Name</button>
-        <button class="tab" onclick="MembersTab.switchTab('removeMemberTab', event)">🚪 Remove Member</button>
-        <button class="tab" onclick="MembersTab.switchTab('chestPointsTab', event)">📦 Chest Points</button>
+        <button class="tab active" onclick="MembersTab.switchTab('mightTab', event)">?? Track Might</button>
+        <button class="tab" onclick="MembersTab.switchTab('addMemberTab', event)">? Add Member</button>
+        <button class="tab" onclick="MembersTab.switchTab('nameTab', event)">?? Change Name</button>
+        <button class="tab" onclick="MembersTab.switchTab('removeMemberTab', event)">?? Remove Member</button>
+        <button class="tab" onclick="MembersTab.switchTab('chestPointsTab', event)">?? Chest Points</button>
       </div>
       <div id="mightTab" class="tab-content active">
         <h3 style="margin:0 0 12px 0;">Track Member Might</h3>
         <div class="form-grid might-form-grid"><div><label for="mightMemberSelect">Member</label><select id="mightMemberSelect"></select></div><div><label for="mightValue">Might</label><input type="number" id="mightValue" placeholder="Enter current might" onkeypress="if(event.key==='Enter'){MembersTab.submitMightEntry();}"></div><div><label for="mightDate">Date</label><input type="date" id="mightDate"><div class="note">Defaults to today</div></div></div>
-        <button class="btn" onclick="MembersTab.submitMightEntry()">💾 Save Might</button><div id="mightStatus" class="status"></div>
+        <button class="btn" onclick="MembersTab.submitMightEntry()">?? Save Might</button><div id="mightStatus" class="status"></div>
       </div>
       <div id="addMemberTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Add New Member</h3>
@@ -787,23 +787,23 @@
             <div class="note">Date member joined</div>
           </div>
         </div>
-        <button class="btn" onclick="MembersTab.submitAddMember()">➕ Add Member</button>
+        <button class="btn" onclick="MembersTab.submitAddMember()">? Add Member</button>
         <div id="addMemberStatus" class="status"></div>
       </div>
       <div id="nameTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Change Member Name</h3>
         <div class="form-grid"><div><label for="oldMemberSelect">Current Member</label><select id="oldMemberSelect"></select></div><div><label for="newMemberName">New Name</label><input type="text" id="newMemberName" placeholder="Enter new member name"></div></div>
-        <button class="btn" onclick="MembersTab.submitNameChange()">✏️ Update Name</button><div id="nameChangeStatus" class="status"></div>
+        <button class="btn" onclick="MembersTab.submitNameChange()">?? Update Name</button><div id="nameChangeStatus" class="status"></div>
       </div>
       <div id="removeMemberTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Remove Member</h3>
         <div class="form-grid"><div><label for="removeMemberSelect">Member to Remove</label><select id="removeMemberSelect"></select></div><div><label for="endDate">End Date</label><input type="date" id="endDate"><div class="note">Date member left</div></div></div>
-        <button class="btn" onclick="MembersTab.submitRemoveMember()">🚪 Remove Member</button><div id="removeMemberStatus" class="status"></div>
+        <button class="btn" onclick="MembersTab.submitRemoveMember()">?? Remove Member</button><div id="removeMemberStatus" class="status"></div>
       </div>
       <div id="chestPointsTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Chest Points - Last Active Periods</h3>
         <div class="controls" style="margin-bottom:10px;">
-          <button class="btn" onclick="MembersTab.loadChestPointsTabData(true)">🔄 Refresh Chest Points</button>
+          <button class="btn" onclick="MembersTab.loadChestPointsTabData(true)">?? Refresh Chest Points</button>
         </div>
         <div id="chestPointsMeta" class="points-meta">Target: 3000 points (green), within 10% (orange), below (red).</div>
         <div class="table-container" style="max-height:52vh;">
@@ -1269,7 +1269,7 @@
                 updateStats();
                 renderTable();
               } else {
-                // Member not in local cache (edge case) – fall back to full reload
+                // Member not in local cache (edge case) � fall back to full reload
                 setTimeout(loadMembers, 500);
               }
             } else {
