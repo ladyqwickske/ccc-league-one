@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <base target="_top">
@@ -83,13 +83,13 @@
 
     /* Top Tabs */
     .tab-nav {
-      background: rgba(110, 121, 150, 0.90);
+      background: rgba(70, 80, 105, 0.92);
       border-bottom: 1px solid #c0c4d8;
       box-shadow: 0 2px 8px rgba(0,0,0,0.25);
       position: sticky; top: 0; z-index: 1000;
     }
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #6c5ce7; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: none; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #6c5ce7; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -147,9 +147,9 @@
     }
 
     /* Tab Content */
-    .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(128, 139, 168, 0.92); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
+    .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
     .tab-content.active { display: block; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #6c5ce7; text-shadow: none; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #6c5ce7; text-shadow: 0 2px 8px #000a; }
     h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #2c2f45; }
     h3 { color: #6c5ce7; }
     h4 { color: #6c5ce7; }
@@ -456,7 +456,7 @@
 <body>
   <!-- Google Translate Widget -->
   <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#6c5ce7;font-size:18px;cursor:pointer;">??</button>
+  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#6c5ce7;font-size:18px;cursor:pointer;">🌐</button>
   <style>
     @media (max-width: 800px) {
       #google_translate_element {
@@ -669,7 +669,7 @@
         if (nav && !document.getElementById('signInManageBtn')) {
           const btn = document.createElement('button');
           btn.id = 'signInManageBtn';
-          btn.textContent = '?? Sign in to Manage';
+          btn.textContent = '🔑 Sign in to Manage';
           btn.style = 'margin-left:16px;padding:8px 18px;background:#1a73e8;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
           btn.onclick = showGoogleLogin;
           nav.appendChild(btn);
@@ -724,7 +724,7 @@
           <span class="tab-label mobile-only">Bank</span>
         </a>
       </div>
-      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">?? Read-Only Mode</div>
+      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
       <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #6c5ce7; border: 1px solid #c0c4d8;"></div>
       <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
     </div>
@@ -734,19 +734,19 @@
     <div class="header"><h1><img src="events.png" alt="Events" style="height: 64px; vertical-align: middle; margin-right: 8px;"> Event Management</h1><p>Track clan events and member participation</p></div>
     <div class="tabs-container">
       <div class="tabs">
-        <button class="tab active" onclick="EventsTab.switchTab('manageTab', event)">?? Manage Events</button>
-        <button class="tab" onclick="EventsTab.switchTab('chestEventsTab', event)">?? Chest Events</button>
-        <button class="tab" onclick="EventsTab.switchTab('manualEventsTab', event)">?? Manual Events</button>
-        <button class="tab" onclick="EventsTab.switchTab('troopEventsTab', event)">??? Troop Events</button>
-        <button class="tab" onclick="EventsTab.switchTab('createTab', event)">? Create Event</button>
-        <button class="tab" onclick="EventsTab.switchTab('eventTypesTab', event)">?? Event Types</button>
+        <button class="tab active" onclick="EventsTab.switchTab('manageTab', event)">📋 Manage Events</button>
+        <button class="tab" onclick="EventsTab.switchTab('chestEventsTab', event)">📊 Chest Events</button>
+        <button class="tab" onclick="EventsTab.switchTab('manualEventsTab', event)">✏️ Manual Events</button>
+        <button class="tab" onclick="EventsTab.switchTab('troopEventsTab', event)">🎖️ Troop Events</button>
+        <button class="tab" onclick="EventsTab.switchTab('createTab', event)">➕ Create Event</button>
+        <button class="tab" onclick="EventsTab.switchTab('eventTypesTab', event)">⚙️ Event Types</button>
       </div>
 
       <!-- MANAGE EVENTS TAB -->
       <div id="manageTab" class="tab-content active">
         <h3 style="margin:0 0 12px 0;">All Events</h3>
         <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-          <button class="btn" onclick="EventsTab.loadEvents()">?? Refresh</button>
+          <button class="btn" onclick="EventsTab.loadEvents()">🔄 Refresh</button>
         </div>
         <div class="table-container">
           <div id="eventsLoading" class="loading"><div class="spinner"></div><p>Loading events...</p></div>
@@ -764,7 +764,7 @@
         <p style="margin-bottom:12px; color:#2c2f45;">View and calculate participation for chest-based events.</p>
         <div style="margin-bottom:12px;"><label for="chestEventSelect">Select Event</label><select id="chestEventSelect" onchange="EventsTab.onChestEventSelected()" style="max-width:400px;"><option value="">-- Select Chest Event --</option></select></div>
         <div id="chestEventActions" style="display:none; margin-bottom:12px;">
-          <button class="btn" onclick="EventsTab.calculateChestParticipation()">?? Calculate Participation</button>
+          <button class="btn" onclick="EventsTab.calculateChestParticipation()">🔄 Calculate Participation</button>
           <div id="chestCalcStatus" class="status"></div>
         </div>
         <div id="chestParticipationData" style="display:none; margin-top:12px;">
@@ -783,7 +783,7 @@
           <div><label for="manualMember">Member</label><select id="manualMember"><option value="">-- Select Member --</option></select></div>
           <div><label for="manualPoints">Points</label><input type="number" id="manualPoints" placeholder="Enter points" onkeypress="if(event.key==='Enter'){EventsTab.submitManualEntry();}"></div>
         </div>
-        <div style="margin-bottom:12px;"><button class="btn" onclick="EventsTab.submitManualEntry()">?? Save Entry</button><button class="btn btn-secondary" onclick="EventsTab.calculateManualNonParticipants()">????? Fill Non-Participants</button><div id="manualEntryStatus" class="status"></div><div id="manualNonPartStatus" class="status"></div></div>
+        <div style="margin-bottom:12px;"><button class="btn" onclick="EventsTab.submitManualEntry()">💾 Save Entry</button><button class="btn btn-secondary" onclick="EventsTab.calculateManualNonParticipants()">🙅‍♂️ Fill Non-Participants</button><div id="manualEntryStatus" class="status"></div><div id="manualNonPartStatus" class="status"></div></div>
         <div id="manualParticipationData" style="display:none; margin-top:12px;"><h4 id="manualParticipationHeading" style="margin:0 0 12px 0;">Participation Entries</h4><div id="manualLoadingIndicator" class="loading">Loading participation data...</div><div class="table-container"><table><thead id="manualParticipationTableHead"></thead><tbody id="manualParticipationTableBody"></tbody></table></div></div>
       </div>
 
@@ -800,7 +800,7 @@
             <div><label for="troopMember">Member</label><select id="troopMember"><option value="">-- Select Member --</option></select></div>
             <div><label for="troopPoints">Points Achieved</label><input type="number" id="troopPoints" placeholder="Enter points" onkeypress="if(event.key==='Enter'){EventsTab.submitTroopEntry();}"></div>
           </div>
-          <div style="margin-bottom:12px;"><button class="btn" onclick="EventsTab.submitTroopEntry()">?? Save Points</button><button class="btn btn-secondary" onclick="EventsTab.calculateTroopNonParticipants()">????? Fill Non-Participants</button><div id="troopEntryStatus" class="status"></div><div id="troopNonPartStatus" class="status"></div></div>
+          <div style="margin-bottom:12px;"><button class="btn" onclick="EventsTab.submitTroopEntry()">💾 Save Points</button><button class="btn btn-secondary" onclick="EventsTab.calculateTroopNonParticipants()">🙅‍♂️ Fill Non-Participants</button><div id="troopEntryStatus" class="status"></div><div id="troopNonPartStatus" class="status"></div></div>
         </div>
         <div id="troopParticipationData" style="display:none; margin-top:12px;">
           <h4 id="troopParticipationHeading" style="margin:0 0 12px 0;">Troop Participation Results</h4>
@@ -817,7 +817,7 @@
           <div><label for="eventType">Event Type</label><select id="eventType"><option value="">-- Select Event Type --</option></select></div>
         </div>
         <div class="form-grid"><div><label for="eventStartDate">Start Date</label><input type="date" id="eventStartDate"></div><div><label for="eventEndDate">End Date</label><input type="date" id="eventEndDate"></div></div>
-        <button class="btn" onclick="EventsTab.submitCreateEvent()">?? Create Event</button><div id="createStatus" class="status"></div>
+        <button class="btn" onclick="EventsTab.submitCreateEvent()">🎯 Create Event</button><div id="createStatus" class="status"></div>
       </div>
 
       <!-- EVENT TYPES TAB -->
@@ -831,16 +831,16 @@
             <label style="display:block; margin-bottom:8px;">G Level Targets</label>
             <p style="color:#2c2f45; font-size:12px; margin-bottom:12px;">Set target points for each G level.</p>
             <div id="troopTargetsList" style="border:1px solid #c0c4d8; border-radius:6px; padding:12px; background:#f0f2f5; margin-bottom:12px; max-height:250px; overflow-y:auto;"></div>
-            <button type="button" class="btn" style="width:100%; margin-bottom:12px;" onclick="EventsTab.addTroopTargetRow()">? Add G Level Target</button>
+            <button type="button" class="btn" style="width:100%; margin-bottom:12px;" onclick="EventsTab.addTroopTargetRow()">➕ Add G Level Target</button>
           </div>
           <div style="margin-bottom:12px;"><label for="newEventTypeDesc">Description (Optional)</label><input type="text" id="newEventTypeDesc" placeholder="Brief description"></div>
           <div style="margin-bottom:12px;"><label for="newEventTypeThreshold">Threshold (Optional)</label><input type="number" id="newEventTypeThreshold" placeholder="0" min="0" step="1"><div class="note">Target chest count, points, or troop count (0 to disable).</div></div>
-          <button class="btn" id="saveEventTypeBtn" onclick="EventsTab.submitAddEventType()">? Add Event Type</button>
-          <button class="btn btn-secondary" id="cancelEditTypeBtn" style="display:none;" onclick="EventsTab.cancelEditEventType()">? Cancel Edit</button>
+          <button class="btn" id="saveEventTypeBtn" onclick="EventsTab.submitAddEventType()">➕ Add Event Type</button>
+          <button class="btn btn-secondary" id="cancelEditTypeBtn" style="display:none;" onclick="EventsTab.cancelEditEventType()">✖ Cancel Edit</button>
           <div id="addTypeStatus" class="status"></div>
         </div>
         <h4 style="margin:24px 0 12px 0;">Existing Event Types</h4>
-        <button class="btn" onclick="EventsTab.renderEventTypesTable()">?? Refresh</button>
+        <button class="btn" onclick="EventsTab.renderEventTypesTable()">🔄 Refresh</button>
         <div class="table-container">
           <div id="typesLoading" class="loading"><div class="spinner"></div><p>Loading event types...</p></div>
           <table id="eventTypesTable" style="display:none;">
@@ -1030,9 +1030,9 @@
           // Only show View button for events that track participation
           const viewButton = event.participationMethod === 'period-marker' 
             ? '' 
-            : `<button class="btn action-btn" onclick="EventsTab.viewEventParticipation('${escapeHtml(event.eventName)}')">?? View</button>`;
+            : `<button class="btn action-btn" onclick="EventsTab.viewEventParticipation('${escapeHtml(event.eventName)}')">👁 View</button>`;
           const row = document.createElement('tr');
-          row.innerHTML = `<td class="event-name">${escapeHtml(event.eventName)}</td><td>${escapeHtml(event.eventType)}</td><td>${formatDateUTC(event.startDate)}</td><td>${formatDateUTC(event.endDate, true)}</td><td>${methodBadge}</td><td>${viewButton}<button class="btn action-btn" onclick="EventsTab.editEvent('${escapeHtml(event.eventName)}')">?? Edit</button><button class="btn action-btn btn-secondary" onclick="EventsTab.deleteEvent('${escapeHtml(event.eventName)}')">??? Delete</button></td>`;
+          row.innerHTML = `<td class="event-name">${escapeHtml(event.eventName)}</td><td>${escapeHtml(event.eventType)}</td><td>${formatDateUTC(event.startDate)}</td><td>${formatDateUTC(event.endDate, true)}</td><td>${methodBadge}</td><td>${viewButton}<button class="btn action-btn" onclick="EventsTab.editEvent('${escapeHtml(event.eventName)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="EventsTab.deleteEvent('${escapeHtml(event.eventName)}')">🗑️ Delete</button></td>`;
           tbody.appendChild(row);
         });
 
@@ -1040,9 +1040,9 @@
         const ths = document.querySelectorAll('#eventsTable thead th.sortable');
         ths.forEach(th => {
           const col = th.getAttribute('data-sort');
-          th.innerHTML = th.textContent.replace(/[??]/g, '').trim();
+          th.innerHTML = th.textContent.replace(/[▲▼]/g, '').trim();
           if (col === eventsSortColumn) {
-            th.innerHTML += eventsSortDirection === 'asc' ? ' ?' : ' ?';
+            th.innerHTML += eventsSortDirection === 'asc' ? ' ▲' : ' ▼';
           }
         });
       }
@@ -1074,7 +1074,7 @@
         document.getElementById('eventStartDate').value = event.startDate;
         document.getElementById('eventEndDate').value = event.endDate;
         const submitBtn = document.querySelector('button[onclick="EventsTab.submitCreateEvent()"]');
-        submitBtn.textContent = '?? Update Event';
+        submitBtn.textContent = '💾 Update Event';
         switchTab('createTab');
       }
 
@@ -1227,7 +1227,7 @@
             document.getElementById('eventType').value = '';
             document.getElementById('eventStartDate').value = '';
             document.getElementById('eventEndDate').value = '';
-            document.querySelector('[onclick="EventsTab.submitCreateEvent()"]').textContent = '?? Create Event';
+            document.querySelector('[onclick="EventsTab.submitCreateEvent()"]').textContent = '🎯 Create Event';
             editingEventName = null;
             loadEvents();
           } else {
@@ -1588,12 +1588,12 @@
         tbody.innerHTML = '';
         sorted.forEach(p => {
           const icon = p.value3 === 'Yes'
-            ? '<span style="color:#4caf50;">?</span>'
+            ? '<span style="color:#4caf50;">✓</span>'
             : (p.value3 === 'Partial'
-              ? '<span style="color:#ff9800;">?</span>'
+              ? '<span style="color:#ff9800;">⚠</span>'
               : (p.value3 === 'N/A'
-                ? '<span style="color:#999;">�</span>'
-                : '<span style="color:#f44336;">?</span>'));
+                ? '<span style="color:#999;">—</span>'
+                : '<span style="color:#f44336;">✕</span>'));
           const row = document.createElement('tr');
           row.innerHTML = `<td>${escapeHtml(p.memberName)}</td><td>${p.value1 || 0}</td><td style="text-align:center;">${icon}</td>`;
           tbody.appendChild(row);
@@ -1601,8 +1601,8 @@
         // Add sort indicators
         thead.querySelectorAll('th.sortable').forEach(th => {
           const col = th.getAttribute('data-sort');
-          th.innerHTML = th.textContent.replace(/[??]/g, '').trim();
-          if (col === chestSortColumn) th.innerHTML += chestSortDirection === 'asc' ? ' ?' : ' ?';
+          th.innerHTML = th.textContent.replace(/[▲▼]/g, '').trim();
+          if (col === chestSortColumn) th.innerHTML += chestSortDirection === 'asc' ? ' ▲' : ' ▼';
         });
         // Add handlers
         addSortHandlers('chestParticipationTableHead', 'chest');
@@ -1635,24 +1635,24 @@
           const eventEndDate = parseDateSafe(selectedEvent?.endDate);
           const joinDate = memberJoinDatesMap[nameKey] || null;
           const notInClan = joinDate && eventEndDate && joinDate > eventEndDate;
-          let statusIcon = '<span class="status-icon na">�</span>';
+          let statusIcon = '<span class="status-icon na">—</span>';
           let statusSort = 0;
           if (!notInClan && targetPoints !== null && !isNaN(targetPoints)) {
             if (pts >= targetPoints) {
-              statusIcon = '<span class="status-icon ok">?</span>';
+              statusIcon = '<span class="status-icon ok">✓</span>';
               statusSort = 3;
             } else if (pts >= targetPoints * 0.9) {
               statusIcon = '<span class="status-icon warn">!</span>';
               statusSort = 2;
             } else {
-              statusIcon = '<span class="status-icon err">?</span>';
+              statusIcon = '<span class="status-icon err">✕</span>';
               statusSort = 1;
             }
           }
           return {
             memberName: p.memberName,
-            gLevel: gLevel !== null && !isNaN(gLevel) ? gLevel : '�',
-            target: targetPoints !== null && !isNaN(targetPoints) ? targetPoints : '�',
+            gLevel: gLevel !== null && !isNaN(gLevel) ? gLevel : '—',
+            target: targetPoints !== null && !isNaN(targetPoints) ? targetPoints : '—',
             achieved: pts,
             status: statusIcon,
             _statusSort: statusSort
@@ -1684,8 +1684,8 @@
         // Add sort indicators
         thead.querySelectorAll('th.sortable').forEach(th => {
           const col = th.getAttribute('data-sort');
-          th.innerHTML = th.textContent.replace(/[??]/g, '').trim();
-          if (col === manualSortColumn) th.innerHTML += manualSortDirection === 'asc' ? ' ?' : ' ?';
+          th.innerHTML = th.textContent.replace(/[▲▼]/g, '').trim();
+          if (col === manualSortColumn) th.innerHTML += manualSortDirection === 'asc' ? ' ▲' : ' ▼';
         });
         // Add handlers
         addSortHandlers('manualParticipationTableHead', 'manual');
@@ -1718,24 +1718,24 @@
           const eventEndDate = parseDateSafe(selectedEvent?.endDate);
           const joinDate = memberJoinDatesMap[nameKey] || null;
           const notInClan = joinDate && eventEndDate && joinDate > eventEndDate;
-          let statusIcon = '<span class="status-icon na">�</span>';
+          let statusIcon = '<span class="status-icon na">—</span>';
           let statusSort = 0;
           if (!notInClan && targetPoints !== null && !isNaN(targetPoints)) {
             if (pts >= targetPoints) {
-              statusIcon = '<span class="status-icon ok">?</span>';
+              statusIcon = '<span class="status-icon ok">✓</span>';
               statusSort = 3;
             } else if (pts >= targetPoints * 0.9) {
               statusIcon = '<span class="status-icon warn">!</span>';
               statusSort = 2;
             } else {
-              statusIcon = '<span class="status-icon err">?</span>';
+              statusIcon = '<span class="status-icon err">✕</span>';
               statusSort = 1;
             }
           }
           return {
             memberName: p.memberName,
-            gLevel: gLevel !== null && !isNaN(gLevel) ? gLevel : '�',
-            target: targetPoints !== null && !isNaN(targetPoints) ? targetPoints : '�',
+            gLevel: gLevel !== null && !isNaN(gLevel) ? gLevel : '—',
+            target: targetPoints !== null && !isNaN(targetPoints) ? targetPoints : '—',
             achieved: pts,
             status: statusIcon,
             _statusSort: statusSort
@@ -1767,8 +1767,8 @@
         // Add sort indicators
         thead.querySelectorAll('th.sortable').forEach(th => {
           const col = th.getAttribute('data-sort');
-          th.innerHTML = th.textContent.replace(/[??]/g, '').trim();
-          if (col === troopSortColumn) th.innerHTML += troopSortDirection === 'asc' ? ' ?' : ' ?';
+          th.innerHTML = th.textContent.replace(/[▲▼]/g, '').trim();
+          if (col === troopSortColumn) th.innerHTML += troopSortDirection === 'asc' ? ' ▲' : ' ▼';
         });
         // Add handlers
         addSortHandlers('troopParticipationTableHead', 'troop');
@@ -1916,7 +1916,7 @@
             <option value="9" ${level == 9 ? 'selected' : ''}>Level 9</option>
           </select>
           <input type="number" placeholder="Points" value="${points}" style="padding:6px; border:1px solid #c0c4d8; border-radius:4px; background:#f0f2f5; color:#2c2f45;" min="0" step="1">
-          <button type="button" class="btn btn-secondary" style="padding:4px 8px;" onclick="EventsTab.removeTroopTargetRow('${rowId}')">? Remove</button>
+          <button type="button" class="btn btn-secondary" style="padding:4px 8px;" onclick="EventsTab.removeTroopTargetRow('${rowId}')">✖ Remove</button>
         `;
         container.appendChild(row);
       }
@@ -1935,7 +1935,7 @@
         document.getElementById('newEventTypeMethod').value = eventType.trackingMethod || '';
         document.getElementById('newEventTypeDesc').value = eventType.description || '';
         document.getElementById('newEventTypeThreshold').value = eventType.threshold || 0;
-        document.getElementById('saveEventTypeBtn').textContent = '?? Save Event Type';
+        document.getElementById('saveEventTypeBtn').textContent = '💾 Save Event Type';
         document.getElementById('cancelEditTypeBtn').style.display = 'inline-block';
         updateEventTypeMethod();
         if (eventType.trackingMethod === 'chest-based') setSelectedChestTypes(eventType.chestTypes);
@@ -1951,7 +1951,7 @@
         document.getElementById('newEventTypeMethod').value = '';
         document.getElementById('newEventTypeDesc').value = '';
         document.getElementById('newEventTypeThreshold').value = '0';
-        document.getElementById('saveEventTypeBtn').textContent = '? Add Event Type';
+        document.getElementById('saveEventTypeBtn').textContent = '➕ Add Event Type';
         document.getElementById('cancelEditTypeBtn').style.display = 'none';
         setSelectedChestTypes('');
         setTroopTargets('');
@@ -2004,7 +2004,7 @@
           const methodBadge = eventType.trackingMethod === 'chest-based' ? '<span class="badge chest">Chest</span>' : '<span class="badge manual">Manual</span>';
           const chestDisplay = eventType.chestTypes ? escapeHtml(eventType.chestTypes) : '<em style="color:#999;">All</em>';
           const row = document.createElement('tr');
-          row.innerHTML = `<td>${escapeHtml(eventType.name)}</td><td>${methodBadge}</td><td>${chestDisplay}</td><td>${escapeHtml(eventType.description)}</td><td style="text-align:center;">${eventType.threshold || '�'}</td><td><button class="btn action-btn" onclick="EventsTab.editEventType('${escapeHtml(eventType.name)}')">?? Edit</button><button class="btn action-btn btn-secondary" onclick="if(confirm('Delete?'))EventsTab.deleteEventType('${escapeHtml(eventType.name)}')">???</button></td>`;
+          row.innerHTML = `<td>${escapeHtml(eventType.name)}</td><td>${methodBadge}</td><td>${chestDisplay}</td><td>${escapeHtml(eventType.description)}</td><td style="text-align:center;">${eventType.threshold || '—'}</td><td><button class="btn action-btn" onclick="EventsTab.editEventType('${escapeHtml(eventType.name)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="if(confirm('Delete?'))EventsTab.deleteEventType('${escapeHtml(eventType.name)}')">🗑️</button></td>`;
           tbody.appendChild(row);
         });
         document.getElementById('eventTypesTable').style.display = 'table';
