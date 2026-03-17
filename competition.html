@@ -1,10 +1,12 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+	<base target="_top">
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>cCc League One - Competition Leaderboard</title>
 	<link rel="icon" href="favicon.png" type="image/png">
+	<script src="site-config.js"></script>
 	<script src="config.js"></script>
 	<script src="portal-shim.js"></script>
 	<style>
@@ -36,7 +38,11 @@
 			box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 			position: sticky;
 			top: 0;
-			z-index: 1000;
+			z-index: 9999;
+			width: 100%;
+			left: 0;
+			right: 0;
+			overflow: visible;
 		}
 		.tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
 		.nav-brand { font-size: 20px; font-weight: 700; color: #6c5ce7; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
