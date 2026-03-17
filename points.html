@@ -35,11 +35,7 @@
     .goog-text-highlight { background: transparent !important; box-shadow: none !important; }
     #google_translate_element, #translateToggleBtn { top: auto !important; right: 8px !important; bottom: 8px !important; }
 
-    .page-container {
-      max-width: 1200px;
-      margin: 20px auto 20px;
-      padding: 0 20px;
-    }
+    .tab-content { padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
 
     .login-container {
       text-align: center;
@@ -81,6 +77,8 @@
       font-size: 14px;
       text-align: center;
     }
+
+    h2 { color: #f0f2f5; }
 
     .tab-icon {
       display: inline-block;
@@ -316,7 +314,7 @@
     }
 
     @media (max-width: 768px) {
-      .page-container {
+      .tab-content {
         margin-top: 80px;
       }
 
@@ -733,7 +731,7 @@
   </nav>
 
   <!-- Main Content -->
-  <div class="page-container">
+  <div class="tab-content active">
     <div id="loginPrompt" style="display: none; text-align: center; padding: 40px;">
       <button id="signInBtn" style="padding: 12px 24px; font-size: 16px; cursor: pointer; background: #6c5ce7; color: #f0f2f5; border: none; border-radius: 4px; font-weight: 600;">Sign in to Manage</button>
     </div>
