@@ -50,7 +50,7 @@
     }
 
     .login-container p {
-      color: #ccc;
+      color: #6b6f85;
       margin-bottom: 20px;
     }
 
@@ -75,7 +75,7 @@
     }
 
     .header p {
-      color: #ccc;
+      color: #6b6f85;
       font-size: 14px;
       text-align: center;
     }
@@ -201,7 +201,7 @@
 
     .quick-add-form {
       background: #f0f2f5;
-      border: 1px solid #333;
+      border: 1px solid #c0c4d8;
       border-radius: 6px;
       padding: 16px;
     }
@@ -232,7 +232,7 @@
     .quick-add-form select:focus {
       outline: none;
       border-color: #6c5ce7;
-      box-shadow: 0 0 8px rgba(255, 179, 0, 0.2);
+      box-shadow: 0 0 8px rgba(108, 92, 231, 0.2);
     }
 
     .quick-add-form button {
@@ -249,7 +249,7 @@
     }
 
     .quick-add-form button:hover {
-      background: #ffc933;
+      background: #8b7cf8;
       transform: scale(1.02);
     }
 
@@ -303,7 +303,7 @@
       background: #f0f2f5;
       padding: 16px;
       border-radius: 6px;
-      border: 1px solid #333;
+      border: 1px solid #c0c4d8;
       margin-bottom: 16px;
     }
 
@@ -321,14 +321,14 @@
     .incident-form input:focus {
       outline: none;
       border-color: #6c5ce7;
-      box-shadow: 0 0 8px rgba(255, 179, 0, 0.2);
+      box-shadow: 0 0 8px rgba(108, 92, 231, 0.2);
     }
 
     .added-leaders-section {
       background: #f0f2f5;
       padding: 16px;
       border-radius: 6px;
-      border: 1px solid #333;
+      border: 1px solid #c0c4d8;
       margin-bottom: 16px;
       max-height: 300px;
       overflow-y: auto;
@@ -349,7 +349,7 @@
     }
 
     .added-leaders-section::-webkit-scrollbar-thumb:hover {
-      background: #666;
+      background: #6b6f85;
     }
 
     /* Troop Entry Grids */
@@ -530,7 +530,7 @@
     }
 
     .btn-primary:hover {
-      background: #ffc933;
+      background: #8b7cf8;
       transform: scale(1.02);
     }
 
@@ -541,7 +541,7 @@
     }
 
     .btn-secondary:hover {
-      background: #555;
+      background: #d0d3e8;
     }
 
     /* Results Display */
@@ -563,7 +563,7 @@
 
     .result-card {
       background: #f0f2f5;
-      border: 1px solid #333;
+      border: 1px solid #c0c4d8;
       border-radius: 6px;
       padding: 16px;
       text-align: center;
@@ -571,7 +571,7 @@
 
     .result-card-title {
       font-size: 12px;
-      color: #ccc;
+      color: #6b6f85;
       font-weight: 600;
       margin-bottom: 8px;
       text-transform: uppercase;
@@ -593,7 +593,7 @@
     }
 
     .result-card.monsters .result-card-value {
-      color: #ffc933;
+      color: #8b7cf8;
     }
 
     .result-card.buildings .result-card-value {
@@ -601,7 +601,7 @@
     }
 
     .result-grand-total {
-      background: linear-gradient(135deg, #6c5ce7 0%, #ffc933 100%);
+      background: linear-gradient(135deg, #6c5ce7 0%, #8b7cf8 100%);
       color: #f0f2f5;
       border-radius: 8px;
       padding: 24px;
@@ -657,7 +657,7 @@
     .report-card:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
       transform: translateY(-2px);
-      border-left-color: #ffc933;
+      border-left-color: #8b7cf8;
     }
 
     .report-card-title {
@@ -685,19 +685,19 @@
     }
 
     .report-card-btn:hover {
-      background: #ffc933;
+      background: #8b7cf8;
     }
 
     .reports-empty {
       text-align: center;
-      color: #888;
+      color: #6b6f85;
       padding: 40px 20px;
       font-size: 14px;
     }
 
     .reports-loading {
       text-align: center;
-      color: #888;
+      color: #6b6f85;
       padding: 40px 20px;
     }
 
@@ -1252,7 +1252,7 @@
         </div>
 
         <div class="added-leaders-section" id="addedLeadersList">
-          <div style="color: #888; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>
+          <div style="color: #6b6f85; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>
         </div>
       </div>
 
@@ -1664,7 +1664,7 @@
       function displayAddedLeaders() {
         const listDiv = document.getElementById('addedLeadersList');
         if (addedLeaders.length === 0) {
-          listDiv.innerHTML = '<div style="color: #888; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>';
+          listDiv.innerHTML = '<div style="color: #6b6f85; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>';
           return;
         }
         
@@ -1675,7 +1675,7 @@
           const typeLabel = leader.type === 'hero' ? 'Hero' : 'Captain';
           const baseValue = 1200;
           const total = leader.amount * leader.level * baseValue;
-          html += `<tr style="border-bottom: 1px solid #333;"><td style="padding: 8px; color: #2c2f45;">${typeLabel}</td><td style="text-align: center; padding: 8px; color: #2c2f45;">Lvl ${leader.level}</td><td style="text-align: center; padding: 8px; color: #ffc933;">${total.toLocaleString()}</td><td style="text-align: center; padding: 8px;"><button onclick="CompensationTab.removeLeader(${index})" style="background: #ff5252; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">Remove</button></td></tr>`;
+          html += `<tr style="border-bottom: 1px solid #c0c4d8;"><td style="padding: 8px; color: #2c2f45;">${typeLabel}</td><td style="text-align: center; padding: 8px; color: #2c2f45;">Lvl ${leader.level}</td><td style="text-align: center; padding: 8px; color: #8b7cf8;">${total.toLocaleString()}</td><td style="text-align: center; padding: 8px;"><button onclick="CompensationTab.removeLeader(${index})" style="background: #ff5252; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">Remove</button></td></tr>`;
         });
         
         html += '</table>';
@@ -1811,31 +1811,31 @@
               const content = document.getElementById('compensationDetailContent');
               content.innerHTML = `
                 <div style="margin-bottom: 20px;">
-                  <div style="font-size: 13px; color: #ccc; margin-bottom: 4px;">INCIDENT</div>
+                  <div style="font-size: 13px; color: #6b6f85; margin-bottom: 4px;">INCIDENT</div>
                   <div style="font-size: 20px; font-weight: 600; color: #6c5ce7;">${result.incidentName}</div>
                   <div style="font-size: 13px; color: #2c2f45; margin-top: 4px;">📅 ${result.date}</div>
                 </div>
 
                 <div style="display: grid; gap: 12px; margin-bottom: 20px;">
                   <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
-                    <span style="color: #ccc; font-size: 13px;">Heroes & Captains</span>
+                    <span style="color: #6b6f85; font-size: 13px;">Heroes & Captains</span>
                     <span style="font-weight: 600; color: #6c5ce7;">${result.breakdown.herosCaptains.toLocaleString()}</span>
                   </div>
                   <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
-                    <span style="color: #ccc; font-size: 13px;">Troops</span>
+                    <span style="color: #6b6f85; font-size: 13px;">Troops</span>
                     <span style="font-weight: 600; color: #8bc34a;">${result.breakdown.troops.toLocaleString()}</span>
                   </div>
                   <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
-                    <span style="color: #ccc; font-size: 13px;">Monsters & Creatures</span>
-                    <span style="font-weight: 600; color: #ffc933;">${result.breakdown.monsters.toLocaleString()}</span>
+                    <span style="color: #6b6f85; font-size: 13px;">Monsters & Creatures</span>
+                    <span style="font-weight: 600; color: #8b7cf8;">${result.breakdown.monsters.toLocaleString()}</span>
                   </div>
                   <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
-                    <span style="color: #ccc; font-size: 13px;">Buildings & Resources</span>
+                    <span style="color: #6b6f85; font-size: 13px;">Buildings & Resources</span>
                     <span style="font-weight: 600; color: #ff5252;">${result.breakdown.buildings.toLocaleString()}</span>
                   </div>
                 </div>
 
-                <div style="background: linear-gradient(135deg, #6c5ce7 0%, #ffc933 100%); color: #f0f2f5; border-radius: 8px; padding: 20px; text-align: center;">
+                <div style="background: linear-gradient(135deg, #6c5ce7 0%, #8b7cf8 100%); color: #f0f2f5; border-radius: 8px; padding: 20px; text-align: center;">
                   <div style="font-size: 12px; opacity: 0.8; margin-bottom: 8px; font-weight: 600;">GRAND TOTAL</div>
                   <div style="font-size: 36px; font-weight: 700;">${result.grandTotal.toLocaleString()} silver</div>
                 </div>
@@ -1998,7 +1998,7 @@
               result.reports.forEach(report => {
                 const card = document.createElement('div');
                 card.style.cssText = 'background: #f0f2f5; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer; transition: all 0.2s; border-left: 4px solid #6c5ce7; border: 1px solid #c0c4d8;';
-                card.onmouseover = function() { this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.35)'; this.style.transform = 'translateY(-2px)'; this.style.borderLeftColor = '#ffc933'; };
+                card.onmouseover = function() { this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.35)'; this.style.transform = 'translateY(-2px)'; this.style.borderLeftColor = '#8b7cf8'; };
                 card.onmouseout = function() { this.style.boxShadow = '0 1px 3px rgba(0,0,0,0.25)'; this.style.transform = 'translateY(0)'; this.style.borderLeftColor = '#6c5ce7'; };
                 
                 card.innerHTML = `
