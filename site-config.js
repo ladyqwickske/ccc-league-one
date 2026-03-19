@@ -1,4 +1,4 @@
-﻿/**
+/**
  * cCc League One Site Configuration
  */
 
@@ -26,7 +26,9 @@ const SITE_CONFIG = {
   // Members hidden from progress stats when not logged in (e.g. leaders with special privileges)
   // Names must match exactly as they appear in the Members sheet (case-insensitive match applied at runtime)
   maskedMembers: [
-  
+    'LION S 5',
+    'MerdO LH', 
+    'Otto S4',
     // 'AnotherSpecialMember'
   ],
 
