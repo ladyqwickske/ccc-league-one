@@ -1,4 +1,4 @@
-﻿// Cloudflare Worker (public, CORS-friendly)
+﻿﻿// Cloudflare Worker (public, CORS-friendly)
 window.CLOUDFLARE_WORKER_URL = 'https://ccc-league-one.lady-qwickske.workers.dev/';
 
 // Frontend should call the worker to avoid GAS CORS restrictions.

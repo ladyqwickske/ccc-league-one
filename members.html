@@ -291,12 +291,12 @@
     .might-value { text-align: right; }
     .date-value { text-align: center; }
 
-    .points-meta { margin: 10px 0; font-size: 12px; color: #6b6f85; text-align: left; }
+    .points-meta { margin: 10px 0; font-size: 12px; color: #3d4059; text-align: left; }
     .points-cell { text-align: center; font-weight: 700; border-radius: 4px; padding: 6px 8px; }
-    .points-green { background: rgba(76, 175, 80, 0.22); color: #9be7a1; }
-    .points-orange { background: rgba(255, 152, 0, 0.22); color: #b388ff; }
-    .points-red { background: rgba(244, 67, 54, 0.22); color: #ff9a92; }
-    .points-na { background: rgba(176, 176, 176, 0.12); color: #6b6f85; }
+    .points-green { background: rgba(46, 125, 50, 0.18); color: #2e7d32; }
+    .points-orange { background: rgba(230, 126, 0, 0.18); color: #bf6900; }
+    .points-red { background: rgba(198, 40, 40, 0.18); color: #c62828; }
+    .points-na { background: rgba(150, 150, 160, 0.12); color: #8a8d9e; }
 
     /* Active Period History (Management) */
     .history-section {
@@ -760,6 +760,7 @@
     <div class="tabs-container">
       <div class="tabs">
         <button class="tab active" onclick="MembersTab.switchTab('mightTab', event)">📊 Track Might</button>
+        <button class="tab" onclick="MembersTab.switchTab('heroTab', event)">🦸 Hero Level</button>
         <button class="tab" onclick="MembersTab.switchTab('addMemberTab', event)">➕ Add Member</button>
         <button class="tab" onclick="MembersTab.switchTab('nameTab', event)">✏️ Change Name</button>
         <button class="tab" onclick="MembersTab.switchTab('removeMemberTab', event)">🚪 Remove Member</button>
@@ -769,6 +770,16 @@
         <h3 style="margin:0 0 12px 0;">Track Member Might</h3>
         <div class="form-grid might-form-grid"><div><label for="mightMemberSelect">Member</label><select id="mightMemberSelect"></select></div><div><label for="mightValue">Might</label><input type="number" id="mightValue" placeholder="Enter current might" onkeypress="if(event.key==='Enter'){MembersTab.submitMightEntry();}"></div><div><label for="mightDate">Date</label><input type="date" id="mightDate"><div class="note">Defaults to today</div></div></div>
         <button class="btn" onclick="MembersTab.submitMightEntry()">💾 Save Might</button><div id="mightStatus" class="status"></div>
+      </div>
+      <div id="heroTab" class="tab-content">
+        <h3 style="margin:0 0 12px 0;">Track Hero Level</h3>
+        <div class="form-grid might-form-grid">
+          <div><label for="heroMemberSelect">Member</label><select id="heroMemberSelect"></select></div>
+          <div><label for="heroLevelValue">Hero Level</label><input type="number" id="heroLevelValue" placeholder="Enter hero level" min="0" step="1" onkeypress="if(event.key==='Enter'){MembersTab.submitHeroLevelEntry();}"></div>
+          <div><label for="heroLevelDate">Date</label><input type="date" id="heroLevelDate"><div class="note">Defaults to today</div></div>
+        </div>
+        <button class="btn" onclick="MembersTab.submitHeroLevelEntry()">💾 Save Hero Level</button>
+        <div id="heroLevelStatus" class="status"></div>
       </div>
       <div id="addMemberTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Add New Member</h3>
@@ -804,8 +815,30 @@
         <h3 style="margin:0 0 12px 0;">Chest Points - Last Active Periods</h3>
         <div class="controls" style="margin-bottom:10px;">
           <button class="btn" onclick="MembersTab.loadChestPointsTabData(true)">🔄 Refresh Chest Points</button>
+          <button class="btn" onclick="MembersTab.togglePointTargetsPanel()" style="margin-left:8px;">⚙️ Point Targets</button>
         </div>
-        <div id="chestPointsMeta" class="points-meta">Target: 3000 points (green), within 10% (orange), below (red).</div>
+
+        <!-- Point Targets Configuration Panel -->
+        <div id="pointTargetsPanel" style="display:none; margin-bottom:14px; background:rgba(255,255,255,0.06); border:1px solid #c0c4d8; border-radius:8px; padding:14px 16px;">
+          <p style="font-size:12px;color:#6b6f85;margin:0 0 12px 0;">Set a custom point target per player per active period. Overrides the default for that cell only. Saved locally in this browser.</p>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
+            <label style="font-size:12px;color:#6c5ce7;white-space:nowrap;font-weight:600;">Default target:</label>
+            <input type="number" id="ptDefaultInput" min="0" step="100" value="6000" style="width:100px;padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:13px;">
+            <button onclick="MembersTab.savePtDefault()" class="btn" style="padding:5px 14px;font-size:12px;">Save default</button>
+          </div>
+          <div style="border-top:1px solid #c0c4d8;padding-top:12px;">
+            <div style="font-size:12px;color:#6c5ce7;font-weight:600;margin-bottom:8px;">Per-player / per-period overrides</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 110px auto;gap:6px;align-items:center;margin-bottom:10px;">
+              <select id="ptPlayerSelect" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;"><option value="">— select player —</option></select>
+              <select id="ptPeriodSelect" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;"><option value="">— select period —</option></select>
+              <input type="number" id="ptOverridePoints" placeholder="Points" min="0" step="100" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;">
+              <button onclick="MembersTab.addPtOverride()" class="btn" style="padding:5px 12px;font-size:12px;white-space:nowrap;">➕ Add</button>
+            </div>
+            <div id="ptOverrideList" style="max-height:160px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
+        <div id="chestPointsMeta" class="points-meta">Target: 15,000 points (green), within 10% (orange), below (red).</div>
         <div class="table-container" style="max-height:52vh;">
           <div id="chestPointsLoading" class="loading" style="display:none;"><div class="spinner"></div>Loading chest points...</div>
           <div id="chestPointsError" class="error" style="display:none;"></div>
@@ -828,6 +861,7 @@
         <thead>
           <tr>
             <th class="sortable" data-column="name">Name</th>
+            <th class="sortable" data-column="heroLevel" title="Latest recorded hero level">Hero Level</th>
             <th class="sortable" data-column="startMight">Starting Might</th>
             <th class="sortable" data-column="joinDate">Join Date</th>
             <th class="sortable" data-column="growth" title="Total growth from start to latest (all-time)">Growth %</th>
@@ -874,7 +908,167 @@
         });
       }
 
+      // ── Point Targets (server-backed with localStorage cache) ─────────
+      // Schema: { default: 6000, overrides: [ { player, period, points } ] }
+      const PT_KEY = 'clo_point_targets';
+      let pointTargetsCache = null; // in-memory cache
+
+      function loadPointTargets() {
+        if (pointTargetsCache) return pointTargetsCache;
+        try {
+          const raw = JSON.parse(localStorage.getItem(PT_KEY) || '{"default":6000,"overrides":[]}');
+          if (!Array.isArray(raw.overrides)) raw.overrides = [];
+          pointTargetsCache = raw;
+          return raw;
+        } catch(e) { return { default: 6000, overrides: [] }; }
+      }
+      function savePointTargets(obj) {
+        pointTargetsCache = obj;
+        try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+        // Persist to server (fire-and-forget)
+        fetch(window.GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'savePointTargets', targets: obj })
+        }).catch(() => {});
+      }
+      function loadPointTargetsFromServer() {
+        return fetch(window.GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'getPointTargets' })
+        })
+          .then(res => res.json())
+          .then(result => {
+            if (result && result.success !== false) {
+              const obj = { default: result.default || 6000, overrides: Array.isArray(result.overrides) ? result.overrides : [] };
+              pointTargetsCache = obj;
+              try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+            }
+          })
+          .catch(() => {}); // fall back to localStorage cache
+      }
+      // Resolve target for a specific player+period; falls back to default
+      function getEffectiveTarget(playerName, periodName) {
+        const pt = loadPointTargets();
+        const pkey = (playerName || '').toLowerCase().trim();
+        const perkey = (periodName || '').trim();
+        const match = (pt.overrides || []).find(o =>
+          o.player.toLowerCase() === pkey && o.period === perkey
+        );
+        return match ? match.points : (pt.default || 6000);
+      }
+      // getPeriodTarget: column header uses global default (no period-level override)
+      function getPeriodTarget() {
+        return loadPointTargets().default || 6000;
+      }
+      function escapeHtmlMem(text) {
+        const d = document.createElement('div'); d.textContent = text; return d.innerHTML;
+      }
+      function togglePointTargetsPanel() {
+        const panel = document.getElementById('pointTargetsPanel');
+        if (!panel) return;
+        const open = panel.style.display !== 'none';
+        panel.style.display = open ? 'none' : 'block';
+        if (!open) renderPointTargetsPanel();
+      }
+      function populatePtSelects() {
+        const playerSel = document.getElementById('ptPlayerSelect');
+        if (playerSel) {
+          const current = playerSel.value;
+          playerSel.innerHTML = '<option value="">— select player —</option>';
+          const names = [...new Set(membersData.map(m => m.name || m.player || '').filter(Boolean))].sort();
+          names.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; playerSel.appendChild(o); });
+          if (current) playerSel.value = current;
+        }
+        const periodSel = document.getElementById('ptPeriodSelect');
+        if (periodSel) {
+          const current = periodSel.value;
+          periodSel.innerHTML = '<option value="">— select period —</option>';
+          const periods = Array.isArray(chestPointsData?.periods) ? chestPointsData.periods : [];
+          periods.forEach(p => { const o = document.createElement('option'); o.value = p.periodName; o.textContent = `${p.periodName} (${p.startDate} – ${p.endDate})`; periodSel.appendChild(o); });
+          if (current) periodSel.value = current;
+        }
+      }
+      function renderPointTargetsPanel() {
+        const pt = loadPointTargets();
+        const defInput = document.getElementById('ptDefaultInput');
+        if (defInput) defInput.value = pt.default || 6000;
+        populatePtSelects();
+        const list = document.getElementById('ptOverrideList');
+        if (!list) return;
+        const overrides = pt.overrides || [];
+        if (overrides.length === 0) {
+          list.innerHTML = '<p style="font-size:12px;color:#6b6f85;margin:0;">No overrides yet. Select a player and period above to add one.</p>';
+          return;
+        }
+        list.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead><tr>
+            <th style="text-align:left;padding:4px 8px;color:#6c5ce7;border-bottom:1px solid #c0c4d8;">Player</th>
+            <th style="text-align:left;padding:4px 8px;color:#6c5ce7;border-bottom:1px solid #c0c4d8;">Period</th>
+            <th style="text-align:right;padding:4px 8px;color:#6c5ce7;border-bottom:1px solid #c0c4d8;">Target pts</th>
+            <th style="padding:4px 8px;border-bottom:1px solid #c0c4d8;"></th>
+          </tr></thead>
+          <tbody>${overrides.map((o, i) =>
+            `<tr>
+              <td style="padding:4px 8px;color:#2c2f45;border-bottom:1px solid #e2e5ef;">${escapeHtmlMem(o.player)}</td>
+              <td style="padding:4px 8px;color:#6b6f85;border-bottom:1px solid #e2e5ef;">${escapeHtmlMem(o.period)}</td>
+              <td style="padding:4px 8px;text-align:right;border-bottom:1px solid #e2e5ef;">
+                <input type="number" value="${o.points}" min="0" step="100" data-idx="${i}"
+                  onchange="MembersTab.updatePtOverride(this)"
+                  style="width:80px;padding:2px 5px;border:1px solid #c0c4d8;border-radius:4px;background:#f0f2f5;color:#2c2f45;font-size:12px;">
+              </td>
+              <td style="padding:4px 8px;border-bottom:1px solid #e2e5ef;">
+                <button data-remove-idx="${i}" style="background:#c62828;color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer;">✕</button>
+              </td>
+            </tr>`
+          ).join('')}</tbody></table>`;
+        list.querySelectorAll('button[data-remove-idx]').forEach(btn => {
+          btn.addEventListener('click', function() { removePtOverride(parseInt(this.getAttribute('data-remove-idx'), 10)); });
+        });
+      }
+      function savePtDefault() {
+        const val = parseInt(document.getElementById('ptDefaultInput').value, 10);
+        if (isNaN(val) || val < 0) return;
+        const pt = loadPointTargets();
+        pt.default = val;
+        savePointTargets(pt);
+        renderChestPointsTable();
+      }
+      function addPtOverride() {
+        const player = (document.getElementById('ptPlayerSelect').value || '').trim();
+        const period = (document.getElementById('ptPeriodSelect').value || '').trim();
+        const pts = parseInt(document.getElementById('ptOverridePoints').value, 10);
+        if (!player || !period || isNaN(pts) || pts < 0) return;
+        const pt = loadPointTargets();
+        const idx = (pt.overrides || []).findIndex(o => o.player.toLowerCase() === player.toLowerCase() && o.period === period);
+        if (idx >= 0) { pt.overrides[idx].points = pts; }
+        else { pt.overrides.push({ player, period, points: pts }); }
+        savePointTargets(pt);
+        document.getElementById('ptOverridePoints').value = '';
+        renderPointTargetsPanel();
+        renderChestPointsTable();
+      }
+      function updatePtOverride(input) {
+        const idx = parseInt(input.getAttribute('data-idx'), 10);
+        const pts = parseInt(input.value, 10);
+        if (isNaN(idx) || isNaN(pts) || pts < 0) return;
+        const pt = loadPointTargets();
+        if (pt.overrides[idx]) { pt.overrides[idx].points = pts; savePointTargets(pt); renderChestPointsTable(); }
+      }
+      function removePtOverride(idx) {
+        const pt = loadPointTargets();
+        pt.overrides.splice(idx, 1);
+        savePointTargets(pt);
+        renderPointTargetsPanel();
+        renderChestPointsTable();
+      }
+      // ──────────────────────────────────────────────────────────────────────
+
       async function loadChestPointsTabData(forceRefresh = false) {
+        // Load point targets from server (updates localStorage cache)
+        await loadPointTargetsFromServer();
+
         const loading = document.getElementById('chestPointsLoading');
         const error = document.getElementById('chestPointsError');
         const table = document.getElementById('chestPointsTable');
@@ -897,7 +1091,7 @@
           const res = await fetch(window.GAS_WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'getRecentActivePeriodChestPoints', limitPeriods: 5, targetPoints: 3000 })
+            body: JSON.stringify({ action: 'getRecentActivePeriodChestPoints', limitPeriods: 5, targetPoints: loadPointTargets().default || 6000 })
           });
           const result = await res.json();
 
@@ -927,7 +1121,8 @@
         const periods = Array.isArray(chestPointsData?.periods) ? chestPointsData.periods : [];
         const membersRaw = Array.isArray(chestPointsData?.members) ? chestPointsData.members : [];
 
-        meta.textContent = `Target: ${Number(chestPointsData?.targetPoints || 3000)} points (green), within 10% (orange), below (red). '-' = not a member in that period, '*' = joined during that period.`;
+        const defaultTgt = loadPointTargets().default || 15000;
+        meta.textContent = `Default target: ${defaultTgt.toLocaleString()} points (green ≥ target, orange ≥ 90%, red below). Per-period or per-player overrides may apply. '-' = not a member in that period, '*' = joined during that period.`;
 
         if (periods.length === 0 || membersRaw.length === 0) {
           table.style.display = 'none';
@@ -1010,14 +1205,16 @@
             const periodEnd = toYmd(period.endDate);
             const isMemberDuringPeriod = !aJoinDate || !periodEnd || aJoinDate <= periodEnd;
             if (!isMemberDuringPeriod) return count;
-            return count + (Number(r?.points || 0) < Number(chestPointsData?.targetPoints || 3000) ? 1 : 0);
+            const tgt = getEffectiveTarget(a.member, period.periodName);
+            return count + (Number(r?.points || 0) < tgt ? 1 : 0);
           }, 0);
           const bMissedCount = bResults.reduce((count, r, idx) => {
             const period = periods[idx] || {};
             const periodEnd = toYmd(period.endDate);
             const isMemberDuringPeriod = !bJoinDate || !periodEnd || bJoinDate <= periodEnd;
             if (!isMemberDuringPeriod) return count;
-            return count + (Number(r?.points || 0) < Number(chestPointsData?.targetPoints || 3000) ? 1 : 0);
+            const tgt = getEffectiveTarget(b.member, period.periodName);
+            return count + (Number(r?.points || 0) < tgt ? 1 : 0);
           }, 0);
 
           if (aMissedCount !== bMissedCount) return bMissedCount - aMissedCount;
@@ -1042,7 +1239,8 @@
         header.innerHTML = '<th>Member</th>';
         periods.forEach(period => {
           const th = document.createElement('th');
-          th.textContent = `${period.periodName} (${period.startDate} - ${period.endDate})`;
+          const periodTgt = getPeriodTarget();
+          th.textContent = `${period.periodName} (${period.startDate} - ${period.endDate}) · ${periodTgt.toLocaleString()} pts`;
           header.appendChild(th);
         });
 
@@ -1051,15 +1249,22 @@
           const row = document.createElement('tr');
           const firstCell = document.createElement('td');
           const periodResults = Array.isArray(memberRow.periodResults) ? memberRow.periodResults : [];
-          const targetPoints = Number(chestPointsData?.targetPoints || 3000);
           const joinDate = toYmdMemberJoinDate(memberRow.joinDate);
           const firstPeriodStart = toYmd(periods[0]?.startDate);
           const joinedAfterPeriodStart = !!joinDate && !!firstPeriodStart && joinDate > firstPeriodStart;
-          const eligibleResults = periodResults.filter((result, idx) => {
-            const periodEnd = toYmd(periods[idx]?.endDate);
-            return !joinDate || !periodEnd || joinDate <= periodEnd;
+          let eligibleCount = 0;
+          let allMissed = true;
+          periodResults.forEach((result, idx) => {
+            const period = periods[idx] || {};
+            const periodEnd = toYmd(period.endDate);
+            const isEligible = !joinDate || !periodEnd || joinDate <= periodEnd;
+            if (!isEligible) return;
+            eligibleCount++;
+            if (Number(result?.points || 0) >= getEffectiveTarget(memberRow.member, period.periodName)) {
+              allMissed = false;
+            }
           });
-          const missedAllGoals = eligibleResults.length > 0 && eligibleResults.every(result => Number(result?.points || 0) < targetPoints);
+          const missedAllGoals = eligibleCount > 0 && allMissed;
 
           firstCell.className = `member-name${missedAllGoals ? ' missed-all-goals' : ''}`;
           firstCell.textContent = joinedAfterPeriodStart
@@ -1079,8 +1284,11 @@
               td.className = 'points-cell points-na';
               td.textContent = '-';
             } else {
-              td.className = `points-cell points-${data.status || 'red'}`;
-              const pointsText = Number(data.points || 0).toLocaleString();
+              const cellPts = Number(data.points || 0);
+              const cellTgt = getEffectiveTarget(memberRow.member, period.periodName);
+              const cellStatus = cellPts >= cellTgt ? 'green' : (cellPts >= cellTgt * 0.9 ? 'orange' : 'red');
+              td.className = `points-cell points-${cellStatus}`;
+              const pointsText = cellPts.toLocaleString();
               td.textContent = joinedDuringPeriod ? `${pointsText}*` : pointsText;
             }
             row.appendChild(td);
@@ -1165,6 +1373,7 @@
             case 'startMight': aVal = a.startMight || 0; bVal = b.startMight || 0; break;
             case 'latestMight': aVal = a.latestMight || 0; bVal = b.latestMight || 0; break;
             case 'latestMightDate': aVal = parseDateUTC(a.latestMightDate) || new Date(0); bVal = parseDateUTC(b.latestMightDate) || new Date(0); break;
+            case 'heroLevel': aVal = a.heroLevel !== null && a.heroLevel !== undefined ? a.heroLevel : -1; bVal = b.heroLevel !== null && b.heroLevel !== undefined ? b.heroLevel : -1; break;
             case 'growth': aVal = (a.startMight && a.latestMight && a.startMight > 0) ? ((a.latestMight - a.startMight) / a.startMight) * 100 : -Infinity; bVal = (b.startMight && b.latestMight && b.startMight > 0) ? ((b.latestMight - b.startMight) / b.startMight) * 100 : -Infinity; break;
             case 'recentGrowth': aVal = a.recentGrowthPercent || 0; bVal = b.recentGrowthPercent || 0; break;
             default: aVal = 0; bVal = 0;
@@ -1195,28 +1404,32 @@
             recentGrowthPercent = (member.recentGrowthPercent).toFixed(1) + '%';
           }
           const row = document.createElement('tr');
-          row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td class="might-value">${formatMight(member.startMight)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td class="might-value">${growthPercent}</td><td class="might-value">${formatMight(member.latestMight)}</td><td class="date-value">${formatDate(member.latestMightDate)}</td><td class="might-value">${recentGrowthPercent}</td>`;
+          const heroLevelDisplay = member.heroLevel !== null && member.heroLevel !== undefined
+            ? (() => { const lvl = member.heroLevel; let bg, fg; if (lvl > 500) { bg='#4a148c'; fg='#e1bee7'; } else if (lvl > 400) { bg='#0d47a1'; fg='#bbdefb'; } else if (lvl > 300) { bg='#1b5e20'; fg='#c8e6c9'; } else if (lvl > 200) { bg='#827717'; fg='#fff9c4'; } else if (lvl > 100) { bg='#37474f'; fg='#eceff1'; } else { bg='#4e342e'; fg='#d7ccc8'; } return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${bg};color:${fg};" title="Updated: ${member.heroLevelDate || '?'}">${lvl}</span>`; })()
+            : '<span style="color:#666">—</span>';
+          row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td style="text-align:center;">${heroLevelDisplay}</td><td class="might-value">${formatMight(member.startMight)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td class="might-value">${growthPercent}</td><td class="might-value">${formatMight(member.latestMight)}</td><td class="date-value">${formatDate(member.latestMightDate)}</td><td class="might-value">${recentGrowthPercent}</td>`;
           tbody.appendChild(row);
         });
       }
 
       function populateMemberSelect() {
         const select = document.getElementById('mightMemberSelect');
+        const heroSelect = document.getElementById('heroMemberSelect');
         const oldSelect = document.getElementById('oldMemberSelect');
         const removeSelect = document.getElementById('removeMemberSelect');
         if (!membersData || membersData.length === 0) {
           const empty = '<option value="">-- No members --</option>';
-          [select, oldSelect, removeSelect].forEach(sel => { if (sel) sel.innerHTML = empty; });
+          [select, heroSelect, oldSelect, removeSelect].forEach(sel => { if (sel) sel.innerHTML = empty; });
           return;
         }
         const sorted = [...membersData].sort((a, b) => a.name.localeCompare(b.name));
         const options = ['<option value="">-- Select member --</option>'].concat(sorted.map(m => `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`)).join('');
-        [select, oldSelect, removeSelect].forEach(sel => { if (sel) sel.innerHTML = options; });
+        [select, heroSelect, oldSelect, removeSelect].forEach(sel => { if (sel) sel.innerHTML = options; });
       }
 
       function setTodayDefault() {
         const today = getTodayUTCString();
-        ['mightDate', 'joinDate', 'endDate'].forEach(id => {
+        ['mightDate', 'heroLevelDate', 'joinDate', 'endDate'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.value = today;
         });
@@ -1281,6 +1494,47 @@
             status.textContent = `Error: ${error.message}`;
             status.classList.add('err');
           });
+      }
+
+      function submitHeroLevelEntry() {
+        const playerName = document.getElementById('heroMemberSelect').value;
+        const levelRaw = document.getElementById('heroLevelValue').value;
+        const date = document.getElementById('heroLevelDate').value;
+        const status = document.getElementById('heroLevelStatus');
+        status.textContent = '';
+        status.className = 'status';
+        if (!playerName) { status.textContent = 'Please select a member.'; status.classList.add('err'); return; }
+        const level = parseInt(levelRaw, 10);
+        if (isNaN(level) || level < 0) { status.textContent = 'Enter a valid hero level (0 or higher).'; status.classList.add('err'); return; }
+        status.textContent = 'Saving...';
+        const customTimestamp = date ? date + 'T12:00:00Z' : null;
+        fetch(window.GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'recordHeroLevel', playerName, level, customTimestamp })
+        })
+          .then(res => res.json())
+          .then(result => {
+            if (result && result.success) {
+              status.textContent = result.message || `Hero level ${level} saved for ${playerName}.`;
+              status.classList.add('ok');
+              document.getElementById('heroLevelValue').value = '';
+              document.getElementById('heroMemberSelect').focus();
+              // Optimistic update in local data
+              const idx = membersData.findIndex(m => m.name === playerName);
+              if (idx !== -1) {
+                membersData[idx].heroLevel = level;
+                membersData[idx].heroLevelDate = date || null;
+                const fidx = filteredData.findIndex(m => m.name === playerName);
+                if (fidx !== -1) filteredData[fidx] = membersData[idx];
+                renderTable();
+              }
+            } else {
+              status.textContent = result?.message || 'Failed to save.';
+              status.classList.add('err');
+            }
+          })
+          .catch(error => { status.textContent = `Error: ${error.message}`; status.classList.add('err'); });
       }
 
       function submitAddMember() {
@@ -1446,7 +1700,7 @@
         document.getElementById('memberEmpty').style.display = 'block';
       }
 
-      return { init, loadMembers, switchTab, submitMightEntry, submitAddMember, submitNameChange, submitRemoveMember, loadChestPointsTabData };
+      return { init, loadMembers, switchTab, submitMightEntry, submitHeroLevelEntry, submitAddMember, submitNameChange, submitRemoveMember, loadChestPointsTabData, togglePointTargetsPanel, savePtDefault, addPtOverride, updatePtOverride };
     })();
   </script>
 </body>

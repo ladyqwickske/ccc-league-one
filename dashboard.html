@@ -688,7 +688,7 @@
         <button class="preset-btn" data-preset="lastmonth" onclick="setDateRange('lastmonth')">Last Month</button>
       </div>
       <div class="date-range-display" id="dateRangeDisplay">Viewing: All Time</div>
-      <div class="date-range-display" id="lastImportedDisplay" style="font-size: 12px; color: #6c5ce7; margin-top: 8px;">Last Imported: <span class="no-date">Loading...</span> | Required Points: 15000</div>
+      <div class="date-range-display" id="lastImportedDisplay" style="font-size: 12px; color: #6c5ce7; margin-top: 8px;">Last Imported: <span class="no-date">Loading...</span> | Required Points: <span id="reqPointsPlaceholder">6,000</span></div>
       <input type="date" id="startDate" style="display:none;">
       <input type="date" id="endDate" style="display:none;">
     </div>
@@ -708,6 +708,58 @@
   </div>
 
   <script>
+    // ── Per-player custom point targets (server-backed with localStorage cache) ──
+    const PT_KEY = 'clo_point_targets';
+    let pointTargetsCache = null;
+
+    function loadPointTargets() {
+      if (pointTargetsCache) return pointTargetsCache;
+      try {
+        const raw = JSON.parse(localStorage.getItem(PT_KEY) || '{"default":6000,"overrides":[]}');
+        if (!Array.isArray(raw.overrides)) raw.overrides = [];
+        pointTargetsCache = raw;
+        return raw;
+      } catch(e) { return { default: 6000, overrides: [] }; }
+    }
+    function savePointTargets(obj) {
+      pointTargetsCache = obj;
+      try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+      fetch(window.GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'savePointTargets', targets: obj })
+      }).catch(() => {});
+    }
+    function loadPointTargetsFromServer() {
+      return fetch(window.GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'getPointTargets' })
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result && result.success !== false) {
+            const obj = { default: result.default || 6000, overrides: Array.isArray(result.overrides) ? result.overrides : [] };
+            pointTargetsCache = obj;
+            try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+          }
+        })
+        .catch(() => {});
+    }
+    function getPlayerTarget(name, periodName) {
+      const pt = loadPointTargets();
+      const key = (name || '').toLowerCase().trim();
+      const perkey = (periodName || '').trim();
+      const match = (pt.overrides || []).find(o =>
+        o.player.toLowerCase() === key && o.period === perkey
+      );
+      return match ? match.points : (pt.default || 6000);
+    }
+    function escapeHtmlDash(text) {
+      const d = document.createElement('div'); d.textContent = text; return d.innerHTML;
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
     // Helper: Format date in UTC
 function formatDateUTC(date) {
   if (!(date instanceof Date)) return '';
@@ -918,6 +970,7 @@ function filterPlayerTable() {
     const isSidebar = false;
     const expandedTypes = new Set();
     let currentViewingStartDate = null; // Store start date for highlighting new members
+    let currentViewingPeriodName = null; // Store period name for per-player target lookup
     let currentPreset = 'lastday'; // Keep selected preset so backend can canonicalize range
     
     // Update UI based on read-only mode
@@ -965,7 +1018,7 @@ function filterPlayerTable() {
 
       // Dashboard
     window.onload = function() { 
-      setDateRange('lastday');
+      loadPointTargetsFromServer().then(() => setDateRange('lastday'));
     };
     
     function setDateRange(preset) {
@@ -1090,6 +1143,7 @@ function filterPlayerTable() {
             startInput.value = formatDateAsUTC(start);
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Active Period (${activePeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+            currentViewingPeriodName = activePeriod.eventName || null;
             const endDateStr = formatDateAsUTC(end) + 'T23:59:59Z';
        //     console.log('[Countdown] Calling updateCountdownTimer (Active Period) with:', endDateStr);
             updateCountdownTimer(endDateStr);
@@ -1214,6 +1268,7 @@ function filterPlayerTable() {
             startInput.value = formatDateAsUTC(start);
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Previous Period (${previousPeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+            currentViewingPeriodName = previousPeriod.eventName || null;
             loadDashboard();
           })
           .catch(error => {
@@ -1260,6 +1315,7 @@ function filterPlayerTable() {
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
       currentViewingStartDate = startDate; // Store for new member highlighting
+      currentViewingPeriodName = null; // Will be overridden by preset logic if applicable
       document.getElementById('playerList').innerHTML = '<div class="loading">Loading...</div>';
       const requestId = `dash-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       
@@ -1325,15 +1381,39 @@ function filterPlayerTable() {
       document.getElementById('totalMembers').textContent = data.totalMembers || '0';
       document.getElementById('totalPlayers').textContent = data.totalPlayers || '0';
       document.getElementById('totalPoints').textContent = data.totalPoints ? data.totalPoints.toLocaleString() : '0';
-      // Show last import timestamp from summary if available
+      updateLastImportedDisplay(data.lastImportTimestamp || null);
+    }
+
+    function updateLastImportedDisplay(timestampText) {
       const display = document.getElementById('lastImportedDisplay');
-      if (display && data.lastImportTimestamp) {
-        let timestampText = data.lastImportTimestamp;
-        if (timestampText === 'Never' || timestampText === 'No imports yet') {
-          display.innerHTML = 'Last Imported: <span class="no-date">No date</span> | Required Points: 15000';
-        } else {
-          display.innerHTML = `Last Imported: ${timestampText} | Required Points: 15000`;
-        }
+      if (!display) return;
+      const reqPoints = (loadPointTargets().default || 6000).toLocaleString();
+      if (!timestampText || timestampText === 'Never' || timestampText === 'No imports yet') {
+        // Timestamp missing from summary response — fetch it directly as a fallback
+        fetch(window.GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'getLastImportTimestamp' })
+        })
+          .then(res => res.json())
+          .then(result => {
+            // result may be a plain string or { value: '...' } depending on GAS version
+            const ts = (typeof result === 'string' && result) ||
+                       (result && typeof result.value === 'string' && result.value) ||
+                       (result && typeof result.lastImportTimestamp === 'string' && result.lastImportTimestamp) ||
+                       null;
+            const reqPts = (loadPointTargets().default || 6000).toLocaleString();
+            if (ts && ts !== 'Never' && ts !== 'No imports yet') {
+              display.innerHTML = `Last Imported: ${ts} | Required Points: ${reqPts}`;
+            } else {
+              display.innerHTML = `Last Imported: <span class="no-date">No date</span> | Required Points: ${reqPts}`;
+            }
+          })
+          .catch(() => {
+            display.innerHTML = `Last Imported: <span class="no-date">No date</span> | Required Points: ${reqPoints}`;
+          });
+      } else {
+        display.innerHTML = `Last Imported: ${timestampText} | Required Points: ${reqPoints}`;
       }
     }
     
@@ -1400,7 +1480,8 @@ function filterPlayerTable() {
       playerArray.forEach((player,idx)=>{
         const commonCryptInfo = player.chestsByTypeGrouped?.['Common Crypt'];
         const totalPointsVal = player.totalPoints || 0;
-        const pointsClass = totalPointsVal >= 15000 ? 'player-green' : (totalPointsVal >= 13500 ? 'player-orange' : 'player-red');
+        const playerTarget = getPlayerTarget(player.player, currentViewingPeriodName);
+        const pointsClass = totalPointsVal >= playerTarget ? 'player-green' : (totalPointsVal >= playerTarget * 0.9 ? 'player-orange' : 'player-red');
         
         // Check if member joined after the current viewing start date
         let isNewMember = false;
@@ -1418,10 +1499,15 @@ function filterPlayerTable() {
             joinDateLabel = ` <span style="font-size:10px;opacity:0.8;">(Joined: ${daysLabel})</span>`;
           }
         }
-        
+
+        const defaultTarget = loadPointTargets().default || 6000;
+        const targetLabel = playerTarget !== defaultTarget
+          ? ` <span style="font-size:10px;opacity:0.75;color:#6c5ce7;">(◎ ${playerTarget.toLocaleString()})</span>`
+          : '';
+
         const rowClass = isNewMember ? 'player-row new-member-row' : 'player-row';
         rowsHtml += `<div class="${rowClass}">`;
-        rowsHtml += `<div class="cell rank-col">${idx+1}</div><div class="cell ${pointsClass}">${player.player}${joinDateLabel}</div><div class="cell">${totalPointsVal || '-'}</div>`;
+        rowsHtml += `<div class="cell rank-col">${idx+1}</div><div class="cell ${pointsClass}">${player.player}${joinDateLabel}${targetLabel}</div><div class="cell">${totalPointsVal || '-'}</div>`;
         // Calculate total chests: use totalChests if available, otherwise sum from chestsByTypeGrouped (don't double-count eventChests!)
         let totalChests = player.totalChests || 0;
         if (totalChests === 0 && player.chestsByTypeGrouped) {
