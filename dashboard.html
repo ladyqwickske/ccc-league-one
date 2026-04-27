@@ -688,8 +688,6 @@
       <div class="date-preset-btns">
         <button class="preset-btn" data-preset="lastday" onclick="setDateRange('lastday')">Active Period</button>
         <button class="preset-btn" data-preset="prevweek" onclick="setDateRange('prevweek')">Previous Period</button>
-        <button class="preset-btn" data-preset="currentmonth" onclick="setDateRange('currentmonth')">Current Month</button>
-        <button class="preset-btn" data-preset="lastmonth" onclick="setDateRange('lastmonth')">Last Month</button>
       </div>
       <div class="date-range-display" id="dateRangeDisplay">Viewing: All Time</div>
       <div class="date-range-display" id="lastImportedDisplay" style="font-size: 12px; color: #6c5ce7; margin-top: 8px;">Last Imported: <span class="no-date">Loading...</span> | Required Points: <span id="reqPointsPlaceholder">6,000</span></div>
@@ -1288,29 +1286,6 @@ function filterPlayerTable() {
             displayElement.textContent = `Viewing: Previous Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
             loadDashboard();
           });
-        return;
-      }
-      if (preset === 'currentmonth') {
-        const start = getUTCStartOfDay(todayUTC.getUTCFullYear(), todayUTC.getUTCMonth() + 1, 1);
-        const endUTC = getUTCComponents(todayUTC);
-        const end = getUTCEndOfDay(endUTC.year, endUTC.month + 1, 0);
-        startInput.value = formatDateAsUTC(start);
-        endInput.value = formatDateAsUTC(end);
-        displayElement.textContent = `Viewing: Current Month: ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-        loadDashboard();
-        return;
-      }
-      if (preset === 'lastmonth') {
-        const prevMonth = todayUTC.getUTCMonth();
-        const prevYear = prevMonth === 0 ? todayUTC.getUTCFullYear() - 1 : todayUTC.getUTCFullYear();
-        const month = prevMonth === 0 ? 12 : prevMonth;
-        const start = getUTCStartOfDay(prevYear, month, 1);
-        const endUtc = getUTCComponents(start);
-        const end = getUTCEndOfDay(endUtc.year, endUtc.month + 1, 0);
-        startInput.value = formatDateAsUTC(start);
-        endInput.value = formatDateAsUTC(end);
-        displayElement.textContent = `Viewing: Last Month: ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-        loadDashboard();
         return;
       }
     }
