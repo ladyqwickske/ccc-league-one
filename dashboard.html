@@ -680,7 +680,7 @@
     <div class="countdown-panel" id="countdownPanel" style="display:none;">
       <div class="countdown-title">⏳ Period Ends In</div>
       <div class="countdown-parts" id="countdownParts"></div>
-      <div class="countdown-subtitle" id="countdownSubtitle">Resets at 23:59 UTC on the period end date</div>
+      <div class="countdown-subtitle" id="countdownSubtitle">Resets at 17:00 UTC on the period end date</div>
     </div>
     
     <div class="date-filter">
@@ -830,10 +830,10 @@ function parseDateUTC(str) {
 }
 // Patch countdown and period display to use UTC
 function updateCountdownTimer(endDateStr) {
-  // Always treat endDateStr as UTC and append 'T23:59:59Z' if only a date is provided
+  // Always treat endDateStr as UTC and target 17:00:00Z (5PM UTC game reset)
   let endDate;
   if (/^\d{4}-\d{2}-\d{2}$/.test(endDateStr)) {
-    endDate = new Date(endDateStr + 'T23:59:59Z');
+    endDate = new Date(endDateStr + 'T17:00:00Z');
     //console.log('[Countdown][DEBUG] Parsed endDate from date only:', endDateStr, '->', endDate.toISOString());
   } else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(endDateStr)) {
     endDate = new Date(endDateStr);
@@ -1063,8 +1063,8 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Active Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              // Use end of day UTC for countdown
-              const endDateStr = formatDateAsUTC(end) + 'T23:59:59Z';
+              // Use 5PM UTC (game reset time) for countdown
+              const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
              // console.log('[Countdown] Calling updateCountdownTimer (Fallback) with:', endDateStr);
               updateCountdownTimer(endDateStr);
               loadDashboard();
@@ -1088,7 +1088,7 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Active Period (No Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              const endDateStr = formatDateAsUTC(end) + 'T23:59:59Z';
+              const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
               console.log('[Countdown] Calling updateCountdownTimer (No Events) with:', endDateStr);
               updateCountdownTimer(endDateStr);
               loadDashboard();
@@ -1148,7 +1148,7 @@ function filterPlayerTable() {
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Active Period (${activePeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
             currentViewingPeriodName = activePeriod.eventName || null;
-            const endDateStr = formatDateAsUTC(end) + 'T23:59:59Z';
+            const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
        //     console.log('[Countdown] Calling updateCountdownTimer (Active Period) with:', endDateStr);
             updateCountdownTimer(endDateStr);
             loadDashboard();
@@ -1164,7 +1164,7 @@ function filterPlayerTable() {
             startInput.value = formatDateAsUTC(start);
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Active Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-            const endDateStr = formatDateAsUTC(end) + 'T23:59:59Z';
+            const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
             console.log('[Countdown] Calling updateCountdownTimer (Error) with:', endDateStr);
             updateCountdownTimer(endDateStr);
             loadDashboard();
