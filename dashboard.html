@@ -690,7 +690,7 @@
         <button class="preset-btn" data-preset="prevweek" onclick="setDateRange('prevweek')">Previous Period</button>
       </div>
       <div class="date-range-display" id="dateRangeDisplay">Viewing: All Time</div>
-      <div class="date-range-display" id="lastImportedDisplay" style="font-size: 12px; color: #6c5ce7; margin-top: 8px;">Last Imported: <span class="no-date">Loading...</span> | Required Points: <span id="reqPointsPlaceholder">6,000</span></div>
+      <div class="date-range-display" id="lastImportedDisplay" style="font-size: 12px; color: #6c5ce7; margin-top: 8px;">Last Imported: <span class="no-date">Loading...</span> | Required Points: 6,000</div>
       <input type="date" id="startDate" style="display:none;">
       <input type="date" id="endDate" style="display:none;">
     </div>
@@ -748,14 +748,21 @@
         })
         .catch(() => {});
     }
-    function getPlayerTarget(name, periodName) {
+    function getPlayerTarget(name, periodName, periodTargetPoints) {
       const pt = loadPointTargets();
       const key = (name || '').toLowerCase().trim();
       const perkey = (periodName || '').trim();
+      // 1. Per-player per-period override
       const match = (pt.overrides || []).find(o =>
         o.player.toLowerCase() === key && o.period === perkey
       );
-      return match ? match.points : (pt.default || 6000);
+      if (match) return match.points;
+      // 2. Period-level custom target (from the event's targetPoints field)
+      if (periodTargetPoints != null && !isNaN(Number(periodTargetPoints)) && Number(periodTargetPoints) > 0) {
+        return Number(periodTargetPoints);
+      }
+      // 3. Global default
+      return pt.default || 6000;
     }
     function escapeHtmlDash(text) {
       const d = document.createElement('div'); d.textContent = text; return d.innerHTML;
@@ -973,6 +980,7 @@ function filterPlayerTable() {
     const expandedTypes = new Set();
     let currentViewingStartDate = null; // Store start date for highlighting new members
     let currentViewingPeriodName = null; // Store period name for per-player target lookup
+    let currentPeriodTargetPoints = null; // Store per-period custom target points (from event)
     let currentPreset = 'lastday'; // Keep selected preset so backend can canonicalize range
     
     // Update UI based on read-only mode
@@ -1146,6 +1154,8 @@ function filterPlayerTable() {
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Active Period (${activePeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
             currentViewingPeriodName = activePeriod.eventName || null;
+            currentPeriodTargetPoints = activePeriod.targetPoints || null;
+            updateRequiredPointsDisplay();
             const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
        //     console.log('[Countdown] Calling updateCountdownTimer (Active Period) with:', endDateStr);
             updateCountdownTimer(endDateStr);
@@ -1271,6 +1281,8 @@ function filterPlayerTable() {
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Previous Period (${previousPeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
             currentViewingPeriodName = previousPeriod.eventName || null;
+            currentPeriodTargetPoints = previousPeriod.targetPoints || null;
+            updateRequiredPointsDisplay();
             loadDashboard();
           })
           .catch(error => {
@@ -1363,10 +1375,50 @@ function filterPlayerTable() {
       updateLastImportedDisplay(data.lastImportTimestamp || null);
     }
 
+    function getEffectiveRequiredPoints() {
+      // Period-level custom target takes precedence over global default
+      if (currentPeriodTargetPoints != null && !isNaN(Number(currentPeriodTargetPoints)) && Number(currentPeriodTargetPoints) > 0) {
+        return Number(currentPeriodTargetPoints);
+      }
+      return loadPointTargets().default || 6000;
+    }
+
+    function updateRequiredPointsDisplay() {
+      const display = document.getElementById('lastImportedDisplay');
+      if (!display) return;
+      const reqPts = getEffectiveRequiredPoints().toLocaleString();
+      const isCustom = currentPeriodTargetPoints != null && !isNaN(Number(currentPeriodTargetPoints)) && Number(currentPeriodTargetPoints) > 0;
+      const label = isCustom ? 'Period Target' : 'Required Points';
+      // Preserve the existing "Last Imported:" portion
+      const existingHtml = display.innerHTML;
+      const importedMatch = existingHtml.match(/Last Imported:[^|]*/i);
+      const importedPart = importedMatch ? importedMatch[0].trim() : 'Last Imported: <span class="no-date">Loading...</span>';
+      display.innerHTML = `${importedPart} | ${label}: ${reqPts}`;
+    }
+
+    function formatTimestampWithAgo(timestampText) {
+      if (!timestampText || timestampText === 'Never' || timestampText === 'No imports yet') return null;
+      // Parse UTC timestamp like "2026-04-18 14:30:00 UTC"
+      const cleaned = timestampText.replace(' UTC', '').replace(/\s*\(.*\)/, '').trim();
+      const parsed = new Date(cleaned + 'Z');
+      if (isNaN(parsed.getTime())) return timestampText;
+      const now = new Date();
+      const diffMs = now - parsed;
+      const diffMins = Math.floor(diffMs / 60000);
+      if (diffMins < 1) return timestampText + ' (just now)';
+      if (diffMins < 60) return timestampText + ` (${diffMins}m ago)`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return timestampText + ` (${diffHours}h ${diffMins % 60}m ago)`;
+      const diffDays = Math.floor(diffHours / 24);
+      return timestampText + ` (${diffDays}d ${diffHours % 24}h ago)`;
+    }
+
     function updateLastImportedDisplay(timestampText) {
       const display = document.getElementById('lastImportedDisplay');
       if (!display) return;
-      const reqPoints = (loadPointTargets().default || 6000).toLocaleString();
+      const reqPts = getEffectiveRequiredPoints().toLocaleString();
+      const isCustom = currentPeriodTargetPoints != null && !isNaN(Number(currentPeriodTargetPoints)) && Number(currentPeriodTargetPoints) > 0;
+      const label = isCustom ? 'Period Target' : 'Required Points';
       if (!timestampText || timestampText === 'Never' || timestampText === 'No imports yet') {
         // Timestamp missing from summary response — fetch it directly as a fallback
         fetch(window.GAS_WEB_APP_URL, {
@@ -1376,23 +1428,23 @@ function filterPlayerTable() {
         })
           .then(res => res.json())
           .then(result => {
-            // result may be a plain string or { value: '...' } depending on GAS version
             const ts = (typeof result === 'string' && result) ||
                        (result && typeof result.value === 'string' && result.value) ||
                        (result && typeof result.lastImportTimestamp === 'string' && result.lastImportTimestamp) ||
                        null;
-            const reqPts = (loadPointTargets().default || 6000).toLocaleString();
             if (ts && ts !== 'Never' && ts !== 'No imports yet') {
-              display.innerHTML = `Last Imported: ${ts} | Required Points: ${reqPts}`;
+              const formatted = formatTimestampWithAgo(ts);
+              display.innerHTML = `Last Imported: ${formatted || ts} | ${label}: ${reqPts}`;
             } else {
-              display.innerHTML = `Last Imported: <span class="no-date">No date</span> | Required Points: ${reqPts}`;
+              display.innerHTML = `Last Imported: <span class="no-date">No date</span> | ${label}: ${reqPts}`;
             }
           })
           .catch(() => {
-            display.innerHTML = `Last Imported: <span class="no-date">No date</span> | Required Points: ${reqPoints}`;
+            display.innerHTML = `Last Imported: <span class="no-date">No date</span> | ${label}: ${reqPts}`;
           });
       } else {
-        display.innerHTML = `Last Imported: ${timestampText} | Required Points: ${reqPoints}`;
+        const formatted = formatTimestampWithAgo(timestampText);
+        display.innerHTML = `Last Imported: ${formatted || timestampText} | ${label}: ${reqPts}`;
       }
     }
     
@@ -1459,7 +1511,7 @@ function filterPlayerTable() {
       playerArray.forEach((player,idx)=>{
         const commonCryptInfo = player.chestsByTypeGrouped?.['Common Crypt'];
         const totalPointsVal = player.totalPoints || 0;
-        const playerTarget = getPlayerTarget(player.player, currentViewingPeriodName);
+        const playerTarget = getPlayerTarget(player.player, currentViewingPeriodName, currentPeriodTargetPoints);
         const pointsClass = totalPointsVal >= playerTarget ? 'player-green' : (totalPointsVal >= playerTarget * 0.9 ? 'player-orange' : 'player-red');
         
         // Check if member joined after the current viewing start date
