@@ -46,6 +46,18 @@
     return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   }
 
+  // Helper: Get effective date for period matching, accounting for the 5PM UTC boundary.
+  // After 17:00 UTC, the next calendar day's period is considered active.
+  function getEffectiveDateUTC() {
+    const now = new Date();
+    const BOUNDARY_HOUR = 17;
+    const effective = new Date(now);
+    if (now.getUTCHours() >= BOUNDARY_HOUR) {
+      effective.setUTCDate(effective.getUTCDate() + 1);
+    }
+    return new Date(Date.UTC(effective.getUTCFullYear(), effective.getUTCMonth(), effective.getUTCDate()));
+  }
+
   // Helper: Format date as YYYY-MM-DD using UTC
   function formatDateAsUTC(date) {
     if (!date) return '';
@@ -932,7 +944,7 @@
             const allEvents = result.events || [];
             const periodEvents = allEvents.filter(e => e.participationMethod === 'period-marker');
             periodEvents.sort((a, b) => parseDateUTC(a.startDate) - parseDateUTC(b.startDate));
-            const todayStr = formatDate(today);
+            const todayStr = formatDate(getEffectiveDateUTC());
             let activePeriod = null;
             for (let i = 0; i < periodEvents.length; i++) {
               const event = periodEvents[i];

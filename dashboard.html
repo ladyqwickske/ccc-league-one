@@ -812,6 +812,19 @@ function getTodayUTC() {
   return getUTCStartOfDay(utc.year, utc.month, utc.day);
 }
 
+// Helper: Get effective date for period matching, accounting for the 5PM UTC boundary.
+// After 17:00 UTC, the next calendar day's period is considered active (matches server-side getActivePeriodDates logic).
+function getEffectiveDateUTC() {
+  const now = new Date();
+  const BOUNDARY_HOUR = 17; // Must match CONFIG.PERIOD_BOUNDARY_HOUR_UTC on the server
+  const effective = new Date(now);
+  if (now.getUTCHours() >= BOUNDARY_HOUR) {
+    effective.setUTCDate(effective.getUTCDate() + 1);
+  }
+  const utc = getUTCComponents(effective);
+  return getUTCStartOfDay(utc.year, utc.month, utc.day);
+}
+
 // Helper: Parse date string as UTC
 function parseDateUTC(str) {
   // Accepts ISO, 'YYYY-MM-DD', or 'YYYY-MM-DD HH:MM:SS'
@@ -1104,8 +1117,9 @@ function filterPlayerTable() {
             // Sort events by start date
             periodEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
             
-            // Find the current active period
-            const todayStr = formatDateAsUTC(todayUTC);
+            // Find the current active period using effective date (accounts for 5PM UTC boundary)
+            const effectiveDate = getEffectiveDateUTC();
+            const todayStr = formatDateAsUTC(effectiveDate);
             let activePeriod = null;
             
             // Look for the event that is currently active (today is between start and end)
@@ -1226,7 +1240,9 @@ function filterPlayerTable() {
             // Sort events by start date
             periodEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
             
-            const todayStr = formatDateAsUTC(todayUTC);
+            // Use effective date (accounts for 5PM UTC boundary)
+            const effectiveDate = getEffectiveDateUTC();
+            const todayStr = formatDateAsUTC(effectiveDate);
             
             // Find the current active period first
             let activePeriod = null;
