@@ -95,7 +95,7 @@
       position: sticky; top: 0; z-index: 1000;
     }
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -122,7 +122,7 @@
       position: relative; 
     }
     .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
-    .tab-btn.active { color: #a5b4fc; border-bottom-color: #4f46e5; }
+    .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
     .tab-btn[title]:hover::after {
       content: attr(title);
       position: absolute;
@@ -155,10 +155,10 @@
     /* Tab Content */
     .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
     .tab-content.active { display: block; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; text-shadow: 0 2px 8px #000a; }
     h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #f0f2f5; }
     h3 { color: #4f46e5; }
-    .loading { text-align: center; padding: 32px; color: #c7cce0; }
+    .loading { text-align: center; padding: 32px; color: #d1d5e6; }
     .spinner { border: 4px solid #c0c4d8; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .note { font-size: 12px; color: #6b6f85; margin-top: 4px; }
@@ -250,7 +250,7 @@
     input:focus, select:focus, textarea:focus { 
       outline: none; 
       border-color: #4f46e5; 
-      box-shadow: 0 0 0 3px rgba(79, 70, 229,0.15);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
     }
     
     /* Buttons */
@@ -301,8 +301,8 @@
     }
     th.sortable { cursor: pointer; user-select: none; }
     th.sortable:hover { color: #6366f1; }
-    th.asc::after { content: ' ?'; }
-    th.desc::after { content: ' ?'; }
+    th.asc::after { content: ' ↑'; }
+    th.desc::after { content: ' ↓'; }
     th.center { text-align: center; }
     td { 
       padding: 12px 8px; 
@@ -575,7 +575,7 @@
 <body>
   <!-- Google Translate Widget -->
   <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">??</button>
+  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">🌐</button>
   <style>
     @media (max-width: 800px) {
       #google_translate_element {
@@ -777,7 +777,7 @@
         if (nav && !document.getElementById('signInManageBtn')) {
           const btn = document.createElement('button');
           btn.id = 'signInManageBtn';
-          btn.textContent = '?? Sign in to Manage';
+          btn.textContent = '🔑 Sign in to Manage';
           btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
           btn.onclick = showGoogleLogin;
           nav.appendChild(btn);
@@ -836,7 +836,7 @@
           <span class="tab-label mobile-only">Bank</span>
         </a>
       </div>
-      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">?? Read-Only Mode</div>
+      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
       <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
       <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
     </div>
@@ -850,9 +850,9 @@
 
     <div class="tabs-container">
       <div class="tabs">
-        <button class="tab active" data-tab="entry" onclick="TroopsTab.switchSubTab('entry', event)">?? Add Entry</button>
-        <button class="tab" data-tab="initial" onclick="TroopsTab.switchSubTab('initial', event)">?? Initial Troop Entry</button>
-        <button class="tab" data-tab="player" onclick="TroopsTab.switchSubTab('player', event)">?? View Player History</button>
+        <button class="tab active" data-tab="entry" onclick="TroopsTab.switchSubTab('entry', event)">👤 Add Entry</button>
+        <button class="tab" data-tab="initial" onclick="TroopsTab.switchSubTab('initial', event)">🚀 Initial Troop Entry</button>
+        <button class="tab" data-tab="player" onclick="TroopsTab.switchSubTab('player', event)">📋 View Player History</button>
       </div>
 
       <!-- ADD ENTRY SUB-TAB -->
@@ -894,8 +894,8 @@
           </div>
         </div>
         <div style="display: flex; gap: 8px; margin-top: 12px;">
-          <button type="button" class="btn" onclick="TroopsTab.submitTroopEntry()">? Add Entry</button>
-          <button type="button" class="btn btn-secondary" onclick="TroopsTab.resetTroopForm()">??? Clear</button>
+          <button type="button" class="btn" onclick="TroopsTab.submitTroopEntry()">➕ Add Entry</button>
+          <button type="button" class="btn btn-secondary" onclick="TroopsTab.resetTroopForm()">🗑️ Clear</button>
         </div>
 
         <div id="troopEntryMessage" class="status" style="margin-top: 12px;"></div>
@@ -909,7 +909,7 @@
       <!-- INITIAL TROOP ENTRY SUB-TAB -->
       <div id="troopInitial" class="tab-content">
         <div class="initial-entry-panel">
-          <h3>?? Initial Troops Quick Entry</h3>
+          <h3>🚀 Initial Troops Quick Entry</h3>
           <div class="controls" style="margin-top: 12px;">
             <div class="field">
               <label for="initialTroopPlayerName">Player Name *</label>
@@ -965,8 +965,8 @@
               <small style="color:#999;font-size:10px;">Leave empty for today</small>
             </div>
             <button type="button" class="btn btn-secondary" onclick="TroopsTab.applyInitialLevelToAll()">Apply</button>
-            <button type="button" class="btn" onclick="TroopsTab.submitInitialTroopEntry()">? Save Initial Troops</button>
-            <button type="button" class="btn btn-secondary" onclick="TroopsTab.resetInitialTroopForm()">??? Clear</button>
+            <button type="button" class="btn" onclick="TroopsTab.submitInitialTroopEntry()">✅ Save Initial Troops</button>
+            <button type="button" class="btn btn-secondary" onclick="TroopsTab.resetInitialTroopForm()">🗑️ Clear</button>
           </div>
           <div class="helper-text">Blank fields are skipped unless auto-fill zeros is enabled.</div>
           <div id="initialTroopEntryMessage" class="status" style="margin-top: 12px;"></div>
@@ -989,7 +989,7 @@
 
     <!-- SUMMARY SECTION - Always Visible -->
     <div id="troopSummarySection" style="margin-top: 30px;">
-      <h2>?? All Members - Latest Troop Levels</h2>
+      <h2>📊 All Members - Latest Troop Levels</h2>
       <div id="troopSummaryContent" class="loading"><div class="spinner"></div><p>Loading troop data...</p></div>
       <div class="table-container" style="margin-top: 20px; overflow-x: auto;">
         <table id="troopMembersTable" style="display: none;">
@@ -1089,11 +1089,11 @@
 
       /**
        * Determine the highest troop category for a member based on current G, M, S levels.
-       * T9 = G=9 AND S=9 AND M=9
-       * G9 = G=9
-       * T8 = G=8 AND S=8 AND M=8
-       * G8 = G=8
-       * G7 = G=7
+       * T9 = G≥9 AND S≥9 AND M≥9
+       * G9 = G≥9
+       * T8 = G≥8 AND S≥8 AND M≥8
+       * G8 = G≥8
+       * G7 = G≥7
        */
       function calculateTroopCategory(member) {
         const g = member.G_currentLevel !== null && member.G_currentLevel !== undefined ? Number(member.G_currentLevel) : null;
@@ -1170,7 +1170,7 @@
           } else {
             const span = document.createElement('span');
             span.className = 'troop-category cat-none';
-            span.textContent = '�';
+            span.textContent = '—';
             catCell.appendChild(span);
           }
           row.appendChild(catCell);
@@ -1194,7 +1194,7 @@
                 levelCell.style.color = '#2c2f45';
               }
             } else {
-              levelCell.textContent = '-';
+              levelCell.textContent = '−';
               levelCell.style.color = '#6b6f85';
               levelCell.style.fontWeight = '400';
             }
@@ -1215,7 +1215,7 @@
                 dateCell.style.color = '#2c2f45';
               }
             } else {
-              dateCell.textContent = '-';
+              dateCell.textContent = '−';
               dateCell.style.color = '#9096b0';
             }
             row.appendChild(dateCell);

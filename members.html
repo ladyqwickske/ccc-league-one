@@ -76,7 +76,7 @@
       position: sticky; top: 0; z-index: 1000;
     }
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -103,7 +103,7 @@
       position: relative; 
     }
     .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
-    .tab-btn.active { color: #a5b4fc; border-bottom-color: #4f46e5; }
+    .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
     .tab-btn[title]:hover::after {
       content: attr(title);
       position: absolute;
@@ -137,10 +137,10 @@
     /* Tab Content */
     .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
     .tab-content.active { display: block; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; text-shadow: 0 2px 8px #000a; }
     h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #f0f2f5; }
     h3 { color: #4f46e5; }
-    .loading { text-align: center; padding: 32px; color: #c7cce0; }
+    .loading { text-align: center; padding: 32px; color: #d1d5e6; }
     .spinner { border: 4px solid #c0c4d8; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .note { font-size: 12px; color: #6b6f85; margin-top: 4px; }
@@ -197,7 +197,7 @@
     input:focus, select:focus, textarea:focus { 
       outline: none; 
       border-color: #4f46e5; 
-      box-shadow: 0 0 0 3px rgba(79, 70, 229,0.15);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
     }
 
     /* Date inputs - narrower for compact layout */
@@ -269,8 +269,8 @@
     }
     th.sortable { cursor: pointer; user-select: none; }
     th.sortable:hover { color: #6366f1; }
-    th.sorted-asc::after { content: ' ?'; }
-    th.sorted-desc::after { content: ' ?'; }
+    th.sorted-asc::after { content: ' ↑'; }
+    th.sorted-desc::after { content: ' ↓'; }
     td { 
       padding: 12px 8px; 
       border-bottom: 1px solid #c0c4d8; 
@@ -485,7 +485,7 @@
 <body>
   <!-- Google Translate Widget -->
   <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">??</button>
+  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">🌐</button>
   <style>
     @media (max-width: 800px) {
       #google_translate_element {
@@ -687,7 +687,7 @@
         if (nav && !document.getElementById('signInManageBtn')) {
           const btn = document.createElement('button');
           btn.id = 'signInManageBtn';
-          btn.textContent = '?? Sign in to Manage';
+          btn.textContent = '🔑 Sign in to Manage';
           btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
           btn.onclick = showGoogleLogin;
           nav.appendChild(btn);
@@ -746,7 +746,7 @@
           <span class="tab-label mobile-only">Bank</span>
         </a>
       </div>
-      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">?? Read-Only Mode</div>
+      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
       <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
       <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
     </div>
@@ -759,21 +759,21 @@
       <div class="stat-card"><h3>Total Might</h3><div class="value" id="memberTotalMight">-</div></div>
       <div class="stat-card"><h3>Average Might</h3><div class="value" id="memberAverageMight">-</div></div>
     </div>
-    <div class="controls"><div class="search-box"><input type="text" id="memberSearchInput" placeholder="?? Search by member name..."></div><button class="btn" onclick="MembersTab.loadMembers()">?? Refresh</button></div>
+    <div class="controls"><div class="search-box"><input type="text" id="memberSearchInput" placeholder="🔍 Search by member name..."></div><button class="btn" onclick="MembersTab.loadMembers()">🔄 Refresh</button></div>
 
     <div class="tabs-container">
       <div class="tabs">
-        <button class="tab active" onclick="MembersTab.switchTab('mightTab', event)">?? Track Might</button>
-        <button class="tab" onclick="MembersTab.switchTab('heroTab', event)">?? Hero Level</button>
-        <button class="tab" onclick="MembersTab.switchTab('addMemberTab', event)">? Add Member</button>
-        <button class="tab" onclick="MembersTab.switchTab('nameTab', event)">?? Change Name</button>
-        <button class="tab" onclick="MembersTab.switchTab('removeMemberTab', event)">?? Remove Member</button>
-        <button class="tab" onclick="MembersTab.switchTab('chestPointsTab', event)">?? Chest Points</button>
+        <button class="tab active" onclick="MembersTab.switchTab('mightTab', event)">📊 Track Might</button>
+        <button class="tab" onclick="MembersTab.switchTab('heroTab', event)">🦸 Hero Level</button>
+        <button class="tab" onclick="MembersTab.switchTab('addMemberTab', event)">➕ Add Member</button>
+        <button class="tab" onclick="MembersTab.switchTab('nameTab', event)">✏️ Change Name</button>
+        <button class="tab" onclick="MembersTab.switchTab('removeMemberTab', event)">🚪 Remove Member</button>
+        <button class="tab" onclick="MembersTab.switchTab('chestPointsTab', event)">📦 Chest Points</button>
       </div>
       <div id="mightTab" class="tab-content active">
         <h3 style="margin:0 0 12px 0;">Track Member Might</h3>
         <div class="form-grid might-form-grid"><div><label for="mightMemberSelect">Member</label><select id="mightMemberSelect"></select></div><div><label for="mightValue">Might</label><input type="number" id="mightValue" placeholder="Enter current might" onkeypress="if(event.key==='Enter'){MembersTab.submitMightEntry();}"></div><div><label for="mightDate">Date</label><input type="date" id="mightDate"><div class="note">Defaults to today</div></div></div>
-        <button class="btn" onclick="MembersTab.submitMightEntry()">?? Save Might</button><div id="mightStatus" class="status"></div>
+        <button class="btn" onclick="MembersTab.submitMightEntry()">💾 Save Might</button><div id="mightStatus" class="status"></div>
       </div>
       <div id="heroTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Track Hero Level</h3>
@@ -782,7 +782,7 @@
           <div><label for="heroLevelValue">Hero Level</label><input type="number" id="heroLevelValue" placeholder="Enter hero level" min="0" step="1" onkeypress="if(event.key==='Enter'){MembersTab.submitHeroLevelEntry();}"></div>
           <div><label for="heroLevelDate">Date</label><input type="date" id="heroLevelDate"><div class="note">Defaults to today</div></div>
         </div>
-        <button class="btn" onclick="MembersTab.submitHeroLevelEntry()">?? Save Hero Level</button>
+        <button class="btn" onclick="MembersTab.submitHeroLevelEntry()">💾 Save Hero Level</button>
         <div id="heroLevelStatus" class="status"></div>
       </div>
       <div id="addMemberTab" class="tab-content">
@@ -802,24 +802,24 @@
             <div class="note">Date member joined</div>
           </div>
         </div>
-        <button class="btn" onclick="MembersTab.submitAddMember()">? Add Member</button>
+        <button class="btn" onclick="MembersTab.submitAddMember()">➕ Add Member</button>
         <div id="addMemberStatus" class="status"></div>
       </div>
       <div id="nameTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Change Member Name</h3>
         <div class="form-grid"><div><label for="oldMemberSelect">Current Member</label><select id="oldMemberSelect"></select></div><div><label for="newMemberName">New Name</label><input type="text" id="newMemberName" placeholder="Enter new member name"></div></div>
-        <button class="btn" onclick="MembersTab.submitNameChange()">?? Update Name</button><div id="nameChangeStatus" class="status"></div>
+        <button class="btn" onclick="MembersTab.submitNameChange()">✏️ Update Name</button><div id="nameChangeStatus" class="status"></div>
       </div>
       <div id="removeMemberTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Remove Member</h3>
         <div class="form-grid"><div><label for="removeMemberSelect">Member to Remove</label><select id="removeMemberSelect"></select></div><div><label for="endDate">End Date</label><input type="date" id="endDate"><div class="note">Date member left</div></div></div>
-        <button class="btn" onclick="MembersTab.submitRemoveMember()">?? Remove Member</button><div id="removeMemberStatus" class="status"></div>
+        <button class="btn" onclick="MembersTab.submitRemoveMember()">🚪 Remove Member</button><div id="removeMemberStatus" class="status"></div>
       </div>
       <div id="chestPointsTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Chest Points - Last Active Periods</h3>
         <div class="controls" style="margin-bottom:10px;">
-          <button class="btn" onclick="MembersTab.loadChestPointsTabData(true)">?? Refresh Chest Points</button>
-          <button class="btn" onclick="MembersTab.togglePointTargetsPanel()" style="margin-left:8px;">?? Point Targets</button>
+          <button class="btn" onclick="MembersTab.loadChestPointsTabData(true)">🔄 Refresh Chest Points</button>
+          <button class="btn" onclick="MembersTab.togglePointTargetsPanel()" style="margin-left:8px;">⚙️ Point Targets</button>
         </div>
 
         <!-- Point Targets Configuration Panel -->
@@ -833,10 +833,10 @@
           <div style="border-top:1px solid #c0c4d8;padding-top:12px;">
             <div style="font-size:12px;color:#4f46e5;font-weight:600;margin-bottom:8px;">Per-player / per-period overrides</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 110px auto;gap:6px;align-items:center;margin-bottom:10px;">
-              <select id="ptPlayerSelect" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;"><option value="">� select player �</option></select>
-              <select id="ptPeriodSelect" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;"><option value="">� select period �</option></select>
+              <select id="ptPlayerSelect" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;"><option value="">— select player —</option></select>
+              <select id="ptPeriodSelect" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;"><option value="">— select period —</option></select>
               <input type="number" id="ptOverridePoints" placeholder="Points" min="0" step="100" style="padding:5px 8px;border:1px solid #c0c4d8;border-radius:5px;background:#f0f2f5;color:#2c2f45;font-size:12px;">
-              <button onclick="MembersTab.addPtOverride()" class="btn" style="padding:5px 12px;font-size:12px;white-space:nowrap;">? Add</button>
+              <button onclick="MembersTab.addPtOverride()" class="btn" style="padding:5px 12px;font-size:12px;white-space:nowrap;">➕ Add</button>
             </div>
             <div id="ptOverrideList" style="max-height:160px;overflow-y:auto;"></div>
           </div>
@@ -912,7 +912,7 @@
         });
       }
 
-      // -- Point Targets (server-backed with localStorage cache) ---------
+      // ── Point Targets (server-backed with localStorage cache) ─────────
       // Schema: { default: 6000, overrides: [ { player, period, points } ] }
       const PT_KEY = 'clo_point_targets';
       let pointTargetsCache = null; // in-memory cache
@@ -994,7 +994,7 @@
         const playerSel = document.getElementById('ptPlayerSelect');
         if (playerSel) {
           const current = playerSel.value;
-          playerSel.innerHTML = '<option value="">� select player �</option>';
+          playerSel.innerHTML = '<option value="">— select player —</option>';
           const names = [...new Set(membersData.map(m => m.name || m.player || '').filter(Boolean))].sort();
           names.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; playerSel.appendChild(o); });
           if (current) playerSel.value = current;
@@ -1002,9 +1002,9 @@
         const periodSel = document.getElementById('ptPeriodSelect');
         if (periodSel) {
           const current = periodSel.value;
-          periodSel.innerHTML = '<option value="">� select period �</option>';
+          periodSel.innerHTML = '<option value="">— select period —</option>';
           const periods = Array.isArray(chestPointsData?.periods) ? chestPointsData.periods : [];
-          periods.forEach(p => { const o = document.createElement('option'); o.value = p.periodName; o.textContent = `${p.periodName} (${p.startDate} � ${p.endDate})`; periodSel.appendChild(o); });
+          periods.forEach(p => { const o = document.createElement('option'); o.value = p.periodName; o.textContent = `${p.periodName} (${p.startDate} – ${p.endDate})`; periodSel.appendChild(o); });
           if (current) periodSel.value = current;
         }
       }
@@ -1037,7 +1037,7 @@
                   style="width:80px;padding:2px 5px;border:1px solid #c0c4d8;border-radius:4px;background:#f0f2f5;color:#2c2f45;font-size:12px;">
               </td>
               <td style="padding:4px 8px;border-bottom:1px solid #e2e5ef;">
-                <button data-remove-idx="${i}" style="background:#c62828;color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer;">?</button>
+                <button data-remove-idx="${i}" style="background:#c62828;color:#fff;border:none;border-radius:4px;padding:2px 7px;font-size:11px;cursor:pointer;">✕</button>
               </td>
             </tr>`
           ).join('')}</tbody></table>`;
@@ -1081,7 +1081,7 @@
         renderPointTargetsPanel();
         renderChestPointsTable();
       }
-      // ----------------------------------------------------------------------
+      // ──────────────────────────────────────────────────────────────────────
 
       async function loadChestPointsTabData(forceRefresh = false) {
         // Load point targets from server (updates localStorage cache)
@@ -1140,7 +1140,7 @@
         const membersRaw = Array.isArray(chestPointsData?.members) ? chestPointsData.members : [];
 
         const defaultTgt = loadPointTargets().default || 6000;
-        meta.textContent = `Default target: ${defaultTgt.toLocaleString()} points (green = target, orange = 90%, red below). Per-period or per-player overrides may apply. '-' = not a member in that period, '*' = joined during that period.`;
+        meta.textContent = `Default target: ${defaultTgt.toLocaleString()} points (green ≥ target, orange ≥ 90%, red below). Per-period or per-player overrides may apply. '-' = not a member in that period, '*' = joined during that period.`;
 
         if (periods.length === 0 || membersRaw.length === 0) {
           table.style.display = 'none';
@@ -1266,7 +1266,7 @@
         periods.forEach(period => {
           const th = document.createElement('th');
           const periodTgt = getPeriodTarget(period.targetPoints);
-          th.textContent = `${period.periodName} (${period.startDate} - ${period.endDate}) � ${periodTgt.toLocaleString()} pts`;
+          th.textContent = `${period.periodName} (${period.startDate} - ${period.endDate}) · ${periodTgt.toLocaleString()} pts`;
           header.appendChild(th);
         });
 
@@ -1438,7 +1438,7 @@
           const row = document.createElement('tr');
           const heroLevelDisplay = member.heroLevel !== null && member.heroLevel !== undefined
             ? (() => { const lvl = member.heroLevel; let bg, fg; if (lvl > 500) { bg='#4a148c'; fg='#e1bee7'; } else if (lvl > 400) { bg='#0d47a1'; fg='#bbdefb'; } else if (lvl > 300) { bg='#1b5e20'; fg='#c8e6c9'; } else if (lvl > 200) { bg='#827717'; fg='#fff9c4'; } else if (lvl > 100) { bg='#37474f'; fg='#eceff1'; } else { bg='#4e342e'; fg='#d7ccc8'; } return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${bg};color:${fg};" title="Updated: ${member.heroLevelDate || '?'}">${lvl}</span>`; })()
-            : '<span style="color:#666">�</span>';
+            : '<span style="color:#666">—</span>';
           row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td style="text-align:center;">${heroLevelDisplay}</td><td class="might-value">${formatMight(member.startMight)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td class="might-value">${growthPercent}</td><td class="might-value">${formatMight(member.latestMight)}</td><td class="date-value">${formatDate(member.latestMightDate)}</td><td class="might-value">${recentGrowthPercent}</td>`;
           tbody.appendChild(row);
         });
@@ -1514,7 +1514,7 @@
                 updateStats();
                 renderTable();
               } else {
-                // Member not in local cache (edge case) � fall back to full reload
+                // Member not in local cache (edge case) – fall back to full reload
                 setTimeout(loadMembers, 500);
               }
             } else {
