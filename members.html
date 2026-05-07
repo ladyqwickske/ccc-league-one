@@ -292,11 +292,11 @@
     .date-value { text-align: center; }
 
     .points-meta { margin: 10px 0; font-size: 12px; color: #3d4059; text-align: left; }
-    .points-cell { text-align: center; font-weight: 700; border-radius: 4px; padding: 6px 8px; }
-    .points-green { background: rgba(46, 125, 50, 0.18); color: #2e7d32; }
-    .points-orange { background: rgba(230, 126, 0, 0.18); color: #bf6900; }
-    .points-red { background: rgba(198, 40, 40, 0.18); color: #c62828; }
-    .points-na { background: rgba(150, 150, 160, 0.12); color: #8a8d9e; }
+    .points-cell { text-align: center; font-weight: 700; border-radius: 4px; padding: 6px 8px; font-size: 14px; }
+    .points-green { background: rgba(46, 125, 50, 0.35); color: #1b5e20; }
+    .points-orange { background: rgba(230, 126, 0, 0.35); color: #e65100; }
+    .points-red { background: rgba(198, 40, 40, 0.35); color: #b71c1c; }
+    .points-na { background: rgba(150, 150, 160, 0.18); color: #616161; }
 
     /* Active Period History (Management) */
     .history-section {
@@ -842,7 +842,7 @@
           </div>
         </div>
 
-        <div id="chestPointsMeta" class="points-meta">Target: 15,000 points (green), within 10% (orange), below (red).</div>
+        <div id="chestPointsMeta" class="points-meta">Target: 6,000 points (green), within 10% (orange), below (red).</div>
         <div class="table-container" style="max-height:52vh;">
           <div id="chestPointsLoading" class="loading" style="display:none;"><div class="spinner"></div>Loading chest points...</div>
           <div id="chestPointsError" class="error" style="display:none;"></div>
@@ -952,18 +952,27 @@
           })
           .catch(() => {}); // fall back to localStorage cache
       }
-      // Resolve target for a specific player+period; falls back to default
-      function getEffectiveTarget(playerName, periodName) {
+      // Resolve target for a specific player+period; falls back to period-level target, then global default.
+      // periodTargetPoints: optional number from the period event's own target (from API response)
+      function getEffectiveTarget(playerName, periodName, periodTargetPoints) {
         const pt = loadPointTargets();
         const pkey = (playerName || '').toLowerCase().trim();
         const perkey = (periodName || '').trim();
         const match = (pt.overrides || []).find(o =>
           o.player.toLowerCase() === pkey && o.period === perkey
         );
-        return match ? match.points : (pt.default || 6000);
+        if (match) return match.points;
+        // Use period-level target if set, otherwise global default
+        if (periodTargetPoints !== null && periodTargetPoints !== undefined && !isNaN(Number(periodTargetPoints)) && Number(periodTargetPoints) > 0) {
+          return Number(periodTargetPoints);
+        }
+        return pt.default || 6000;
       }
-      // getPeriodTarget: column header uses global default (no period-level override)
-      function getPeriodTarget() {
+      // getPeriodTarget: returns the target for a specific period (period-level if set, else global default)
+      function getPeriodTarget(periodTargetPoints) {
+        if (periodTargetPoints !== null && periodTargetPoints !== undefined && !isNaN(Number(periodTargetPoints)) && Number(periodTargetPoints) > 0) {
+          return Number(periodTargetPoints);
+        }
         return loadPointTargets().default || 6000;
       }
       function escapeHtmlMem(text) {
@@ -974,7 +983,12 @@
         if (!panel) return;
         const open = panel.style.display !== 'none';
         panel.style.display = open ? 'none' : 'block';
-        if (!open) renderPointTargetsPanel();
+        if (!open) {
+          // If chest points data hasn't loaded yet, trigger a load so the
+          // period dropdown will be populated once the fetch completes.
+          if (!chestPointsData) loadChestPointsTabData();
+          renderPointTargetsPanel();
+        }
       }
       function populatePtSelects() {
         const playerSel = document.getElementById('ptPlayerSelect');
@@ -1125,7 +1139,7 @@
         const periods = Array.isArray(chestPointsData?.periods) ? chestPointsData.periods : [];
         const membersRaw = Array.isArray(chestPointsData?.members) ? chestPointsData.members : [];
 
-        const defaultTgt = loadPointTargets().default || 15000;
+        const defaultTgt = loadPointTargets().default || 6000;
         meta.textContent = `Default target: ${defaultTgt.toLocaleString()} points (green ≥ target, orange ≥ 90%, red below). Per-period or per-player overrides may apply. '-' = not a member in that period, '*' = joined during that period.`;
 
         if (periods.length === 0 || membersRaw.length === 0) {
@@ -1217,7 +1231,7 @@
             const periodEnd = toYmd(period.endDate);
             const isMemberDuringPeriod = !aJoinDate || !periodEnd || aJoinDate <= periodEnd;
             if (!isMemberDuringPeriod) return count;
-            const tgt = getEffectiveTarget(a.member, period.periodName);
+            const tgt = getEffectiveTarget(a.member, period.periodName, period.targetPoints);
             return count + (Number(r?.points || 0) < tgt ? 1 : 0);
           }, 0);
           const bMissedCount = bResults.reduce((count, r, idx) => {
@@ -1225,7 +1239,7 @@
             const periodEnd = toYmd(period.endDate);
             const isMemberDuringPeriod = !bJoinDate || !periodEnd || bJoinDate <= periodEnd;
             if (!isMemberDuringPeriod) return count;
-            const tgt = getEffectiveTarget(b.member, period.periodName);
+            const tgt = getEffectiveTarget(b.member, period.periodName, period.targetPoints);
             return count + (Number(r?.points || 0) < tgt ? 1 : 0);
           }, 0);
 
@@ -1251,7 +1265,7 @@
         header.innerHTML = '<th>Member</th>';
         periods.forEach(period => {
           const th = document.createElement('th');
-          const periodTgt = getPeriodTarget();
+          const periodTgt = getPeriodTarget(period.targetPoints);
           th.textContent = `${period.periodName} (${period.startDate} - ${period.endDate}) · ${periodTgt.toLocaleString()} pts`;
           header.appendChild(th);
         });
@@ -1272,7 +1286,7 @@
             const isEligible = !joinDate || !periodEnd || joinDate <= periodEnd;
             if (!isEligible) return;
             eligibleCount++;
-            if (Number(result?.points || 0) >= getEffectiveTarget(memberRow.member, period.periodName)) {
+            if (Number(result?.points || 0) >= getEffectiveTarget(memberRow.member, period.periodName, period.targetPoints)) {
               allMissed = false;
             }
           });
@@ -1297,7 +1311,7 @@
               td.textContent = '-';
             } else {
               const cellPts = Number(data.points || 0);
-              const cellTgt = getEffectiveTarget(memberRow.member, period.periodName);
+              const cellTgt = getEffectiveTarget(memberRow.member, period.periodName, period.targetPoints);
               const cellStatus = cellPts >= cellTgt ? 'green' : (cellPts >= cellTgt * 0.9 ? 'orange' : 'red');
               td.className = `points-cell points-${cellStatus}`;
               const pointsText = cellPts.toLocaleString();
@@ -1311,6 +1325,12 @@
 
         empty.style.display = 'none';
         table.style.display = 'table';
+
+        // Keep point-targets selects in sync when data refreshes
+        const ptPanel = document.getElementById('pointTargetsPanel');
+        if (ptPanel && ptPanel.style.display !== 'none') {
+          populatePtSelects();
+        }
       }
 
       function loadMembers() {
