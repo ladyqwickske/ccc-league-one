@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <base target="_top">
@@ -97,7 +97,7 @@
       position: sticky; top: 0; z-index: 1000;
     }
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #2563eb; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -112,7 +112,7 @@
       padding: 12px 16px; 
       background: none; 
       border: none; 
-      color: #2c2f45; 
+      color: #c7cce0; 
       font-size: 28px; 
       font-weight: 500; 
       border-bottom: 3px solid transparent; 
@@ -123,8 +123,8 @@
       cursor: pointer; 
       position: relative; 
     }
-    .tab-btn:hover { color: #2563eb; background: #f0f2f5; }
-    .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
+    .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
+    .tab-btn.active { color: #a5b4fc; border-bottom-color: #4f46e5; }
     .tab-btn[title]:hover::after {
       content: attr(title);
       position: absolute;
@@ -132,7 +132,7 @@
       left: 50%;
       transform: translateX(-50%);
       background: #f0f2f5;
-      color: #2563eb;
+      color: #4f46e5;
       padding: 6px 12px;
       border-radius: 4px;
       font-size: 12px;
@@ -157,11 +157,11 @@
     /* Tab Content */
     .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
     .tab-content.active { display: block; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #2563eb; text-shadow: 0 2px 8px #000a; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; }
     h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #f0f2f5; }
-    h3 { color: #2563eb; font-size: 13px; margin-bottom: 8px; }
-    .loading { text-align: center; padding: 32px; color: #2c2f45; }
-    .spinner { border: 4px solid #c0c4d8; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    h3 { color: #4f46e5; font-size: 13px; margin-bottom: 8px; }
+    .loading { text-align: center; padding: 32px; color: #c7cce0; }
+    .spinner { border: 4px solid #c0c4d8; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* Period Tabs */
@@ -187,7 +187,7 @@
       background: #e2e5ef;
       border-radius: 4px;
       font-size: 13px;
-      color: #2563eb;
+      color: #4f46e5;
       font-weight: 500;
       border: 1px solid #c0c4d8;
     }
@@ -195,15 +195,15 @@
     /* Summary Cards */
     .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
     .summary-card { background: #f0f2f5; border-radius: 8px; padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.25); border: 1px solid #c0c4d8; text-align: center; }
-    .summary-card h3 { font-size: 12px; color: #2563eb; margin-bottom: 8px; }
-    .summary-card .value { font-size: 28px; font-weight: 700; color: #2563eb; }
+    .summary-card h3 { font-size: 12px; color: #4f46e5; margin-bottom: 8px; }
+    .summary-card .value { font-size: 28px; font-weight: 700; color: #4f46e5; }
     .summary-card .subtitle { font-size: 11px; color: #6b6f85; margin-top: 4px; }
     .summary-card .stats { font-size: 12px; color: #2c2f45; margin-top: 4px; }
 
     /* Highlight Cards */
     .highlight-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
-    .highlight-card { background: #f0f2f5; border-radius: 8px; padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.25); border-left: 4px solid #2563eb; }
-    .highlight-card h3 { font-size: 12px; color: #2563eb; margin-bottom: 8px; margin-top: 0; }
+    .highlight-card { background: #f0f2f5; border-radius: 8px; padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.25); border-left: 4px solid #4f46e5; }
+    .highlight-card h3 { font-size: 12px; color: #4f46e5; margin-bottom: 8px; margin-top: 0; }
     .highlight-card .member-name { font-size: 16px; font-weight: 600; color: #2c2f45; margin: 8px 0; }
     .highlight-card .stats { font-size: 12px; color: #6b6f85; }
     .highlight-card.green { border-left-color: #8bc34a; }
@@ -229,14 +229,14 @@
     }
     input:focus, select:focus { 
       outline: none; 
-      border-color: #2563eb; 
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+      border-color: #4f46e5; 
+      box-shadow: 0 0 0 3px rgba(79, 70, 229,0.15);
     }
     
     /* Buttons */
     .btn { 
       padding: 10px 16px; 
-      background: #2563eb; 
+      background: #4f46e5; 
       color: #f0f2f5; 
       border: none; 
       border-radius: 6px; 
@@ -246,7 +246,7 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-    .btn:hover { background: #3b82f6; }
+    .btn:hover { background: #6366f1; }
 
     /* Table */
     .table-container { margin-top: 12px; margin-bottom: 12px; overflow: auto; max-height: 70vh; position: relative; border-radius: 8px; border: 1px solid #c0c4d8; }
@@ -256,7 +256,7 @@
       padding: 12px 8px; 
       font-weight: 600; 
       font-size: 11px; 
-      color: #2563eb; 
+      color: #4f46e5; 
       text-transform: uppercase; 
       letter-spacing: 0.5px;
       border-bottom: 2px solid #c0c4d8;
@@ -274,9 +274,9 @@
       z-index: 11;
       background: #e8eaf2;
     }
-    th:hover { color: #3b82f6; }
-    th.sorted-asc::after { content: ' ↑'; }
-    th.sorted-desc::after { content: ' ↓'; }
+    th:hover { color: #6366f1; }
+    th.sorted-asc::after { content: ' ?'; }
+    th.sorted-desc::after { content: ' ?'; }
     th.event-column { text-align: center; font-size: 10px; }
     td { 
       padding: 12px 8px; 
@@ -338,7 +338,7 @@
       display: block;
       width: 24px;
       height: 3px;
-      background: #2563eb;
+      background: #a5b4fc;
       border-radius: 2px;
       transition: all 0.2s;
     }
@@ -451,7 +451,7 @@
 <body>
   <!-- Google Translate Widget -->
   <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#2563eb;font-size:18px;cursor:pointer;">🌐</button>
+  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">??</button>
   <style>
     @media (max-width: 800px) {
       #google_translate_element {
@@ -544,12 +544,12 @@
       loginDiv.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
       loginDiv.innerHTML = `
         <div style="background:#f0f2f5;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #c0c4d8;">
-          <h2 style="margin-bottom:8px;color:#2563eb;">Sign in to Manage</h2>
+          <h2 style="margin-bottom:8px;color:#4f46e5;">Sign in to Manage</h2>
           <p style="font-size:14px;color:#2c2f45;text-align:center;margin:0 0 8px 0;">Use your Google account to access management features</p>
           <div id="g_id_onload" data-client_id="47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com" data-callback="onGoogleSignIn" data-auto_prompt="false" data-ux_mode="popup"></div>
           <div id="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
           <div style="width:100%;height:1px;background:#c0c4d8;margin:8px 0;"></div>
-          <button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#2563eb;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button>
+          <button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button>
           <div id="login-error" style="color:#ff5252;font-size:13px;display:none;"></div>
         </div>
       `;
@@ -651,7 +651,7 @@
         if (nav && !document.getElementById('signInManageBtn')) {
           const btn = document.createElement('button');
           btn.id = 'signInManageBtn';
-          btn.textContent = '🔑 Sign in to Manage';
+          btn.textContent = '?? Sign in to Manage';
           btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
           btn.onclick = showGoogleLogin;
           nav.appendChild(btn);
@@ -710,8 +710,8 @@
           <span class="tab-label mobile-only">Bank</span>
         </a>
       </div>
-      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
-      <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #2563eb; border: 1px solid #c0c4d8;"></div>
+      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">?? Read-Only Mode</div>
+      <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
       <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
     </div>
   </nav>
@@ -723,10 +723,10 @@
     </div>
 
     <div class="period-tabs">
-      <button class="period-btn active" onclick="ProgressTab.setPeriod('active')" data-period="active">⏳ Active Period</button>
-      <button class="period-btn" onclick="ProgressTab.setPeriod('prev')" data-period="prev">⬅️ Previous Period</button>
-      <button class="period-btn" onclick="ProgressTab.setPeriod('currentmonth')" data-period="currentmonth">📆 Current Month</button>
-      <button class="period-btn" onclick="ProgressTab.setPeriod('lastmonth')" data-period="lastmonth">📊 Last Month</button>
+      <button class="period-btn active" onclick="ProgressTab.setPeriod('active')" data-period="active">? Active Period</button>
+      <button class="period-btn" onclick="ProgressTab.setPeriod('prev')" data-period="prev">?? Previous Period</button>
+      <button class="period-btn" onclick="ProgressTab.setPeriod('currentmonth')" data-period="currentmonth">?? Current Month</button>
+      <button class="period-btn" onclick="ProgressTab.setPeriod('lastmonth')" data-period="lastmonth">?? Last Month</button>
     </div>
 
     <div class="date-range-display" id="progressPeriodDisplay">Viewing: Active Period</div>
@@ -739,14 +739,14 @@
     </div>
 
     <div class="highlight-cards">
-      <div class="highlight-card"><h3>🏆 Most Active Member</h3><div class="member-name" id="progMostActiveName">-</div><div class="stats" id="progMostActiveStats">-</div></div>
-      <div class="highlight-card green"><h3>📈 Fastest Growing</h3><div class="member-name" id="progFastestGrowingName">-</div><div class="stats" id="progFastestGrowingStats">-</div></div>
-      <div class="highlight-card orange"><h3>💪 Highest Might</h3><div class="member-name" id="progHighestMightName">-</div><div class="stats" id="progHighestMightStats">-</div></div>
+      <div class="highlight-card"><h3>?? Most Active Member</h3><div class="member-name" id="progMostActiveName">-</div><div class="stats" id="progMostActiveStats">-</div></div>
+      <div class="highlight-card green"><h3>?? Fastest Growing</h3><div class="member-name" id="progFastestGrowingName">-</div><div class="stats" id="progFastestGrowingStats">-</div></div>
+      <div class="highlight-card orange"><h3>?? Highest Might</h3><div class="member-name" id="progHighestMightName">-</div><div class="stats" id="progHighestMightStats">-</div></div>
     </div>
 
     <div class="controls">
-      <div class="search-box"><input type="text" id="progSearchInput" placeholder="🔍 Search by member name..."></div>
-      <button class="btn" onclick="ProgressTab.clearCacheAndRefresh()">🔄 Refresh Data</button>
+      <div class="search-box"><input type="text" id="progSearchInput" placeholder="?? Search by member name..."></div>
+      <button class="btn" onclick="ProgressTab.clearCacheAndRefresh()">?? Refresh Data</button>
     </div>
 
     <div class="table-container">
@@ -902,8 +902,8 @@
         document.querySelectorAll('.period-btn').forEach(btn => {
           if (btn.dataset.period === period) {
             btn.classList.add('active');
-            btn.style.color = '#2563eb';
-            btn.style.borderBottom = '3px solid #2563eb';
+            btn.style.color = '#4f46e5';
+            btn.style.borderBottom = '3px solid #4f46e5';
           } else {
             btn.classList.remove('active');
             btn.style.color = '#2c2f45';
@@ -974,11 +974,11 @@
             if (period === 'active' && activePeriod) {
               startDate = parseDateUTC(activePeriod.startDate);
               endDate = parseDateUTC(activePeriod.endDate);
-              periodLabel = `Viewing: Active Period (${activePeriod.eventName || ''}): ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+              periodLabel = `Viewing: Active Period (${activePeriod.eventName || ''}): ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
             } else if (period === 'prev' && previousPeriod) {
               startDate = parseDateUTC(previousPeriod.startDate);
               endDate = parseDateUTC(previousPeriod.endDate);
-              periodLabel = `Viewing: Previous Period (${previousPeriod.eventName || ''}): ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+              periodLabel = `Viewing: Previous Period (${previousPeriod.eventName || ''}): ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
             } else {
               // Fallback to calendar week (using UTC)
               if (period === 'active') {
@@ -986,13 +986,13 @@
                 startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay());
                 endDate = new Date(startDate);
                 endDate.setUTCDate(endDate.getUTCDate() + 6);
-                periodLabel = `Viewing: Active Period (Fallback): ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+                periodLabel = `Viewing: Active Period (Fallback): ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
               } else {
                 startDate = new Date(today);
                 startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay() - 7);
                 endDate = new Date(startDate);
                 endDate.setUTCDate(endDate.getUTCDate() + 6);
-                periodLabel = `Viewing: Previous Period (Fallback): ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+                periodLabel = `Viewing: Previous Period (Fallback): ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
               }
             }
           } catch (e) {
@@ -1002,13 +1002,13 @@
               startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay());
               endDate = new Date(startDate);
               endDate.setUTCDate(endDate.getUTCDate() + 6);
-              periodLabel = `Viewing: Active Period (Error): ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+              periodLabel = `Viewing: Active Period (Error): ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
             } else {
               startDate = new Date(today);
               startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay() - 7);
               endDate = new Date(startDate);
               endDate.setUTCDate(endDate.getUTCDate() + 6);
-              periodLabel = `Viewing: Previous Period (Error): ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+              periodLabel = `Viewing: Previous Period (Error): ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
             }
           }
         } else if (period === 'currentmonth') {
@@ -1017,7 +1017,7 @@
           const month = today.getUTCMonth() + 1;
           startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
           endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59));
-          periodLabel = `Viewing: Current Month: ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+          periodLabel = `Viewing: Current Month: ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
         } else if (period === 'lastmonth') {
           // Create month dates using UTC
           let year = today.getUTCFullYear();
@@ -1028,7 +1028,7 @@
           }
           startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
           endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59));
-          periodLabel = `Viewing: Last Month: ${formatDisplayDate(startDate)} – ${formatDisplayDate(endDate)}`;
+          periodLabel = `Viewing: Last Month: ${formatDisplayDate(startDate)} � ${formatDisplayDate(endDate)}`;
         }
 
         document.getElementById('progressPeriodDisplay').textContent = periodLabel;
@@ -1369,7 +1369,7 @@
           const th = document.createElement('th');
           th.className = 'event-column';
           th.title = `${event.name} (${event.participationMethod})`;
-          th.innerHTML = `${escapeHtml(event.name)}<br><small style="font-size:9px; opacity:0.7;">✓/⚠/✕</small>`;
+          th.innerHTML = `${escapeHtml(event.name)}<br><small style="font-size:9px; opacity:0.7;">?/?/?</small>`;
           headerRow.appendChild(th);
         });
 
@@ -1421,7 +1421,7 @@
             const memberJoinedAfterEvent = memberJoinDate && eventEnd && memberJoinDate > eventEnd;
 
             if (hasNotStarted || memberJoinedAfterEvent) {
-              html += '<td class="event-cell"><span class="not-started">−</span></td>';
+              html += '<td class="event-cell"><span class="not-started">-</span></td>';
             } else if (event.participationMethod === 'troop-based') {
               const points = participation ? Number(participation.value || 0) : 0;
               const targets = getTroopTargets(event.eventType);
@@ -1433,20 +1433,20 @@
                 : null;
 
               if (targetPoints === null || isNaN(targetPoints)) {
-                html += '<td class="event-cell"><span class="not-started">−</span></td>';
+                html += '<td class="event-cell"><span class="not-started">-</span></td>';
               } else if (points >= targetPoints) {
-                html += '<td class="event-cell"><span class="checkmark">✓</span></td>';
+                html += '<td class="event-cell"><span class="checkmark">?</span></td>';
               } else if (points >= targetPoints * 0.9 && points > 0) {
                 html += '<td class="event-cell"><span class="warning">!</span></td>';
               } else {
-                html += '<td class="event-cell"><span class="cross">✕</span></td>';
+                html += '<td class="event-cell"><span class="cross">?</span></td>';
               }
             } else if (!participation || participation.value === 0) {
-              html += '<td class="event-cell"><span class="cross">✕</span></td>';
+              html += '<td class="event-cell"><span class="cross">?</span></td>';
             } else if (!participation.met) {
-              html += '<td class="event-cell"><span class="warning">⚠</span></td>';
+              html += '<td class="event-cell"><span class="warning">?</span></td>';
             } else {
-              html += '<td class="event-cell"><span class="checkmark">✓</span></td>';
+              html += '<td class="event-cell"><span class="checkmark">?</span></td>';
             }
           });
 
