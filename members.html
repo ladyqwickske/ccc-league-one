@@ -988,7 +988,36 @@
           // period dropdown will be populated once the fetch completes.
           if (!chestPointsData) loadChestPointsTabData();
           renderPointTargetsPanel();
+          // Fetch all periods (including current/future) for the dropdown
+          loadAllPeriodsForDropdown();
         }
+      }
+      let allPeriodsForDropdown = null;
+      async function loadAllPeriodsForDropdown() {
+        try {
+          const res = await fetch(window.GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'getAllPeriodNamesForTargets' })
+          });
+          const result = await res.json();
+          if (result && result.success && Array.isArray(result.periods)) {
+            allPeriodsForDropdown = result.periods;
+            populatePtPeriodSelect();
+          }
+        } catch (e) {
+          // Fallback: use chestPointsData periods if available
+          if (!allPeriodsForDropdown) populatePtPeriodSelect();
+        }
+      }
+      function populatePtPeriodSelect() {
+        const periodSel = document.getElementById('ptPeriodSelect');
+        if (!periodSel) return;
+        const current = periodSel.value;
+        periodSel.innerHTML = '<option value="">— select period —</option>';
+        const periods = allPeriodsForDropdown || (Array.isArray(chestPointsData?.periods) ? chestPointsData.periods : []);
+        periods.forEach(p => { const o = document.createElement('option'); o.value = p.periodName; o.textContent = `${p.periodName} (${p.startDate} – ${p.endDate})`; periodSel.appendChild(o); });
+        if (current) periodSel.value = current;
       }
       function populatePtSelects() {
         const playerSel = document.getElementById('ptPlayerSelect');
@@ -999,14 +1028,7 @@
           names.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; playerSel.appendChild(o); });
           if (current) playerSel.value = current;
         }
-        const periodSel = document.getElementById('ptPeriodSelect');
-        if (periodSel) {
-          const current = periodSel.value;
-          periodSel.innerHTML = '<option value="">— select period —</option>';
-          const periods = Array.isArray(chestPointsData?.periods) ? chestPointsData.periods : [];
-          periods.forEach(p => { const o = document.createElement('option'); o.value = p.periodName; o.textContent = `${p.periodName} (${p.startDate} – ${p.endDate})`; periodSel.appendChild(o); });
-          if (current) periodSel.value = current;
-        }
+        populatePtPeriodSelect();
       }
       function renderPointTargetsPanel() {
         const pt = loadPointTargets();
