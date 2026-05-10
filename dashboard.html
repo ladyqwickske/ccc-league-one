@@ -201,6 +201,42 @@
       border-radius: 3px;
       font-weight: 700;
     }
+
+    /* Chest Points Reference Popup */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #f0f2f5; border-radius: 16px; padding: 24px;
+      max-width: 800px; width: 95%; max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3); border: 1px solid #c0c4d8;
+    }
+    .modal h2 { color: #4f46e5; margin-bottom: 12px; }
+    .modal .close-btn {
+      float: right; background: none; border: none; color: #2c2f45;
+      font-size: 1.5em; cursor: pointer; padding: 0 8px;
+    }
+    .modal .close-btn:hover { color: #4f46e5; }
+    .modal input[type="text"] {
+      width: 100%; padding: 10px; background: #fff; border: 1px solid #c0c4d8;
+      border-radius: 8px; color: #2c2f45; font-size: 0.9em; margin-bottom: 12px;
+    }
+    .modal input[type="text"]:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79,70,229,0.15); }
+    .chest-ref-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+    .chest-ref-table th { background: #e2e5ef; padding: 8px; text-align: left; font-size: 0.85em; color: #4f46e5; border-bottom: 2px solid #c0c4d8; }
+    .chest-ref-table td { padding: 6px 8px; border-bottom: 1px solid #c0c4d8; }
+    .chest-ref-table tr:hover { background: #e2e5ef; }
+
+    /* Chest Points Ref Button */
+    .ref-btn {
+      background: #e2e5ef; color: #4f46e5; border: 1px solid #4f46e5;
+      border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 0.85em;
+      display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+    .ref-btn:hover { background: #4f46e5; color: #f0f2f5; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     
     /* READ-ONLY MODE STYLES */
     .read-only-mode input:not(#playerFilterInput),
@@ -655,10 +691,6 @@
           <img src="competition.png" alt="Competition" class="tab-icon desktop-only">
           <span class="tab-label mobile-only">Competition</span>
         </a>
-        <a href="points.html" class="tab-btn" title="Points Reference">
-          <img src="chest_points.png" alt="Points Reference" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Points Reference</span>
-        </a>
         <a href="calendar.html" class="tab-btn" title="Calendar">
           <img src="calendar.png" alt="Calendar" class="tab-icon desktop-only">
           <span class="tab-label mobile-only">Calendar</span>
@@ -688,6 +720,7 @@
       <div class="date-preset-btns">
         <button class="preset-btn" data-preset="lastday" onclick="setDateRange('lastday')">Active Period</button>
         <button class="preset-btn" data-preset="prevweek" onclick="setDateRange('prevweek')">Previous Period</button>
+        <button class="ref-btn" onclick="openChestPointsRef()">📋 Chest Points</button>
       </div>
       <div class="date-range-display" id="dateRangeDisplay">Viewing: All Time</div>
       <div class="date-range-display" id="lastImportedDisplay" style="font-size: 12px; color: #4f46e5; margin-top: 8px;">Last Imported: <span class="no-date">Loading...</span> | Required Points: 6,000</div>
@@ -707,6 +740,24 @@
       <input type="text" id="playerFilterInput" placeholder="🔍 Filter by member name..." style="width:100%;padding:10px 14px;font-size:15px;border-radius:6px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;outline:none;box-shadow:0 1px 6px rgba(0,0,0,0.15);margin-bottom:4px;" oninput="filterPlayerTable()">
     </div>
     <div class="player-list" id="playerList"><div class="loading">Loading player stats...</div></div>
+  </div>
+
+  <!-- Chest Points Reference Modal -->
+  <div class="modal-overlay" id="chestRefModal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeChestPointsRef()">&times;</button>
+      <h2>📋 Chest Points Reference</h2>
+      <input type="text" id="chestRefSearch" placeholder="Search chests..." oninput="filterChestRef()">
+      <div class="table-container" style="overflow-x:auto;">
+        <table class="chest-ref-table">
+          <thead>
+            <tr><th>Type</th><th>Level</th><th>Points</th></tr>
+          </thead>
+          <tbody id="chestRefBody"></tbody>
+        </table>
+      </div>
+      <div class="loading" id="chestRefLoading" style="display:none"><div class="spinner" style="display:inline-block;width:24px;height:24px;border:3px solid #c0c4d8;border-top-color:#4f46e5;border-radius:50%;animation:spin 0.8s linear infinite;"></div><br>Loading...</div>
+    </div>
   </div>
 
   <script>
@@ -1651,6 +1702,61 @@ function filterPlayerTable() {
   });
 }
     }
+
+    // ===========================
+    // CHEST POINTS REFERENCE
+    // ===========================
+    let chestRefData = [];
+
+    async function openChestPointsRef() {
+      document.getElementById('chestRefModal').classList.add('active');
+      if (chestRefData.length === 0) {
+        document.getElementById('chestRefLoading').style.display = 'block';
+        try {
+          const res = await fetch(window.GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'getChestPointsReference' })
+          });
+          const result = await res.json();
+          if (result && result.success) {
+            chestRefData = result.data;
+            renderChestRef(chestRefData);
+          }
+        } catch (err) {
+          console.error('Chest ref load error:', err);
+        }
+        document.getElementById('chestRefLoading').style.display = 'none';
+      }
+    }
+
+    function closeChestPointsRef() {
+      document.getElementById('chestRefModal').classList.remove('active');
+    }
+
+    function renderChestRef(data) {
+      const tbody = document.getElementById('chestRefBody');
+      tbody.innerHTML = '';
+      data.forEach(chest => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + escapeHtmlDash(chest.type) + '</td><td>' + escapeHtmlDash(String(chest.level)) + '</td><td style="font-weight:600;color:#4f46e5;">' + chest.points + '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterChestRef() {
+      const query = document.getElementById('chestRefSearch').value.toLowerCase();
+      const filtered = chestRefData.filter(c =>
+        c.type.toLowerCase().includes(query) ||
+        String(c.level).toLowerCase().includes(query)
+      );
+      renderChestRef(filtered);
+    }
+
+    // Close modal on overlay click
+    document.getElementById('chestRefModal').addEventListener('click', function(e) {
+      if (e.target === this) closeChestPointsRef();
+    });
     
     function toggleType(typeName) {
       const header = document.querySelector(`.type-total-header[data-type="${typeName}"]`);
