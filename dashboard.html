@@ -1133,6 +1133,9 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Active Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+              currentPeriodTargetPoints = null;
+              currentViewingPeriodName = null;
+              updateRequiredPointsDisplay();
               // Use 5PM UTC (game reset time) for countdown
               const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
              // console.log('[Countdown] Calling updateCountdownTimer (Fallback) with:', endDateStr);
@@ -1158,6 +1161,9 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Active Period (No Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+              currentPeriodTargetPoints = null;
+              currentViewingPeriodName = null;
+              updateRequiredPointsDisplay();
               const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
               console.log('[Countdown] Calling updateCountdownTimer (No Events) with:', endDateStr);
               updateCountdownTimer(endDateStr);
@@ -1204,6 +1210,9 @@ function filterPlayerTable() {
                 startInput.value = formatDateAsUTC(start);
                 endInput.value = formatDateAsUTC(end);
                 displayElement.textContent = `Viewing: Active Period (Between Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+                currentPeriodTargetPoints = null;
+                currentViewingPeriodName = null;
+                updateRequiredPointsDisplay();
                 loadDashboard();
                 return;
               }
@@ -1237,6 +1246,9 @@ function filterPlayerTable() {
             startInput.value = formatDateAsUTC(start);
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Active Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+            currentPeriodTargetPoints = null;
+            currentViewingPeriodName = null;
+            updateRequiredPointsDisplay();
             const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
             console.log('[Countdown] Calling updateCountdownTimer (Error) with:', endDateStr);
             updateCountdownTimer(endDateStr);
@@ -1264,6 +1276,9 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Previous Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+              currentPeriodTargetPoints = null;
+              currentViewingPeriodName = null;
+              updateRequiredPointsDisplay();
               loadDashboard();
               return;
             }
@@ -1284,6 +1299,9 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Previous Period (No Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+              currentPeriodTargetPoints = null;
+              currentViewingPeriodName = null;
+              updateRequiredPointsDisplay();
               loadDashboard();
               return;
             }
@@ -1337,6 +1355,9 @@ function filterPlayerTable() {
               startInput.value = formatDateAsUTC(start);
               endInput.value = formatDateAsUTC(end);
               displayElement.textContent = `Viewing: Previous Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+              currentPeriodTargetPoints = null;
+              currentViewingPeriodName = null;
+              updateRequiredPointsDisplay();
               loadDashboard();
               return;
             }
@@ -1363,6 +1384,9 @@ function filterPlayerTable() {
             startInput.value = formatDateAsUTC(start);
             endInput.value = formatDateAsUTC(end);
             displayElement.textContent = `Viewing: Previous Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+            currentPeriodTargetPoints = null;
+            currentViewingPeriodName = null;
+            updateRequiredPointsDisplay();
             loadDashboard();
           });
         return;
@@ -1373,7 +1397,7 @@ function filterPlayerTable() {
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
       currentViewingStartDate = startDate; // Store for new member highlighting
-      currentViewingPeriodName = null; // Will be overridden by preset logic if applicable
+      currentViewingPeriodName = null; // Note: will be overridden by preset logic if applicable
       document.getElementById('playerList').innerHTML = '<div class="loading">Loading...</div>';
       const requestId = `dash-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       
