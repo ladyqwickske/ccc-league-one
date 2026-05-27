@@ -1622,8 +1622,8 @@ function filterPlayerTable() {
           }
         }
 
-        const defaultTarget = loadPointTargets().default || 6000;
-        const targetLabel = playerTarget !== defaultTarget
+        const effectiveDefaultTarget = getPlayerTarget('__no_match__', currentViewingPeriodName, currentPeriodTargetPoints);
+        const targetLabel = playerTarget !== effectiveDefaultTarget
           ? ` <span style="font-size:10px;opacity:0.75;color:#4f46e5;">(◎ ${playerTarget.toLocaleString()})</span>`
           : '';
 
