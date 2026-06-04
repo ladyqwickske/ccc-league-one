@@ -809,7 +809,8 @@
       <div id="removeMemberTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Remove Member</h3>
         <div class="form-grid"><div><label for="removeMemberSelect">Member to Remove</label><select id="removeMemberSelect"></select></div><div><label for="endDate">End Date</label><input type="date" id="endDate"><div class="note">Date member left</div></div></div>
-        <button class="btn" onclick="MembersTab.submitRemoveMember()">🚪 Remove Member</button><div id="removeMemberStatus" class="status"></div>
+        <div style="margin-top:8px;"><label for="removeComment" style="display:block;font-size:12px;font-weight:600;color:#4f46e5;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">Reason (optional)</label><textarea id="removeComment" placeholder="Why is this member being removed?" style="width:100%;padding:10px 12px;border:1px solid #c0c4d8;border-radius:6px;font-size:14px;background:#fff;color:#2c2f45;resize:vertical;min-height:60px;font-family:inherit;"></textarea></div>
+        <button class="btn" style="margin-top:10px;" onclick="MembersTab.submitRemoveMember()">🚪 Remove Member</button><div id="removeMemberStatus" class="status"></div>
       </div>
       <div id="chestPointsTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Chest Points - Last Active Periods</h3>
@@ -1659,6 +1660,7 @@
       function submitRemoveMember() {
         const memberName = document.getElementById('removeMemberSelect').value;
         const endDate = document.getElementById('endDate').value;
+        const comment = (document.getElementById('removeComment').value || '').trim();
         const status = document.getElementById('removeMemberStatus');
         status.textContent = '';
         status.className = 'status';
@@ -1668,7 +1670,7 @@
         fetch(window.GAS_WEB_APP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'disableMember', memberName, endDate })
+          body: JSON.stringify({ action: 'disableMember', memberName, endDate, comment })
         })
           .then(res => res.json())
           .then(result => {

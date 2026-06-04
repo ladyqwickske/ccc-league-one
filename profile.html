@@ -522,6 +522,7 @@
       if (m.lastMight != null) infoLines.push('Last Might: ' + formatNumber(m.lastMight));
       if (m.growthPercent) infoLines.push('Growth: ' + escapeHtml(m.growthPercent));
       if (m.lastRecordedDate) infoLines.push('Last Recorded: ' + formatDateUTC(m.lastRecordedDate));
+      if (m.reason) infoLines.push('Reason: ' + escapeHtml(m.reason));
       document.getElementById('profileMemberInfo').innerHTML = infoLines.join(' &nbsp;|&nbsp; ');
 
       // --- Summary Cards ---
