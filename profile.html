@@ -518,14 +518,17 @@
       const infoLines = [];
       if (m.joinDate) infoLines.push('Joined: ' + formatDateUTC(m.joinDate));
       if (m.leaveDate) infoLines.push('Left: ' + formatDateUTC(m.leaveDate));
-      if (m.startMight) infoLines.push('Starting Might: ' + formatNumber(m.startMight));
+      if (m.startMight != null) infoLines.push('Start Might: ' + formatNumber(m.startMight));
+      if (m.lastMight != null) infoLines.push('Last Might: ' + formatNumber(m.lastMight));
+      if (m.growthPercent) infoLines.push('Growth: ' + escapeHtml(m.growthPercent));
+      if (m.lastRecordedDate) infoLines.push('Last Recorded: ' + formatDateUTC(m.lastRecordedDate));
       document.getElementById('profileMemberInfo').innerHTML = infoLines.join(' &nbsp;|&nbsp; ');
 
       // --- Summary Cards ---
       const cs = data.chestStats;
       const mh = data.mightHistory;
-      const latestMight = mh && mh.length > 0 ? mh[0].might : null;
-      const mightGrowth = (latestMight && m.startMight) ? latestMight - m.startMight : null;
+      const latestMight = mh && mh.length > 0 ? mh[0].might : (m.lastMight != null ? m.lastMight : null);
+      const mightGrowth = (latestMight != null && m.startMight != null) ? latestMight - m.startMight : null;
       const troopCat = determineTroopCategoryFE(data.troopLevels);
 
       let cardsHtml = '';
