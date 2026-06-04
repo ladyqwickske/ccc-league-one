@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cCc Champions - Compensation Calculator</title>
+  <title>cCc League One - Compensation Calculator</title>
   <link rel="icon" href="favicon.png" type="image/png">
+  <script src="site-config.js"></script>
   <script src="config.js"></script>
   <script src="portal-shim.js"></script>
   <style>
@@ -16,8 +18,8 @@
 
     body {
       font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
-      background: linear-gradient(135deg, #232526 0%, #414345 100%);
-      color: #f3f3f3;
+      background: linear-gradient(135deg, #f0f2f5 0%, #d8dce8 100%);
+      color: #1a1c2e;
       text-align: center;
       padding: 32px 16px 60px 16px;
       min-height: 100vh;
@@ -26,8 +28,14 @@
     body { top: 0 !important; }
     .goog-te-banner-frame.skiptranslate { display: none !important; }
     .goog-te-balloon-frame { display: none !important; }
+    html, body { margin-top: 0 !important; top: 0 !important; }
+    body.translated-ltr, body.translated-rtl { margin-top: 0 !important; top: 0 !important; }
+    .goog-te-banner-frame, iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate { display: none !important; visibility: hidden !important; height: 0 !important; }
+    #goog-gt-tt, .goog-te-balloon-frame { display: none !important; visibility: hidden !important; }
+    .goog-text-highlight { background: transparent !important; box-shadow: none !important; }
+    #google_translate_element, #translateToggleBtn { top: auto !important; right: 8px !important; bottom: 8px !important; }
 
-    .tab-content { padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(30, 34, 40, 0.95); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
+    .tab-content { padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
 
     .login-container {
       text-align: center;
@@ -35,12 +43,12 @@
     }
 
     .login-container h1 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 20px;
     }
 
     .login-container p {
-      color: #ccc;
+      color: #6b6f85;
       margin-bottom: 20px;
     }
 
@@ -49,9 +57,10 @@
     }
 
     .header { margin-bottom: 16px; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #ffb300; text-shadow: 0 2px 8px #000a; display: flex; align-items: center; justify-content: center; gap: 12px; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; text-shadow: 0 2px 8px #000a; display: flex; align-items: center; justify-content: center; gap: 12px; }
+
     .header p {
-      color: #b0b0b0;
+      color: #d8dce8;
       font-size: 14px;
       text-align: center;
     }
@@ -62,8 +71,8 @@
 
     /* Sticky Navigation Bar */
     .tab-nav {
-      background: rgba(30, 34, 40, 0.95);
-      border-bottom: 1px solid #444;
+      background: rgba(70, 80, 105, 0.92);
+      border-bottom: 1px solid #c0c4d8;
       box-shadow: 0 2px 8px rgba(0,0,0,0.25);
       position: sticky;
       top: 0;
@@ -74,7 +83,7 @@
       overflow: visible;
     }
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #ffb300; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -89,7 +98,7 @@
       padding: 12px 16px; 
       background: none; 
       border: none; 
-      color: #e0e0e0; 
+      color: #c7cce0; 
       font-size: 28px; 
       font-weight: 500; 
       border-bottom: 3px solid transparent; 
@@ -100,22 +109,22 @@
       cursor: pointer; 
       position: relative; 
     }
-    .tab-btn:hover { color: #ffb300; background: #232526; }
-    .tab-btn.active { color: #ffb300; border-bottom-color: #ffb300; }
+    .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
+    .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
     .tab-btn[title]:hover::after {
       content: attr(title);
       position: absolute;
       top: -42px;
       left: 50%;
       transform: translateX(-50%);
-      background: #232526;
-      color: #ffb300;
+      background: #f0f2f5;
+      color: #4f46e5;
       padding: 6px 12px;
       border-radius: 4px;
       font-size: 12px;
       white-space: nowrap;
       z-index: 1001;
-      border: 1px solid #444;
+      border: 1px solid #c0c4d8;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     .tab-btn .tab-icon {
@@ -158,15 +167,15 @@
     }
 
     .quick-add-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .quick-add-section h3 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 16px;
       font-size: 14px;
       text-transform: uppercase;
@@ -180,15 +189,15 @@
     }
 
     .quick-add-form {
-      background: #232526;
-      border: 1px solid #333;
+      background: #f0f2f5;
+      border: 1px solid #c0c4d8;
       border-radius: 6px;
       padding: 16px;
     }
 
     .quick-add-form label {
       display: block;
-      color: #ffb300;
+      color: #4f46e5;
       font-size: 12px;
       font-weight: 600;
       margin-bottom: 8px;
@@ -201,25 +210,25 @@
       width: 100%;
       padding: 10px;
       margin-bottom: 12px;
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 4px;
-      color: #e0e0e0;
+      color: #2c2f45;
       font-size: 13px;
     }
 
     .quick-add-form input:focus,
     .quick-add-form select:focus {
       outline: none;
-      border-color: #ffb300;
-      box-shadow: 0 0 8px rgba(255, 179, 0, 0.2);
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.2);
     }
 
     .quick-add-form button {
       width: 100%;
       padding: 10px;
-      background: #ffb300;
-      color: #232526;
+      background: #4f46e5;
+      color: #f0f2f5;
       border: none;
       border-radius: 4px;
       cursor: pointer;
@@ -229,7 +238,7 @@
     }
 
     .quick-add-form button:hover {
-      background: #ffc933;
+      background: #6366f1;
       transform: scale(1.02);
     }
 
@@ -265,50 +274,50 @@
 
     /* Incidents Section */
     .incidents-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .incidents-section h2 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 16px;
       font-size: 16px;
       font-weight: 600;
     }
 
     .incident-form {
-      background: #232526;
+      background: #f0f2f5;
       padding: 16px;
       border-radius: 6px;
-      border: 1px solid #333;
+      border: 1px solid #c0c4d8;
       margin-bottom: 16px;
     }
 
     .incident-form input {
       width: 100%;
       padding: 10px;
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 4px;
-      color: #e0e0e0;
+      color: #2c2f45;
       font-size: 13px;
       margin-bottom: 12px;
     }
 
     .incident-form input:focus {
       outline: none;
-      border-color: #ffb300;
-      box-shadow: 0 0 8px rgba(255, 179, 0, 0.2);
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.2);
     }
 
     .added-leaders-section {
-      background: #232526;
+      background: #f0f2f5;
       padding: 16px;
       border-radius: 6px;
-      border: 1px solid #333;
+      border: 1px solid #c0c4d8;
       margin-bottom: 16px;
       max-height: 300px;
       overflow-y: auto;
@@ -319,30 +328,30 @@
     }
 
     .added-leaders-section::-webkit-scrollbar-track {
-      background: #1a1b1c;
+      background: #e8eaf2;
       border-radius: 4px;
     }
 
     .added-leaders-section::-webkit-scrollbar-thumb {
-      background: #444;
+      background: #c0c4d8;
       border-radius: 4px;
     }
 
     .added-leaders-section::-webkit-scrollbar-thumb:hover {
-      background: #666;
+      background: #6b6f85;
     }
 
     /* Troop Entry Grids */
     .troop-grid-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .troop-grid-section h3 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 16px;
       font-size: 14px;
       text-transform: uppercase;
@@ -364,7 +373,7 @@
 
     .level-input label {
       font-size: 11px;
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 4px;
       font-weight: 600;
     }
@@ -372,31 +381,31 @@
     .level-input input {
       width: 100%;
       padding: 6px;
-      background: #232526;
-      border: 1px solid #444;
+      background: #f0f2f5;
+      border: 1px solid #c0c4d8;
       border-radius: 4px;
-      color: #e0e0e0;
+      color: #2c2f45;
       font-size: 12px;
       text-align: center;
     }
 
     .level-input input:focus {
       outline: none;
-      border-color: #ffb300;
-      background: #1a1b1c;
+      border-color: #4f46e5;
+      background: #e8eaf2;
     }
 
     /* Monsters Section */
     .monster-grid-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .monster-grid-section h3 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 16px;
       font-size: 14px;
       text-transform: uppercase;
@@ -416,36 +425,36 @@
 
     .monster-input label {
       font-size: 12px;
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 6px;
       font-weight: 600;
     }
 
     .monster-input input {
       padding: 8px;
-      background: #232526;
-      border: 1px solid #444;
+      background: #f0f2f5;
+      border: 1px solid #c0c4d8;
       border-radius: 4px;
-      color: #e0e0e0;
+      color: #2c2f45;
       font-size: 13px;
     }
 
     .monster-input input:focus {
       outline: none;
-      border-color: #ffb300;
+      border-color: #4f46e5;
     }
 
     /* Buildings Section */
     .building-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .building-section h3 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 16px;
       font-size: 14px;
       text-transform: uppercase;
@@ -465,7 +474,7 @@
 
     .building-field label {
       font-size: 12px;
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 8px;
       font-weight: 600;
     }
@@ -473,17 +482,17 @@
     .building-field input,
     .building-field select {
       padding: 10px;
-      background: #232526;
-      border: 1px solid #444;
+      background: #f0f2f5;
+      border: 1px solid #c0c4d8;
       border-radius: 4px;
-      color: #e0e0e0;
+      color: #2c2f45;
       font-size: 13px;
     }
 
     .building-field input:focus,
     .building-field select:focus {
       outline: none;
-      border-color: #ffb300;
+      border-color: #4f46e5;
     }
 
     /* Buttons */
@@ -504,30 +513,30 @@
     }
 
     .btn-primary {
-      background: #ffb300;
-      color: #232526;
+      background: #4f46e5;
+      color: #f0f2f5;
       flex: 1;
     }
 
     .btn-primary:hover {
-      background: #ffc933;
+      background: #6366f1;
       transform: scale(1.02);
     }
 
     .btn-secondary {
-      background: #444;
-      color: #e0e0e0;
+      background: #c0c4d8;
+      color: #2c2f45;
       flex: 1;
     }
 
     .btn-secondary:hover {
-      background: #555;
+      background: #d0d3e8;
     }
 
     /* Results Display */
     .result-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin: 20px 0;
@@ -542,8 +551,8 @@
     }
 
     .result-card {
-      background: #232526;
-      border: 1px solid #333;
+      background: #f0f2f5;
+      border: 1px solid #c0c4d8;
       border-radius: 6px;
       padding: 16px;
       text-align: center;
@@ -551,7 +560,7 @@
 
     .result-card-title {
       font-size: 12px;
-      color: #ccc;
+      color: #6b6f85;
       font-weight: 600;
       margin-bottom: 8px;
       text-transform: uppercase;
@@ -561,11 +570,11 @@
     .result-card-value {
       font-size: 18px;
       font-weight: 700;
-      color: #ffb300;
+      color: #4f46e5;
     }
 
     .result-card.heroes .result-card-value {
-      color: #ffb300;
+      color: #4f46e5;
     }
 
     .result-card.troops .result-card-value {
@@ -573,7 +582,7 @@
     }
 
     .result-card.monsters .result-card-value {
-      color: #ffc933;
+      color: #6366f1;
     }
 
     .result-card.buildings .result-card-value {
@@ -581,8 +590,8 @@
     }
 
     .result-grand-total {
-      background: linear-gradient(135deg, #ffb300 0%, #ffc933 100%);
-      color: #232526;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: #f0f2f5;
       border-radius: 8px;
       padding: 24px;
       text-align: center;
@@ -604,15 +613,15 @@
 
     /* Reports Section */
     .reports-section {
-      background: #1a1b1c;
-      border: 1px solid #444;
+      background: #e8eaf2;
+      border: 1px solid #c0c4d8;
       border-radius: 8px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .reports-section h2 {
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 16px;
       font-size: 16px;
       font-weight: 600;
@@ -625,9 +634,9 @@
     }
 
     .report-card {
-      background: #232526;
-      border: 1px solid #444;
-      border-left: 4px solid #ffb300;
+      background: #f0f2f5;
+      border: 1px solid #c0c4d8;
+      border-left: 4px solid #4f46e5;
       border-radius: 6px;
       padding: 16px;
       cursor: pointer;
@@ -637,26 +646,26 @@
     .report-card:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
       transform: translateY(-2px);
-      border-left-color: #ffc933;
+      border-left-color: #6366f1;
     }
 
     .report-card-title {
       font-size: 14px;
       font-weight: 600;
-      color: #ffb300;
+      color: #4f46e5;
       margin-bottom: 8px;
     }
 
     .report-card-date {
       font-size: 12px;
-      color: #e0e0e0;
+      color: #2c2f45;
       margin-bottom: 12px;
     }
 
     .report-card-btn {
       padding: 8px 12px;
-      background: #ffb300;
-      color: #232526;
+      background: #4f46e5;
+      color: #f0f2f5;
       border: none;
       border-radius: 4px;
       cursor: pointer;
@@ -665,19 +674,19 @@
     }
 
     .report-card-btn:hover {
-      background: #ffc933;
+      background: #6366f1;
     }
 
     .reports-empty {
       text-align: center;
-      color: #888;
+      color: #6b6f85;
       padding: 40px 20px;
       font-size: 14px;
     }
 
     .reports-loading {
       text-align: center;
-      color: #888;
+      color: #6b6f85;
       padding: 40px 20px;
     }
 
@@ -696,13 +705,13 @@
     }
 
     .modal-content {
-      background: #1a1b1c;
+      background: #e8eaf2;
       border-radius: 8px;
       padding: 30px;
       max-width: 500px;
       max-height: 80vh;
       overflow-y: auto;
-      border: 1px solid #444;
+      border: 1px solid #c0c4d8;
     }
 
     .modal-close {
@@ -711,13 +720,13 @@
       right: 20px;
       background: none;
       border: none;
-      color: #e0e0e0;
+      color: #2c2f45;
       font-size: 24px;
       cursor: pointer;
     }
 
     .modal-close:hover {
-      color: #ffb300;
+      color: #4f46e5;
     }
 
     @media (max-width: 768px) {
@@ -760,7 +769,7 @@
       display: block;
       width: 24px;
       height: 3px;
-      background: #ffb300;
+      background: #a5b4fc;
       border-radius: 2px;
       transition: all 0.2s;
     }
@@ -801,7 +810,7 @@
         align-items: stretch;
         max-height: 60vh;
         overflow-y: auto;
-        background: #232526;
+        background: #f0f2f5;
         position: absolute;
         top: 60px;
         left: 0;
@@ -820,7 +829,7 @@
       .tab-btn {
         font-size: 18px;
         padding: 18px 24px;
-        border-bottom: 1px solid #444;
+        border-bottom: 1px solid #c0c4d8;
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -873,7 +882,7 @@
 <body>
     <!-- Google Translate Widget -->
     <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-    <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #444;border-radius:8px;background:#232526;color:#ffb300;font-size:18px;cursor:pointer;">🌐</button>
+    <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">🌐</button>
     <style>
       @media (max-width: 800px) {
         #google_translate_element {
@@ -921,8 +930,8 @@
   <script>
     // --- Google Sign-In for edit access ---
     const BACKEND_VERIFY_URL = window.GAS_WEB_APP_URL;
-    const AUTH_KEY = 'ccc_portal_google_auth';
-    const AUTH_EMAIL_KEY = 'ccc_portal_google_email';
+    const AUTH_KEY = 'clo_portal_google_auth';
+    const AUTH_EMAIL_KEY = 'clo_portal_google_email';
 
     function setReadOnlyMode(enabled) {
       if (enabled) {
@@ -965,13 +974,12 @@
       loginDiv.id = 'login-overlay';
       loginDiv.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
       loginDiv.innerHTML = `
-        <div style="background:#232526;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #444;">
-          <h2 style="margin-bottom:8px;color:#ffb300;">Sign in to Manage</h2>
-          <p style="font-size:14px;color:#e0e0e0;text-align:center;margin:0 0 8px 0;">Use your Google account to access management features</p>
-          <div id="g_id_onload" data-client_id="47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com" data-callback="onGoogleSignIn" data-auto_prompt="false" data-ux_mode="popup"></div>
+        <div style="background:#f0f2f5;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #c0c4d8;">
+          <h2 style="margin-bottom:8px;color:#4f46e5;">Sign in to Manage</h2>
+          <p style="font-size:14px;color:#2c2f45;text-align:center;margin:0 0 8px 0;">Use your Google account to access management features</p>
           <div id="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
-          <div style="width:100%;height:1px;background:#444;margin:8px 0;"></div>
-          <button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #444;background:#232526;color:#ffb300;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button>
+          <div style="width:100%;height:1px;background:#c0c4d8;margin:8px 0;"></div>
+          <button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button>
           <div id="login-error" style="color:#ff5252;font-size:13px;display:none;"></div>
         </div>
       `;
@@ -993,7 +1001,8 @@
               client_id: '47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com',
               callback: onGoogleSignIn,
               auto_select: false,
-              ux_mode: 'popup'
+              ux_mode: 'popup',
+              cancel_on_tap_outside: true
             });
             google.accounts.id.renderButton(document.getElementById('g_id_signin'), 
               { type: 'standard', size: 'large', theme: 'outline', text: 'signin', shape: 'rectangular', logo_alignment: 'left' });
@@ -1022,7 +1031,8 @@
           body: JSON.stringify({ action: 'verifyUserPermission', email })
         });
         const data = await res.json();
-        if (data.isAllowedEditor) {
+        const isAllowed = Boolean(data && (data.isAllowedEditor === true || data.allowed === true));
+        if (isAllowed) {
           try { localStorage.setItem(AUTH_KEY, idToken); } catch (e) {}
           try { localStorage.setItem(AUTH_EMAIL_KEY, email); } catch (e) {}
           setReadOnlyMode(false);
@@ -1050,7 +1060,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       const setRestrictedTabsVisibility = (isVisible) => {
         const displayValue = isVisible ? '' : 'none';
-        ['events.html', 'members.html', 'troops.html', 'compensation.html', 'progress.html'].forEach((href) => {
+        ['events.html', 'members.html', 'troops.html', 'profile.html'].forEach((href) => {
           document.querySelectorAll(`.tab-buttons .tab-btn[href="${href}"]`).forEach((link) => {
             link.style.display = displayValue;
           });
@@ -1058,10 +1068,6 @@
       };
       const token = (() => { try { return localStorage.getItem(AUTH_KEY); } catch (e) { return null; } })();
       const email = (() => { try { return localStorage.getItem(AUTH_EMAIL_KEY); } catch (e) { return null; } })();
-      if (!token || !email) {
-        window.location.href = 'dashboard.html';
-        return;
-      }
       if (token && email) {
         setReadOnlyMode(false);
         updateSignedInBadge(email);
@@ -1079,7 +1085,7 @@
           const btn = document.createElement('button');
           btn.id = 'signInManageBtn';
           btn.textContent = '🔑 Sign in to Manage';
-          btn.style = 'margin-left:16px;padding:8px 18px;background:#1a73e8;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
+          btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
           btn.onclick = showGoogleLogin;
           nav.appendChild(btn);
         }
@@ -1090,7 +1096,7 @@
   <!-- Navigation Bar -->
   <nav class="tab-nav">
     <div class="tab-nav-container">
-      <div class="nav-brand" id="navBrand"><img src="favicon.png" alt="" style="height: 32px; vertical-align: middle; margin-right: 8px;"> cCc Champions</div>
+      <div class="nav-brand" id="navBrand"><img src="favicon.png" alt="" style="height: 32px; vertical-align: middle; margin-right: 8px;"> cCc League One</div>
       <button class="hamburger" id="navHamburger" aria-label="Toggle navigation">
         <span></span>
         <span></span>
@@ -1117,9 +1123,9 @@
           <img src="progress.png" alt="Progress" class="tab-icon desktop-only">
           <span class="tab-label mobile-only">Progress</span>
         </a>
-        <a href="compensation.html" class="tab-btn active" title="Compensation">
-          <img src="compensation.png" alt="Compensation" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Compensation</span>
+        <a href="profile.html" class="tab-btn" title="Profile">
+          <img src="profile.png" alt="Profile" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Profile</span>
         </a>
         <a href="competition.html" class="tab-btn" title="Competition">
           <img src="competition.png" alt="Competition" class="tab-icon desktop-only">
@@ -1135,7 +1141,7 @@
         </a>
       </div>
       <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
-      <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #1a1b1c; border-radius: 4px; font-size: 12px; color: #ffb300; border: 1px solid #444;"></div>
+      <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
       <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
     </div>
   </nav>
@@ -1143,7 +1149,7 @@
   <!-- Main Content -->
   <div class="tab-content active">
     <div id="loginPrompt" style="display: none; text-align: center; padding: 40px;">
-      <button id="signInBtn" style="padding: 12px 24px; font-size: 16px; cursor: pointer; background: #ffb300; color: #232526; border: none; border-radius: 4px; font-weight: 600;">Sign in to Manage</button>
+      <button id="signInBtn" style="padding: 12px 24px; font-size: 16px; cursor: pointer; background: #4f46e5; color: #f0f2f5; border: none; border-radius: 4px; font-weight: 600;">Sign in to Manage</button>
     </div>
 
     <div class="google-signin" id="googleSignInContainer" style="display: none; text-align: center; padding: 20px;"></div>
@@ -1235,7 +1241,7 @@
         </div>
 
         <div class="added-leaders-section" id="addedLeadersList">
-          <div style="color: #888; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>
+          <div style="color: #6b6f85; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>
         </div>
       </div>
 
@@ -1401,7 +1407,7 @@
   <script>
     // Check authentication and initialize
     window.addEventListener('DOMContentLoaded', () => {
-      const isSignedIn = localStorage.getItem('cccClanSignedIn') === 'true';
+      const isSignedIn = localStorage.getItem('cloClanSignedIn') === 'true';
       
       // Always show main content (guest mode)
       document.getElementById('mainContent').style.display = 'block';
@@ -1428,8 +1434,8 @@
 
     function logout() {
       if (confirm('Sign out of cCc Portal?')) {
-        localStorage.removeItem('cccClanSignedIn');
-        localStorage.removeItem('cccClanUser');
+        localStorage.removeItem('cloClanSignedIn');
+        localStorage.removeItem('cloClanUser');
         document.getElementById('mainContent').style.display = 'none';
         document.getElementById('loginPrompt').style.display = 'block';
         document.body.classList.remove('read-only-mode');
@@ -1440,7 +1446,7 @@
       const isReadOnly = document.body.classList.contains('read-only-mode');
       const navBrand = document.getElementById('navBrand');
       if (navBrand) {
-        navBrand.innerHTML = '<img src="favicon.png" alt="" style="height: 32px; width: 32px; vertical-align: middle; margin-right: 8px;"> cCc Champions';
+        navBrand.innerHTML = '<img src="favicon.png" alt="" style="height: 32px; width: 32px; vertical-align: middle; margin-right: 8px;"> cCc League One';
       }
       const badge = document.getElementById('readOnlyBadge');
       if (badge) {
@@ -1647,18 +1653,18 @@
       function displayAddedLeaders() {
         const listDiv = document.getElementById('addedLeadersList');
         if (addedLeaders.length === 0) {
-          listDiv.innerHTML = '<div style="color: #888; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>';
+          listDiv.innerHTML = '<div style="color: #6b6f85; font-size: 12px; text-align: center; padding: 24px;">No leaders added yet. Use Quick Add above to add heroes and captains.</div>';
           return;
         }
         
         let html = '<table style="width: 100%; border-collapse: collapse; font-size: 13px;">';
-        html += '<tr style="border-bottom: 1px solid #444;"><th style="text-align: left; padding: 8px; color: #ffb300; font-weight: 600;">Type</th><th style="text-align: center; padding: 8px; color: #ffb300; font-weight: 600;">Level</th><th style="text-align: center; padding: 8px; color: #ffb300; font-weight: 600;">Value</th><th style="text-align: center; padding: 8px; color: #ffb300; font-weight: 600;"></th></tr>';
+        html += '<tr style="border-bottom: 1px solid #c0c4d8;"><th style="text-align: left; padding: 8px; color: #4f46e5; font-weight: 600;">Type</th><th style="text-align: center; padding: 8px; color: #4f46e5; font-weight: 600;">Level</th><th style="text-align: center; padding: 8px; color: #4f46e5; font-weight: 600;">Value</th><th style="text-align: center; padding: 8px; color: #4f46e5; font-weight: 600;"></th></tr>';
         
         addedLeaders.forEach((leader, index) => {
           const typeLabel = leader.type === 'hero' ? 'Hero' : 'Captain';
           const baseValue = 1200;
           const total = leader.amount * leader.level * baseValue;
-          html += `<tr style="border-bottom: 1px solid #333;"><td style="padding: 8px; color: #e0e0e0;">${typeLabel}</td><td style="text-align: center; padding: 8px; color: #e0e0e0;">Lvl ${leader.level}</td><td style="text-align: center; padding: 8px; color: #ffc933;">${total.toLocaleString()}</td><td style="text-align: center; padding: 8px;"><button onclick="CompensationTab.removeLeader(${index})" style="background: #ff5252; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">Remove</button></td></tr>`;
+          html += `<tr style="border-bottom: 1px solid #c0c4d8;"><td style="padding: 8px; color: #2c2f45;">${typeLabel}</td><td style="text-align: center; padding: 8px; color: #2c2f45;">Lvl ${leader.level}</td><td style="text-align: center; padding: 8px; color: #6366f1;">${total.toLocaleString()}</td><td style="text-align: center; padding: 8px;"><button onclick="CompensationTab.removeLeader(${index})" style="background: #ff5252; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">Remove</button></td></tr>`;
         });
         
         html += '</table>';
@@ -1722,7 +1728,7 @@
           const currentValue = parseInt(field.value) || 0;
           field.value = currentValue + amount;
           field.style.background = '#e8f5e9';
-          setTimeout(() => field.style.background = '#232526', 500);
+          setTimeout(() => field.style.background = '#f0f2f5', 500);
           document.getElementById('quickTroopAmount').value = '';
           document.getElementById('quickTroopAmount').focus();
         }
@@ -1742,7 +1748,7 @@
           const currentValue = parseInt(field.value) || 0;
           field.value = currentValue + amount;
           field.style.background = '#e8f5e9';
-          setTimeout(() => field.style.background = '#232526', 500);
+          setTimeout(() => field.style.background = '#f0f2f5', 500);
           showQuickStatus(`✓ Added ${amount} item(s)`, 'ok');
           document.getElementById('quickMonsterAmount').value = '';
           document.getElementById('quickMonsterAmount').focus();
@@ -1757,7 +1763,7 @@
           if (amount > 0) {
             document.getElementById(type).value = '1';
             document.getElementById(type).style.background = '#e8f5e9';
-            setTimeout(() => document.getElementById(type).style.background = '#232526', 500);
+            setTimeout(() => document.getElementById(type).style.background = '#f0f2f5', 500);
             showQuickStatus(`✓ Clan Capital marked as lost`, 'ok');
             document.getElementById('quickBuildingAmount').value = '';
           } else {
@@ -1776,7 +1782,7 @@
           const currentValue = parseInt(field.value) || 0;
           field.value = currentValue + amount;
           field.style.background = '#e8f5e9';
-          setTimeout(() => field.style.background = '#232526', 500);
+          setTimeout(() => field.style.background = '#f0f2f5', 500);
           showQuickStatus(`✓ Added ${amount} item(s)`, 'ok');
           document.getElementById('quickBuildingAmount').value = '';
         }
@@ -1794,37 +1800,37 @@
               const content = document.getElementById('compensationDetailContent');
               content.innerHTML = `
                 <div style="margin-bottom: 20px;">
-                  <div style="font-size: 13px; color: #ccc; margin-bottom: 4px;">INCIDENT</div>
-                  <div style="font-size: 20px; font-weight: 600; color: #ffb300;">${result.incidentName}</div>
-                  <div style="font-size: 13px; color: #e0e0e0; margin-top: 4px;">📅 ${result.date}</div>
+                  <div style="font-size: 13px; color: #6b6f85; margin-bottom: 4px;">INCIDENT</div>
+                  <div style="font-size: 20px; font-weight: 600; color: #4f46e5;">${result.incidentName}</div>
+                  <div style="font-size: 13px; color: #2c2f45; margin-top: 4px;">📅 ${result.date}</div>
                 </div>
 
                 <div style="display: grid; gap: 12px; margin-bottom: 20px;">
-                  <div style="background: #1a1b1c; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #444;">
-                    <span style="color: #ccc; font-size: 13px;">Heroes & Captains</span>
-                    <span style="font-weight: 600; color: #ffb300;">${result.breakdown.herosCaptains.toLocaleString()}</span>
+                  <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
+                    <span style="color: #6b6f85; font-size: 13px;">Heroes & Captains</span>
+                    <span style="font-weight: 600; color: #4f46e5;">${result.breakdown.herosCaptains.toLocaleString()}</span>
                   </div>
-                  <div style="background: #1a1b1c; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #444;">
-                    <span style="color: #ccc; font-size: 13px;">Troops</span>
+                  <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
+                    <span style="color: #6b6f85; font-size: 13px;">Troops</span>
                     <span style="font-weight: 600; color: #8bc34a;">${result.breakdown.troops.toLocaleString()}</span>
                   </div>
-                  <div style="background: #1a1b1c; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #444;">
-                    <span style="color: #ccc; font-size: 13px;">Monsters & Creatures</span>
-                    <span style="font-weight: 600; color: #ffc933;">${result.breakdown.monsters.toLocaleString()}</span>
+                  <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
+                    <span style="color: #6b6f85; font-size: 13px;">Monsters & Creatures</span>
+                    <span style="font-weight: 600; color: #6366f1;">${result.breakdown.monsters.toLocaleString()}</span>
                   </div>
-                  <div style="background: #1a1b1c; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #444;">
-                    <span style="color: #ccc; font-size: 13px;">Buildings & Resources</span>
+                  <div style="background: #e8eaf2; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; border: 1px solid #c0c4d8;">
+                    <span style="color: #6b6f85; font-size: 13px;">Buildings & Resources</span>
                     <span style="font-weight: 600; color: #ff5252;">${result.breakdown.buildings.toLocaleString()}</span>
                   </div>
                 </div>
 
-                <div style="background: linear-gradient(135deg, #ffb300 0%, #ffc933 100%); color: #232526; border-radius: 8px; padding: 20px; text-align: center;">
+                <div style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); color: #f0f2f5; border-radius: 8px; padding: 20px; text-align: center;">
                   <div style="font-size: 12px; opacity: 0.8; margin-bottom: 8px; font-weight: 600;">GRAND TOTAL</div>
                   <div style="font-size: 36px; font-weight: 700;">${result.grandTotal.toLocaleString()} silver</div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-                  <button onclick="CompensationTab.editReport('${result.sheetName}')" style="padding: 10px 16px; background: #ffb300; color: #232526; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">✏️ Edit</button>
+                  <button onclick="CompensationTab.editReport('${result.sheetName}')" style="padding: 10px 16px; background: #4f46e5; color: #f0f2f5; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">✏️ Edit</button>
                   <button onclick="CompensationTab.deleteReport('${result.sheetName}')" style="padding: 10px 16px; background: #ff5252; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">🗑️ Delete</button>
                 </div>
               `;
@@ -1980,14 +1986,14 @@
               listDiv.innerHTML = '';
               result.reports.forEach(report => {
                 const card = document.createElement('div');
-                card.style.cssText = 'background: #232526; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer; transition: all 0.2s; border-left: 4px solid #ffb300; border: 1px solid #444;';
-                card.onmouseover = function() { this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.35)'; this.style.transform = 'translateY(-2px)'; this.style.borderLeftColor = '#ffc933'; };
-                card.onmouseout = function() { this.style.boxShadow = '0 1px 3px rgba(0,0,0,0.25)'; this.style.transform = 'translateY(0)'; this.style.borderLeftColor = '#ffb300'; };
+                card.style.cssText = 'background: #f0f2f5; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.25); cursor: pointer; transition: all 0.2s; border-left: 4px solid #4f46e5; border: 1px solid #c0c4d8;';
+                card.onmouseover = function() { this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.35)'; this.style.transform = 'translateY(-2px)'; this.style.borderLeftColor = '#6366f1'; };
+                card.onmouseout = function() { this.style.boxShadow = '0 1px 3px rgba(0,0,0,0.25)'; this.style.transform = 'translateY(0)'; this.style.borderLeftColor = '#4f46e5'; };
                 
                 card.innerHTML = `
-                  <div style="font-size: 14px; font-weight: 600; color: #ffb300; margin-bottom: 8px;">${report.incidentName}</div>
-                  <div style="font-size: 12px; color: #e0e0e0; margin-bottom: 12px;">📅 ${report.date}</div>
-                  <button onclick="CompensationTab.viewDetail('${report.sheetName}')" style="padding: 8px 12px; background: #ffb300; color: #232526; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; margin-right: 8px;">👁️ View</button>
+                  <div style="font-size: 14px; font-weight: 600; color: #4f46e5; margin-bottom: 8px;">${report.incidentName}</div>
+                  <div style="font-size: 12px; color: #2c2f45; margin-bottom: 12px;">📅 ${report.date}</div>
+                  <button onclick="CompensationTab.viewDetail('${report.sheetName}')" style="padding: 8px 12px; background: #4f46e5; color: #f0f2f5; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; margin-right: 8px;">👁️ View</button>
                 `;
                 listDiv.appendChild(card);
               });
