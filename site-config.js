@@ -5,7 +5,7 @@
 const SITE_CONFIG = {
   // Clan Identity
   clanName: 'cCc League One',
-  clanAbbr: 'ccc',
+  clanAbbr: 'clo',
 
   // Progress ranking weights (must sum to 100)
   rankingWeights: {
@@ -16,7 +16,7 @@ const SITE_CONFIG = {
   },
   
   // Branding
-  primaryColor: '#6c5ce7',
+  primaryColor: '#2563eb',
   secondaryColor: '#f0f2f5',
   favicon: 'favicon.png',
   
@@ -41,6 +41,7 @@ const SITE_CONFIG = {
     { name: 'Members', file: 'members.html', icon: 'members.png' },
     { name: 'Troops', file: 'troops.html', icon: 'troops.png' },
     { name: 'Progress', file: 'progress.html', icon: 'progress.png' },
+    { name: 'Profile', file: 'profile.html', icon: 'profile.png' },
     { name: 'Calendar', file: 'calendar.html', icon: 'calendar.png' }
   ]
 };
