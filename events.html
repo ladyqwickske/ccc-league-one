@@ -913,6 +913,7 @@
       const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
       return text.replace(/[&<>"']/g, m => map[m]);
     };
+    const escapeAttr = (str) => String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
     window.addEventListener('DOMContentLoaded', () => {
       EventsTab.init();
@@ -1196,12 +1197,12 @@
           // Only show View button for events that track participation
           const viewButton = event.participationMethod === 'period-marker' 
             ? '' 
-            : `<button class="btn action-btn" onclick="EventsTab.viewEventParticipation('${escapeHtml(event.eventName)}')">👁 View</button>`;
+            : `<button class="btn action-btn" onclick="EventsTab.viewEventParticipation('${escapeAttr(event.eventName)}')">👁 View</button>`;
           const targetPtsDisplay = event.participationMethod === 'period-marker'
             ? (event.targetPoints ? `<span style="color:#ffb300;font-weight:600;">${Number(event.targetPoints).toLocaleString()}</span>` : '<span style="color:#888;">Default</span>')
             : '<span style="color:#555;">—</span>';
           const row = document.createElement('tr');
-          row.innerHTML = `<td class="event-name">${escapeHtml(event.eventName)}</td><td>${escapeHtml(event.eventType)}</td><td>${formatDateUTC(event.startDate)}</td><td>${formatDateUTC(event.endDate, true)}</td><td>${methodBadge}</td><td style="text-align:center;">${targetPtsDisplay}</td><td>${viewButton}<button class="btn action-btn" onclick="EventsTab.editEvent('${escapeHtml(event.eventName)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="EventsTab.deleteEvent('${escapeHtml(event.eventName)}')">🗑️ Delete</button></td>`;
+          row.innerHTML = `<td class="event-name">${escapeHtml(event.eventName)}</td><td>${escapeHtml(event.eventType)}</td><td>${formatDateUTC(event.startDate)}</td><td>${formatDateUTC(event.endDate, true)}</td><td>${methodBadge}</td><td style="text-align:center;">${targetPtsDisplay}</td><td>${viewButton}<button class="btn action-btn" onclick="EventsTab.editEvent('${escapeAttr(event.eventName)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="EventsTab.deleteEvent('${escapeAttr(event.eventName)}')">🗑️ Delete</button></td>`;
           tbody.appendChild(row);
         });
         if (sorted.length === 0) {
@@ -2209,7 +2210,7 @@
           const methodBadge = eventType.trackingMethod === 'chest-based' ? '<span class="badge chest">Chest</span>' : '<span class="badge manual">Manual</span>';
           const chestDisplay = eventType.chestTypes ? escapeHtml(eventType.chestTypes) : '<em style="color:#999;">All</em>';
           const row = document.createElement('tr');
-          row.innerHTML = `<td>${escapeHtml(eventType.name)}</td><td>${methodBadge}</td><td>${chestDisplay}</td><td>${escapeHtml(eventType.description)}</td><td style="text-align:center;">${eventType.threshold || '—'}</td><td><button class="btn action-btn" onclick="EventsTab.editEventType('${escapeHtml(eventType.name)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="if(confirm('Delete?'))EventsTab.deleteEventType('${escapeHtml(eventType.name)}')">🗑️</button></td>`;
+          row.innerHTML = `<td>${escapeHtml(eventType.name)}</td><td>${methodBadge}</td><td>${chestDisplay}</td><td>${escapeHtml(eventType.description)}</td><td style="text-align:center;">${eventType.threshold || '—'}</td><td><button class="btn action-btn" onclick="EventsTab.editEventType('${escapeAttr(eventType.name)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="if(confirm('Delete?'))EventsTab.deleteEventType('${escapeAttr(eventType.name)}')">🗑️</button></td>`;
           tbody.appendChild(row);
         });
         document.getElementById('eventTypesTable').style.display = 'table';
