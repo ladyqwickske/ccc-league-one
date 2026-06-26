@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>cCc League One - Events</title>
   <link rel="icon" href="favicon.png" type="image/png">
+  <script src="perf-debug.js"></script>
   <script src="config.js"></script>
   <script src="portal-shim.js"></script>
   <script>
@@ -216,6 +217,8 @@
     .btn-secondary { background: #c0c4d8; color: #4f46e5; border: 1px solid #c0c4d8; }
     .btn-secondary:hover { background: #d0d3e8; }
     .action-btn { padding: 4px 8px; font-size: 11px; }
+    .filter-btn { background: #e8eaf2 !important; color: #555 !important; border: 1px solid #c0c4d8 !important; border-radius: 6px !important; padding: 5px 12px !important; font-size: 0.82em !important; font-weight: 500 !important; }
+    .filter-btn.active { background: #4f46e5 !important; color: #fff !important; border-color: #4f46e5 !important; }
 
     /* Table */
     .table-container { margin-top: 12px; margin-bottom: 12px; overflow: auto; max-height: 70vh; position: relative; border-radius: 8px; border: 1px solid #c0c4d8; }
@@ -747,6 +750,11 @@
         <h3 style="margin:0 0 12px 0;">All Events</h3>
         <div style="display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap; align-items:center;">
           <button class="btn" onclick="EventsTab.loadEvents()">🔄 Refresh</button>
+          <span style="font-size:0.82em; color:#888; margin-left:8px;">Show:</span>
+          <button class="btn filter-btn active" onclick="EventsTab.setEventFilter('active', this)">🟢 Active</button>
+          <button class="btn filter-btn" onclick="EventsTab.setEventFilter('recent', this)">🕐 Recent</button>
+          <button class="btn filter-btn" onclick="EventsTab.setEventFilter('all', this)">📋 All</button>
+          <button class="btn filter-btn" onclick="EventsTab.setEventFilter('ended', this)">📁 Ended</button>
         </div>
         <div class="table-container">
           <div id="eventsLoading" class="loading"><div class="spinner"></div><p>Loading events...</p></div>
@@ -1014,13 +1022,67 @@
       // --- Table Sorting State ---
       let eventsSortColumn = 'endDate';
       let eventsSortDirection = 'desc';
+      let eventsFilter = 'active';
+
+      function setEventFilter(filter, btn) {
+        eventsFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        renderEventsTable();
+      }
+
+      function classifyEvent(ev) {
+        const today = new Date(); today.setHours(0,0,0,0);
+        const cutoff = new Date(today); cutoff.setDate(cutoff.getDate() - 14);
+        const start = parseDateUTC(ev.startDate);
+        const end = parseDateUTC(ev.endDate);
+        if (!start || !end) return 'other';
+        const startDay = new Date(start); startDay.setHours(0,0,0,0);
+        const endDay = new Date(end); endDay.setHours(23,59,59,999);
+        if (startDay > today) return 'future';
+        if (endDay >= today) return 'active';
+        if (endDay >= cutoff) return 'recent';
+        return 'ended';
+      }
+
+      function buildGroupedOptions(events, placeholder) {
+        const active = [], recent = [], older = [], future = [];
+        events.forEach(e => {
+          const cls = classifyEvent(e);
+          if (cls === 'active') active.push(e);
+          else if (cls === 'recent') recent.push(e);
+          else if (cls === 'future') future.push(e);
+          else older.push(e);
+        });
+        const byDateDesc = (a, b) => (b.startDate || '').localeCompare(a.startDate || '');
+        [active, recent, older, future].forEach(g => g.sort(byDateDesc));
+        const optHtml = (e) => `<option value="${escapeHtml(e.eventName)}">${escapeHtml(e.eventName)}</option>`;
+        let html = `<option value="">${placeholder}</option>`;
+        if (active.length) html += `<optgroup label="🟢 Active">${active.map(optHtml).join('')}</optgroup>`;
+        if (recent.length) html += `<optgroup label="🕐 Recent (last 14 days)">${recent.map(optHtml).join('')}</optgroup>`;
+        if (future.length) html += `<optgroup label="📅 Upcoming">${future.map(optHtml).join('')}</optgroup>`;
+        if (older.length) html += `<optgroup label="📁 Older">${older.map(optHtml).join('')}</optgroup>`;
+        return html;
+      }
 
       function renderEventsTable() {
         const tbody = document.getElementById('eventsTableBody');
         tbody.innerHTML = '';
 
+        // Apply filter
+        let filtered = [...eventsData];
+        if (eventsFilter !== 'all') {
+          filtered = filtered.filter(ev => {
+            const cls = classifyEvent(ev);
+            if (eventsFilter === 'active') return cls === 'active';
+            if (eventsFilter === 'recent') return cls === 'active' || cls === 'recent';
+            if (eventsFilter === 'ended') return cls === 'ended';
+            return true;
+          });
+        }
+
         // Sorting logic
-        let sorted = [...eventsData];
+        let sorted = filtered;
         if (eventsSortColumn) {
           sorted.sort((a, b) => {
             let vA, vB;
@@ -1073,6 +1135,9 @@
           row.innerHTML = `<td class="event-name">${escapeHtml(event.eventName)}</td><td>${escapeHtml(event.eventType)}</td><td>${formatDateUTC(event.startDate)}</td><td>${formatDateUTC(event.endDate, true)}</td><td>${methodBadge}</td><td style="text-align:center;">${targetPtsDisplay}</td><td>${viewButton}<button class="btn action-btn" onclick="EventsTab.editEvent('${escapeHtml(event.eventName)}')">✏️ Edit</button><button class="btn action-btn btn-secondary" onclick="EventsTab.deleteEvent('${escapeHtml(event.eventName)}')">🗑️ Delete</button></td>`;
           tbody.appendChild(row);
         });
+        if (sorted.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">No events match this filter.</td></tr>';
+        }
 
         // Add sort indicators to headers
         const ths = document.querySelectorAll('#eventsTable thead th.sortable');
@@ -1156,7 +1221,7 @@
         if (!eventsData || eventsData.length === 0) { select.innerHTML = '<option value="">-- No events available --</option>'; return; }
         const chestEvents = eventsData.filter(e => e.participationMethod === 'chest-based');
         if (chestEvents.length === 0) { select.innerHTML = '<option value="">-- No chest-based events --</option>'; return; }
-        select.innerHTML = ['<option value="">-- Select Chest Event --</option>'].concat(chestEvents.map(e => `<option value="${escapeHtml(e.eventName)}">${escapeHtml(e.eventName)}</option>`)).join('');
+        select.innerHTML = buildGroupedOptions(chestEvents, '-- Select Chest Event --');
       }
 
       function populateManualEventSelect() {
@@ -1164,7 +1229,7 @@
         if (!eventsData || eventsData.length === 0) { select.innerHTML = '<option value="">-- No events available --</option>'; return; }
         const manualEvents = eventsData.filter(e => e.participationMethod === 'manual-entry');
         if (manualEvents.length === 0) { select.innerHTML = '<option value="">-- No manual events --</option>'; return; }
-        select.innerHTML = ['<option value="">-- Select Event --</option>'].concat(manualEvents.map(e => `<option value="${escapeHtml(e.eventName)}">${escapeHtml(e.eventName)}</option>`)).join('');
+        select.innerHTML = buildGroupedOptions(manualEvents, '-- Select Event --');
       }
 
       function populateTroopEventSelect() {
@@ -1172,7 +1237,7 @@
         if (!eventsData || eventsData.length === 0) { select.innerHTML = '<option value="">-- No events available --</option>'; return; }
         const troopEvents = eventsData.filter(e => e.participationMethod === 'troop-based');
         if (troopEvents.length === 0) { select.innerHTML = '<option value="">-- No troop-based events --</option>'; return; }
-        select.innerHTML = ['<option value="">-- Select Troop Event --</option>'].concat(troopEvents.map(e => `<option value="${escapeHtml(e.eventName)}">${escapeHtml(e.eventName)}</option>`)).join('');
+        select.innerHTML = buildGroupedOptions(troopEvents, '-- Select Troop Event --');
       }
 
       function normalizeName(name) {
@@ -2161,7 +2226,7 @@
         }
       }
 
-      return { init, switchTab, loadEvents, generateEvents, toggleAllGenTypes, onChestEventSelected, onManualEventSelected, onTroopEventSelected, submitManualEntry, submitTroopEntry, calculateManualNonParticipants, calculateTroopNonParticipants, calculateChestParticipation, submitCreateEvent, updateEventTypeMethod, submitAddEventType, renderEventTypesTable, cancelEditEventType, addTroopTargetRow, removeTroopTargetRow, editEventType, editEvent, deleteEvent, deleteEventType, viewEventParticipation, sortTable, sortManualTable };
+      return { init, switchTab, loadEvents, generateEvents, toggleAllGenTypes, onChestEventSelected, onManualEventSelected, onTroopEventSelected, submitManualEntry, submitTroopEntry, calculateManualNonParticipants, calculateTroopNonParticipants, calculateChestParticipation, submitCreateEvent, updateEventTypeMethod, submitAddEventType, renderEventTypesTable, cancelEditEventType, addTroopTargetRow, removeTroopTargetRow, editEventType, editEvent, deleteEvent, deleteEventType, viewEventParticipation, sortTable, sortManualTable, setEventFilter };
     })();
   </script>
 </body>
