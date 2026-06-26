@@ -1019,8 +1019,8 @@
         document.getElementById('eventsTable').style.display = 'table';
       }
 
-      // --- Table Sorting State ---
-      let eventsSortColumn = 'endDate';
+      // --- Table Sorting State (null = default two-level: eventType asc, startDate desc) ---
+      let eventsSortColumn = null;
       let eventsSortDirection = 'desc';
       let eventsFilter = 'active';
 
@@ -1031,17 +1031,55 @@
         renderEventsTable();
       }
 
+      // Find current & previous period-marker ranges (cached per render cycle)
+      let _periodRanges = null;
+      function getPeriodRanges_() {
+        if (_periodRanges) return _periodRanges;
+        const today = new Date(); today.setHours(0,0,0,0);
+        const periods = (eventsData || [])
+          .filter(e => e.participationMethod === 'period-marker')
+          .sort((a, b) => (a.startDate || '').localeCompare(b.startDate || ''));
+        let current = null, previous = null;
+        for (let i = 0; i < periods.length; i++) {
+          const s = parseDateUTC(periods[i].startDate);
+          const e = parseDateUTC(periods[i].endDate);
+          if (s && e) {
+            const sd = new Date(s); sd.setHours(0,0,0,0);
+            const ed = new Date(e); ed.setHours(23,59,59,999);
+            if (sd <= today && ed >= today) {
+              current = { start: sd, end: ed };
+              for (let j = i - 1; j >= 0; j--) {
+                const ps = parseDateUTC(periods[j].startDate);
+                const pe = parseDateUTC(periods[j].endDate);
+                if (ps && pe) {
+                  const psd = new Date(ps); psd.setHours(0,0,0,0);
+                  const ped = new Date(pe); ped.setHours(23,59,59,999);
+                  previous = { start: psd, end: ped }; break;
+                }
+              }
+              break;
+            }
+          }
+        }
+        if (!current) {
+          const cutoff = new Date(today); cutoff.setDate(cutoff.getDate() - 14);
+          current = { start: cutoff, end: today };
+        }
+        _periodRanges = { current, previous };
+        return _periodRanges;
+      }
+
       function classifyEvent(ev) {
         const today = new Date(); today.setHours(0,0,0,0);
-        const cutoff = new Date(today); cutoff.setDate(cutoff.getDate() - 14);
+        const { current, previous } = getPeriodRanges_();
         const start = parseDateUTC(ev.startDate);
         const end = parseDateUTC(ev.endDate);
         if (!start || !end) return 'other';
         const startDay = new Date(start); startDay.setHours(0,0,0,0);
         const endDay = new Date(end); endDay.setHours(23,59,59,999);
-        if (startDay > today) return 'future';
-        if (endDay >= today) return 'active';
-        if (endDay >= cutoff) return 'recent';
+        if (startDay > current.end) return 'future';
+        if (endDay >= current.start && startDay <= current.end) return 'active';
+        if (previous && endDay >= previous.start && startDay <= previous.end) return 'recent';
         return 'ended';
       }
 
@@ -1059,13 +1097,14 @@
         const optHtml = (e) => `<option value="${escapeHtml(e.eventName)}">${escapeHtml(e.eventName)}</option>`;
         let html = `<option value="">${placeholder}</option>`;
         if (active.length) html += `<optgroup label="🟢 Active">${active.map(optHtml).join('')}</optgroup>`;
-        if (recent.length) html += `<optgroup label="🕐 Recent (last 14 days)">${recent.map(optHtml).join('')}</optgroup>`;
+        if (recent.length) html += `<optgroup label="🕐 Recent (prev. period)">${recent.map(optHtml).join('')}</optgroup>`;
         if (future.length) html += `<optgroup label="📅 Upcoming">${future.map(optHtml).join('')}</optgroup>`;
         if (older.length) html += `<optgroup label="📁 Older">${older.map(optHtml).join('')}</optgroup>`;
         return html;
       }
 
       function renderEventsTable() {
+        _periodRanges = null;         // bust period cache on each render
         const tbody = document.getElementById('eventsTableBody');
         tbody.innerHTML = '';
 
@@ -1083,7 +1122,14 @@
 
         // Sorting logic
         let sorted = filtered;
-        if (eventsSortColumn) {
+        if (!eventsSortColumn) {
+          // Default two-level sort: eventType asc, then startDate desc
+          sorted.sort((a, b) => {
+            const typeA = (a.eventType || '').toLowerCase(), typeB = (b.eventType || '').toLowerCase();
+            if (typeA !== typeB) return typeA.localeCompare(typeB);
+            return (parseDateUTC(b.startDate)?.getTime() || 0) - (parseDateUTC(a.startDate)?.getTime() || 0);
+          });
+        } else {
           sorted.sort((a, b) => {
             let vA, vB;
             switch (eventsSortColumn) {
