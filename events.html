@@ -755,6 +755,10 @@
           <button class="btn filter-btn" onclick="EventsTab.setEventFilter('recent', this)">🕐 Recent</button>
           <button class="btn filter-btn" onclick="EventsTab.setEventFilter('all', this)">📋 All</button>
           <button class="btn filter-btn" onclick="EventsTab.setEventFilter('ended', this)">📁 Ended</button>
+          <span style="font-size:0.82em; color:#888; margin-left:8px;">Type:</span>
+          <select id="eventTypeFilter" onchange="EventsTab.setEventTypeFilter(this.value)" style="border:1px solid #c5cbe0; border-radius:6px; padding:4px 8px; font-size:0.82em; cursor:pointer;">
+            <option value="">All Types</option>
+          </select>
         </div>
         <div class="table-container">
           <div id="eventsLoading" class="loading"><div class="spinner"></div><p>Loading events...</p></div>
@@ -1023,6 +1027,12 @@
       let eventsSortColumn = null;
       let eventsSortDirection = 'desc';
       let eventsFilter = 'active';
+      let eventsTypeFilter = '';
+
+      function setEventTypeFilter(type) {
+        eventsTypeFilter = type;
+        renderEventsTable();
+      }
 
       function setEventFilter(filter, btn) {
         eventsFilter = filter;
@@ -1108,6 +1118,16 @@
         const tbody = document.getElementById('eventsTableBody');
         tbody.innerHTML = '';
 
+        // Populate event type dropdown from all events
+        var typeSelect = document.getElementById('eventTypeFilter');
+        if (typeSelect) {
+          var types = []; var seen = {};
+          eventsData.forEach(function(e) { if (e.eventType && !seen[e.eventType]) { seen[e.eventType] = 1; types.push(e.eventType); } });
+          types.sort();
+          var prev = eventsTypeFilter;
+          typeSelect.innerHTML = '<option value="">All Types</option>' + types.map(function(t) { return '<option value="' + t + '"' + (t === prev ? ' selected' : '') + '>' + t + '</option>'; }).join('');
+        }
+
         // Apply filter
         let filtered = [...eventsData];
         if (eventsFilter !== 'all') {
@@ -1118,6 +1138,9 @@
             if (eventsFilter === 'ended') return cls === 'ended';
             return true;
           });
+        }
+        if (eventsTypeFilter) {
+          filtered = filtered.filter(ev => ev.eventType === eventsTypeFilter);
         }
 
         // Sorting logic
@@ -2272,7 +2295,7 @@
         }
       }
 
-      return { init, switchTab, loadEvents, generateEvents, toggleAllGenTypes, onChestEventSelected, onManualEventSelected, onTroopEventSelected, submitManualEntry, submitTroopEntry, calculateManualNonParticipants, calculateTroopNonParticipants, calculateChestParticipation, submitCreateEvent, updateEventTypeMethod, submitAddEventType, renderEventTypesTable, cancelEditEventType, addTroopTargetRow, removeTroopTargetRow, editEventType, editEvent, deleteEvent, deleteEventType, viewEventParticipation, sortTable, sortManualTable, setEventFilter };
+      return { init, switchTab, loadEvents, generateEvents, toggleAllGenTypes, onChestEventSelected, onManualEventSelected, onTroopEventSelected, submitManualEntry, submitTroopEntry, calculateManualNonParticipants, calculateTroopNonParticipants, calculateChestParticipation, submitCreateEvent, updateEventTypeMethod, submitAddEventType, renderEventTypesTable, cancelEditEventType, addTroopTargetRow, removeTroopTargetRow, editEventType, editEvent, deleteEvent, deleteEventType, viewEventParticipation, sortTable, sortManualTable, setEventFilter, setEventTypeFilter };
     })();
   </script>
 </body>
