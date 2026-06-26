@@ -1088,6 +1088,15 @@
         if (!start || !end) return 'other';
         const startDay = new Date(start); startDay.setHours(0,0,0,0);
         const endDay = new Date(end); endDay.setHours(23,59,59,999);
+        // Period-marker events define the periods themselves — classify directly vs today
+        if (ev.participationMethod === 'period-marker') {
+          if (startDay > today) return 'future';
+          if (endDay < today) {
+            if (previous && endDay >= previous.start && startDay <= previous.end) return 'recent';
+            return 'ended';
+          }
+          return 'active';
+        }
         if (startDay > current.end) return 'future';
         if (endDay >= current.start && startDay <= current.end) return 'active';
         if (previous && endDay >= previous.start && startDay <= previous.end) return 'recent';
