@@ -829,6 +829,12 @@
           <div><label for="eventType">Event Type</label><select id="eventType"><option value="">-- Select Event Type --</option></select></div>
         </div>
         <div class="form-grid"><div><label for="eventStartDate">Start Date</label><input type="date" id="eventStartDate"></div><div><label for="eventEndDate">End Date</label><input type="date" id="eventEndDate"></div><div id="targetPointsGroup" style="display:none;"><label for="eventTargetPoints">Target Points</label><input type="number" id="eventTargetPoints" placeholder="e.g., 4000 (blank = use global default)" min="0"></div></div>
+        <div id="eventTroopTargetSection" style="display:none; margin:12px 0;">
+          <label style="display:block; margin-bottom:8px;">🎖️ Troop Category Targets</label>
+          <p style="color:#555; font-size:12px; margin-bottom:12px;">Set target points for each troop category. These override the event type defaults for this specific event.</p>
+          <div id="eventTroopTargetsList" style="border:1px solid #c0c4d8; border-radius:6px; padding:12px; background:#f0f2f5; margin-bottom:12px; max-height:250px; overflow-y:auto;"></div>
+          <button type="button" class="btn btn-secondary" style="width:100%; margin-bottom:12px;" onclick="EventsTab.addEventTroopTargetRow()">➕ Add Category Target</button>
+        </div>
         <button class="btn" onclick="EventsTab.submitCreateEvent()">🎯 Create Event</button><div id="createStatus" class="status"></div>
 
         <hr style="border:none; border-top:1px solid #c0c4d8; margin:24px 0;">
@@ -958,13 +964,18 @@
         const startDateInput = document.getElementById('eventStartDate');
         const endDateInput = document.getElementById('eventEndDate');
         const targetPointsGroup = document.getElementById('targetPointsGroup');
+        const troopTargetSection = document.getElementById('eventTroopTargetSection');
         if (!eventTypeSelect || !startDateInput || !endDateInput) return;
         // Find selected event type's method
         const selectedType = eventTypeSelect.value;
         let method = '';
+        let typeData = null;
         if (selectedType && Array.isArray(eventTypesData)) {
           const found = eventTypesData.find(et => et.name === selectedType);
-          if (found) method = found.trackingMethod || found.participationMethod || '';
+          if (found) {
+            method = found.trackingMethod || found.participationMethod || '';
+            typeData = found;
+          }
         }
         // If period-marker, always enable and require dates, show target points
         if (method === 'period-marker') {
@@ -977,6 +988,16 @@
           startDateInput.required = false;
           endDateInput.required = false;
           if (targetPointsGroup) targetPointsGroup.style.display = 'none';
+        }
+        // Show/hide troop targets for troop-based methods
+        if (troopTargetSection) {
+          const showTroop = (method === 'troop-based');
+          troopTargetSection.style.display = showTroop ? 'block' : 'none';
+          if (showTroop && typeData && typeData.troopTargets && !editingEventName) {
+            setEventTroopTargetsInForm(typeData.troopTargets);
+          } else if (!showTroop) {
+            setEventTroopTargetsInForm('');
+          }
         }
       }
 
@@ -1259,6 +1280,10 @@
         if (targetPtsInput) targetPtsInput.value = event.targetPoints || '';
         // Show/hide target points field based on event type
         onCreateEventTypeChange();
+        // Load per-event troop targets if available
+        if (event.troopTargets) {
+          setEventTroopTargetsInForm(event.troopTargets);
+        }
         const submitBtn = document.querySelector('button[onclick="EventsTab.submitCreateEvent()"]');
         submitBtn.textContent = '💾 Update Event';
         switchTab('createTab');
@@ -1373,6 +1398,13 @@
       }
 
       function getEventTroopTargets(eventTypeName) {
+        // Check per-event troop targets first (override event type defaults)
+        if (selectedEvent && selectedEvent.troopTargets) {
+          try {
+            const parsed = JSON.parse(selectedEvent.troopTargets);
+            if (parsed && Object.keys(parsed).length > 0) return parsed;
+          } catch (e) { /* fall through to event type targets */ }
+        }
         if (!eventTypeName) return null;
         if (troopTargetsCache[eventTypeName]) return troopTargetsCache[eventTypeName];
         const type = eventTypesData.find(et => et.name === eventTypeName);
@@ -1416,6 +1448,7 @@
             document.getElementById('eventStartDate').value = '';
             document.getElementById('eventEndDate').value = '';
             if (targetPointsInput) targetPointsInput.value = '';
+            setEventTroopTargetsInForm('');
             document.querySelector('[onclick="EventsTab.submitCreateEvent()"]').textContent = '🎯 Create Event';
             editingEventName = null;
             loadEvents();
@@ -1427,11 +1460,14 @@
 
         const onError = (error) => { status.textContent = 'Error: ' + error.message; status.classList.add('err'); };
 
+        // Collect troop targets if applicable
+        const troopTargets = getEventTroopTargetsFromForm();
+
         const payload = {
           action: isEditing ? 'updateEvent' : 'addEvent',
           args: isEditing
-            ? [editingEventName, eventName, eventType, startDate, endDate, targetPoints]
-            : [eventName, eventType, startDate, endDate, targetPoints]
+            ? [editingEventName, eventName, eventType, startDate, endDate, targetPoints, troopTargets]
+            : [eventName, eventType, startDate, endDate, targetPoints, troopTargets]
         };
         // Extra validation: show error if eventType is undefined
         if (!eventType || eventType === 'undefined') {
@@ -2141,6 +2177,55 @@
         if (row) row.remove();
       }
 
+      // --- Event-level troop target helpers (Create/Edit Event form) ---
+      function getEventTroopTargetsFromForm() {
+        const rows = document.querySelectorAll('#eventTroopTargetsList .evt-troop-target-row');
+        const targets = {};
+        rows.forEach(row => {
+          const level = row.querySelector('select').value;
+          const points = row.querySelector('input[type="number"]').value;
+          if (level && points) targets[level] = parseInt(points);
+        });
+        return Object.keys(targets).length === 0 ? '' : JSON.stringify(targets);
+      }
+
+      function setEventTroopTargetsInForm(targetsJson) {
+        const container = document.getElementById('eventTroopTargetsList');
+        if (!container) return;
+        container.innerHTML = '';
+        if (!targetsJson) return;
+        try {
+          const targets = JSON.parse(targetsJson);
+          Object.entries(targets).forEach(([level, points]) => { addEventTroopTargetRow(level, points); });
+        } catch (e) { console.error('Failed to parse event troop targets:', e); }
+      }
+
+      function addEventTroopTargetRow(level, points) {
+        level = level || '';
+        points = points || '';
+        const container = document.getElementById('eventTroopTargetsList');
+        if (!container) return;
+        const rowId = 'evt-troop-target-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+        const row = document.createElement('div');
+        row.className = 'evt-troop-target-row';
+        row.id = rowId;
+        row.style.cssText = 'display:grid; grid-template-columns:1fr 2fr auto; gap:8px; margin-bottom:8px;';
+        const categories = ['G7', 'G8', 'T8', 'G9', 'T9'];
+        const options = categories.map(cat =>
+          '<option value="' + cat + '"' + (level === cat ? ' selected' : '') + '>' + cat + '</option>'
+        ).join('');
+        row.innerHTML =
+          '<select style="padding:6px; border:1px solid #c0c4d8; border-radius:4px; background:#f0f2f5; color:#2c2f45;"><option value="">-- Category --</option>' + options + '</select>' +
+          '<input type="number" placeholder="Target points" value="' + points + '" style="padding:6px; border:1px solid #c0c4d8; border-radius:4px; background:#f0f2f5; color:#2c2f45;" min="0" step="1">' +
+          '<button type="button" class="btn btn-secondary" style="padding:4px 8px;" onclick="EventsTab.removeEventTroopTargetRow(\'' + rowId + '\')">✖</button>';
+        container.appendChild(row);
+      }
+
+      function removeEventTroopTargetRow(rowId) {
+        const row = document.getElementById(rowId);
+        if (row) row.remove();
+      }
+
       function editEventType(eventTypeName) {
         const eventType = eventTypesData.find(et => et.name === eventTypeName);
         if (!eventType) { alert('Event type not found.'); return; }
@@ -2305,7 +2390,7 @@
         }
       }
 
-      return { init, switchTab, loadEvents, generateEvents, toggleAllGenTypes, onChestEventSelected, onManualEventSelected, onTroopEventSelected, submitManualEntry, submitTroopEntry, calculateManualNonParticipants, calculateTroopNonParticipants, calculateChestParticipation, submitCreateEvent, updateEventTypeMethod, submitAddEventType, renderEventTypesTable, cancelEditEventType, addTroopTargetRow, removeTroopTargetRow, editEventType, editEvent, deleteEvent, deleteEventType, viewEventParticipation, sortTable, sortManualTable, setEventFilter, setEventTypeFilter };
+      return { init, switchTab, loadEvents, generateEvents, toggleAllGenTypes, onChestEventSelected, onManualEventSelected, onTroopEventSelected, submitManualEntry, submitTroopEntry, calculateManualNonParticipants, calculateTroopNonParticipants, calculateChestParticipation, submitCreateEvent, updateEventTypeMethod, submitAddEventType, renderEventTypesTable, cancelEditEventType, addTroopTargetRow, removeTroopTargetRow, addEventTroopTargetRow, removeEventTroopTargetRow, editEventType, editEvent, deleteEvent, deleteEventType, viewEventParticipation, sortTable, sortManualTable, setEventFilter, setEventTypeFilter };
     })();
   </script>
 </body>
