@@ -42,6 +42,7 @@ const SITE_CONFIG = {
     { name: 'Troops', file: 'troops.html', icon: 'troops.png' },
     { name: 'Progress', file: 'progress.html', icon: 'progress.png' },
     { name: 'Profile', file: 'profile.html', icon: 'profile.png' },
+    { name: 'Warnings', file: 'warnings.html', icon: 'warning.png' },
     { name: 'Calendar', file: 'calendar.html', icon: 'calendar.png' }
   ]
 };
