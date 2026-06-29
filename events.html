@@ -648,7 +648,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       const setRestrictedTabsVisibility = (isVisible) => {
         const displayValue = isVisible ? '' : 'none';
-        ['events.html', 'members.html', 'troops.html', 'profile.html'].forEach((href) => {
+        ['events.html', 'members.html', 'troops.html', 'profile.html', 'warnings.html'].forEach((href) => {
           document.querySelectorAll(`.tab-buttons .tab-btn[href="${href}"]`).forEach((link) => {
             link.style.display = displayValue;
           });
@@ -713,6 +713,10 @@
         <a href="profile.html" class="tab-btn" title="Profile">
           <img src="profile.png" alt="Profile" class="tab-icon desktop-only">
           <span class="tab-label mobile-only">Profile</span>
+        </a>
+        <a href="warnings.html" class="tab-btn" title="Warnings">
+          <img src="warning.png" alt="Warnings" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Warnings</span>
         </a>
         <a href="competition.html" class="tab-btn" title="Competition">
           <img src="competition.png" alt="Competition" class="tab-icon desktop-only">

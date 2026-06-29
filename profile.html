@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>cCc League One - Member Profile</title>
   <link rel="icon" href="favicon.png" type="image/png">
+  <script src="perf-debug.js"></script>
   <script src="site-config.js"></script>
   <script src="config.js"></script>
   <script src="portal-shim.js"></script>
@@ -288,7 +289,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       const setRestrictedTabsVisibility = (isVisible) => {
         const displayValue = isVisible ? '' : 'none';
-        ['events.html', 'members.html', 'troops.html', 'profile.html'].forEach((href) => {
+        ['events.html', 'members.html', 'troops.html', 'profile.html', 'warnings.html'].forEach((href) => {
           document.querySelectorAll(`.tab-buttons .tab-btn[href="${href}"]`).forEach((link) => { link.style.display = displayValue; });
         });
       };
@@ -335,6 +336,7 @@
         <a href="troops.html" class="tab-btn" title="Troops"><img src="troops.png" alt="Troops" class="tab-icon desktop-only"><span class="tab-label mobile-only">Troops</span></a>
         <a href="progress.html" class="tab-btn" title="Progress"><img src="progress.png" alt="Progress" class="tab-icon desktop-only"><span class="tab-label mobile-only">Progress</span></a>
         <a href="profile.html" class="tab-btn active" title="Profile"><img src="profile.png" alt="Profile" class="tab-icon desktop-only"><span class="tab-label mobile-only">Profile</span></a>
+        <a href="warnings.html" class="tab-btn" title="Warnings"><img src="warning.png" alt="Warnings" class="tab-icon desktop-only"><span class="tab-label mobile-only">Warnings</span></a>
         <a href="competition.html" class="tab-btn" title="Competition"><img src="competition.png" alt="Competition" class="tab-icon desktop-only"><span class="tab-label mobile-only">Competition</span></a>
         <a href="calendar.html" class="tab-btn" title="Calendar"><img src="calendar.png" alt="Calendar" class="tab-icon desktop-only"><span class="tab-label mobile-only">Calendar</span></a>
         <a href="bank.html" class="tab-btn" id="bankTabBtn" title="Bank" style="display:none;"><img src="bank.png" alt="Bank" class="tab-icon desktop-only"><span class="tab-label mobile-only">Bank</span></a>
