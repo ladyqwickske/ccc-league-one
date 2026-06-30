@@ -1500,6 +1500,30 @@
           if (result && result.success) {
             status.textContent = result.message;
             status.classList.add('ok');
+            
+            // Optimistic client-side update (no re-fetch needed)
+            const eventTypeObj = eventTypesData.find(t => t.name === eventType);
+            const participationMethod = eventTypeObj ? eventTypeObj.method : 'manual';
+            const newEvent = {
+              eventName: eventName,
+              eventType: eventType,
+              startDate: startDate,
+              endDate: endDate,
+              participationMethod: participationMethod,
+              targetPoints: targetPoints || null,
+              troopTargets: troopTargets || ''
+            };
+            if (isEditing) {
+              const idx = eventsData.findIndex(e => e.eventName === editingEventName);
+              if (idx >= 0) eventsData[idx] = newEvent;
+              else eventsData.push(newEvent);
+            } else {
+              eventsData.push(newEvent);
+            }
+            renderEventsTable();
+            document.getElementById('eventsTable').style.display = 'table';
+            document.getElementById('eventsEmpty').style.display = 'none';
+            
             document.getElementById('eventName').value = '';
             document.getElementById('eventType').value = '';
             document.getElementById('eventStartDate').value = '';
@@ -1508,7 +1532,6 @@
             setEventTroopTargetsInForm('');
             document.querySelector('[onclick="EventsTab.submitCreateEvent()"]').textContent = '🎯 Create Event';
             editingEventName = null;
-            loadEvents();
           } else {
             status.textContent = result?.message || (isEditing ? 'Failed to update.' : 'Failed to create.');
             status.classList.add('err');
@@ -2096,7 +2119,15 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'deleteEvent', eventName })
         }).then(res => res.json()).then(result => {
-          if (result && result.success) loadEvents();
+          if (result && result.success) {
+            // Optimistic removal from local data
+            eventsData = eventsData.filter(e => e.eventName !== eventName);
+            renderEventsTable();
+            if (eventsData.length === 0) {
+              document.getElementById('eventsTable').style.display = 'none';
+              document.getElementById('eventsEmpty').style.display = 'block';
+            }
+          }
           else alert(result?.message || 'Failed.');
         }).catch(error => { alert('Error: ' + error.message); });
       }
@@ -2412,6 +2443,7 @@
             if (result.errors && result.errors.length > 0) parts.push('❌ ' + result.errors.length + ' error(s)');
             status.innerHTML = parts.join('<br>') || 'No events to generate in this range.';
             status.style.color = (result.errors && result.errors.length > 0) ? '#ff5252' : '#4CAF50';
+            // Refresh events list (generated events are multiple, easier to re-fetch)
             loadEvents();
           } else {
             status.textContent = '❌ ' + (result?.message || 'Generation failed.');
