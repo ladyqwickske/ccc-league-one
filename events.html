@@ -949,7 +949,6 @@
 
       function init() {
         switchTab('manageTab');
-        loadEvents();
         loadMembers();
         loadChestTypes();
         loadEventTypes();
@@ -1297,12 +1296,12 @@
         fetch(window.GAS_WEB_APP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'getMembersList' })
+          body: JSON.stringify({ action: 'getAllMembers' })
         })
           .then(res => res.json())
           .then(result => {
             const norm = normalizeResponse(result);
-            const list = norm.members || norm.data || [];
+            const list = norm.members || norm.data || (Array.isArray(norm) ? norm : []);
             membersData = Array.isArray(list) ? list : [];
             buildMemberJoinDatesMap();
             populateMemberSelects();

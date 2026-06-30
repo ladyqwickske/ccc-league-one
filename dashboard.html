@@ -1097,7 +1097,10 @@ function filterPlayerTable() {
 
       // Dashboard
     window.onload = function() { 
-      loadPointTargetsFromServer().then(() => setDateRange('lastday'));
+      // Load point targets in background (localStorage cache provides instant default)
+      loadPointTargetsFromServer();
+      // Start dashboard immediately without waiting for point targets
+      setDateRange('lastday');
     };
     
     function setDateRange(preset) {
