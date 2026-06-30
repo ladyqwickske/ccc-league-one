@@ -948,10 +948,10 @@
 
 
       function init() {
-        switchTab('manageTab');
-        loadMembers();
-        loadChestTypes();
-        loadEventTypes();
+        // Show the manage tab visually (but don't trigger a separate loadEvents — bundle handles it)
+        document.getElementById('manageTab')?.classList.add('active');
+        // Single API call loads all page data at once
+        loadEventsBundle();
         updateEventTypeMethod();
         // Add event type change handler for Create Event form
         const eventTypeSelect = document.getElementById('eventType');
@@ -960,6 +960,60 @@
         }
         // Run once on load
         onCreateEventTypeChange();
+      }
+
+      function loadEventsBundle() {
+        document.getElementById('eventsLoading').style.display = 'block';
+        document.getElementById('eventsTable').style.display = 'none';
+        document.getElementById('eventsEmpty').style.display = 'none';
+        fetch(window.GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'getEventsBundle' })
+        })
+          .then(res => res.json())
+          .then(bundle => {
+            console.log('[DEBUG] getEventsBundle response keys:', Object.keys(bundle || {}));
+            if (bundle._timing) console.log('[DEBUG] Server build time:', bundle._timing.ms + 'ms');
+            
+            // 1. Process events
+            if (bundle.events) {
+              onEventsLoaded(bundle.events);
+            }
+            
+            // 2. Process members
+            if (bundle.members) {
+              const norm = normalizeResponse(bundle.members);
+              const list = norm.members || norm.data || (Array.isArray(norm) ? norm : []);
+              membersData = Array.isArray(list) ? list : [];
+              buildMemberJoinDatesMap();
+              populateMemberSelects();
+            }
+            
+            // 3. Process chest types
+            if (bundle.chestTypes) {
+              const norm = normalizeResponse(bundle.chestTypes);
+              if (norm.success) {
+                availableChestTypes = norm.chestTypes || norm.data || [];
+                renderChestTypesList();
+              }
+            }
+            
+            // 4. Process event types
+            if (bundle.eventTypes) {
+              const norm = normalizeResponse(bundle.eventTypes);
+              if (norm.success) {
+                const data = norm.eventTypes || norm.data || [];
+                eventTypesData = Array.isArray(data) ? data : [];
+                populateEventTypeDropdown();
+                renderEventTypesTable();
+              }
+            }
+          })
+          .catch(error => {
+            console.error('Error loading events bundle:', error);
+            document.getElementById('eventsLoading').innerHTML = '<p style="color:#ff5252;">Error: ' + error.message + '</p>';
+          });
       }
 
       function onCreateEventTypeChange() {
@@ -1009,11 +1063,11 @@
         document.querySelectorAll('#events .tab').forEach(t => t.classList.remove('active'));
         document.getElementById(tabId)?.classList.add('active');
         if (evt && evt.target) evt.target.classList.add('active');
-        if (tabId === 'manageTab') loadEvents();
+        if (tabId === 'manageTab') { if (!eventsData || eventsData.length === 0) loadEvents(); else renderEventsTable(); }
         if (tabId === 'chestEventsTab') populateChestEventSelect();
         if (tabId === 'manualEventsTab') populateManualEventSelect();
         if (tabId === 'troopEventsTab') populateTroopEventSelect();
-        if (tabId === 'eventTypesTab') loadEventTypes();
+        if (tabId === 'eventTypesTab') { if (!eventTypesData || eventTypesData.length === 0) loadEventTypes(); else renderEventTypesTable(); }
       }
 
       function loadEvents() {
