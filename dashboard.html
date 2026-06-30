@@ -1097,9 +1097,7 @@ function filterPlayerTable() {
 
       // Dashboard
     window.onload = function() { 
-      // Load point targets in background (localStorage cache provides instant default)
-      loadPointTargetsFromServer();
-      // Start dashboard immediately without waiting for point targets
+      // Point targets are loaded via getDashboardInit combined endpoint
       setDateRange('lastday');
     };
     
@@ -1126,10 +1124,18 @@ function filterPlayerTable() {
         fetch(window.GAS_WEB_APP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'getAllEvents' })
+          body: JSON.stringify({ action: 'getDashboardInit' })
         })
           .then(res => res.json())
-          .then(result => {
+          .then(initData => {
+            // Apply point targets from combined endpoint
+            if (initData && initData.pointTargets) {
+              const pt = initData.pointTargets;
+              const obj = { default: pt.default || 6000, overrides: Array.isArray(pt.overrides) ? pt.overrides : [] };
+              pointTargetsCache = obj;
+              try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+            }
+            const result = (initData && initData.events) ? initData.events : initData;
             if (!result || !result.success) {
               console.error('Error loading events for active period');
               // Fallback to Sunday-Saturday (UTC)
@@ -1270,10 +1276,18 @@ function filterPlayerTable() {
         fetch(window.GAS_WEB_APP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'getAllEvents' })
+          body: JSON.stringify({ action: 'getDashboardInit' })
         })
           .then(res => res.json())
-          .then(result => {
+          .then(initData => {
+            // Apply point targets from combined endpoint
+            if (initData && initData.pointTargets) {
+              const pt = initData.pointTargets;
+              const obj = { default: pt.default || 6000, overrides: Array.isArray(pt.overrides) ? pt.overrides : [] };
+              pointTargetsCache = obj;
+              try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+            }
+            const result = (initData && initData.events) ? initData.events : initData;
             if (!result || !result.success || !result.events || result.events.length === 0) {
               // Fallback to previous Sunday-Saturday (UTC)
               const start = new Date(todayUTC);
