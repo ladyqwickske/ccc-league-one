@@ -1097,13 +1097,11 @@ function filterPlayerTable() {
 
       // Dashboard
     window.onload = function() { 
-      // Point targets are loaded via getDashboardInit combined endpoint
       setDateRange('lastday');
     };
     
     function setDateRange(preset) {
       currentPreset = preset;
-      const todayUTC = getTodayUTC();
       const startInput = document.getElementById('startDate');
       const endInput = document.getElementById('endDate');
       const displayElement = document.getElementById('dateRangeDisplay');
@@ -1118,392 +1116,108 @@ function filterPlayerTable() {
       
       document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelector(`[data-preset="${preset}"]`)?.classList.add('active');
-      if (preset === 'lastday') {
-        // Active Period: Based on Ruthless Slaughter events
-        displayElement.textContent = 'Loading Active Period...';
-        fetch(window.GAS_WEB_APP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'getDashboardInit' })
-        })
-          .then(res => res.json())
-          .then(initData => {
-            console.log('[DEBUG] getDashboardInit response keys:', Object.keys(initData || {}));
-            // Apply point targets from combined endpoint
-            const ptData = initData?.pointTargets;
-            if (ptData) {
-              const obj = { default: ptData.default || 6000, overrides: Array.isArray(ptData.overrides) ? ptData.overrides : [] };
-              pointTargetsCache = obj;
-              try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
-            }
-            // Extract events - handle multiple response formats
-            let result;
-            const evRaw = initData?.events;
-            if (Array.isArray(evRaw)) {
-              // getAllEvents returned raw array internally
-              result = { success: true, events: evRaw };
-            } else if (evRaw && typeof evRaw === 'object' && evRaw.success) {
-              // getAllEvents returned { success: true, events: [...] }
-              result = evRaw;
-            } else if (initData?.success && Array.isArray(initData?.events)) {
-              result = { success: true, events: initData.events };
-            } else {
-              result = initData;
-            }
-            if (!result || !result.success) {
-              console.error('Error loading events for active period', result);
-              // Fallback to Sunday-Saturday (UTC)
-              const start = new Date(todayUTC);
-              const dayOfWeekUTC = start.getUTCDay();
-              start.setUTCDate(start.getUTCDate() - dayOfWeekUTC);
-              const end = new Date(start);
-              end.setUTCDate(end.getUTCDate() + 6);
-              startInput.value = formatDateAsUTC(start);
-              endInput.value = formatDateAsUTC(end);
-              displayElement.textContent = `Viewing: Active Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              currentPeriodTargetPoints = null;
-              currentViewingPeriodName = null;
-              updateRequiredPointsDisplay();
-              // Use 5PM UTC (game reset time) for countdown
-              const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
-             // console.log('[Countdown] Calling updateCountdownTimer (Fallback) with:', endDateStr);
-              updateCountdownTimer(endDateStr);
-              loadDashboard();
-              return;
-            }
-            
-            // Filter for Ruthless Slaughter events (period markers)
-            const allEvents = result.events || [];
-            const periodEvents = allEvents.filter(e => 
-              e.eventType === 'Ruthless Slaughter' || e.participationMethod === 'period-marker'
-            );
-            
-            if (periodEvents.length === 0) {
-              console.warn('No Ruthless Slaughter events found, using fallback');
-              // Fallback to Sunday-Saturday (UTC)
-              const start = new Date(todayUTC);
-              const dayOfWeekUTC = start.getUTCDay();
-              start.setUTCDate(start.getUTCDate() - dayOfWeekUTC);
-              const end = new Date(start);
-              end.setUTCDate(end.getUTCDate() + 6);
-              startInput.value = formatDateAsUTC(start);
-              endInput.value = formatDateAsUTC(end);
-              displayElement.textContent = `Viewing: Active Period (No Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              currentPeriodTargetPoints = null;
-              currentViewingPeriodName = null;
-              updateRequiredPointsDisplay();
-              const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
-              console.log('[Countdown] Calling updateCountdownTimer (No Events) with:', endDateStr);
-              updateCountdownTimer(endDateStr);
-              loadDashboard();
-              return;
-            }
-            
-            // Sort events by start date
-            periodEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-            
-            // Find the current active period using effective date (accounts for 5PM UTC boundary)
-            const effectiveDate = getEffectiveDateUTC();
-            const todayStr = formatDateAsUTC(effectiveDate);
-            let activePeriod = null;
-            
-            // Look for the event that is currently active (today is between start and end)
-            for (let i = 0; i < periodEvents.length; i++) {
-              const event = periodEvents[i];
-              if (event.startDate <= todayStr && event.endDate >= todayStr) {
-                activePeriod = event;
-                break;
-              }
-            }
-            
-            // If no active event, find the most recent past event and next upcoming event
-            if (!activePeriod) {
-              let lastPastEvent = null;
-              let nextFutureEvent = null;
-              
-              for (const event of periodEvents) {
-                if (event.endDate < todayStr) {
-                  lastPastEvent = event;
-                } else if (event.startDate > todayStr && !nextFutureEvent) {
-                  nextFutureEvent = event;
-                }
-              }
-              
-              // If we're between two events, use the end of the last and start of the next
-              if (lastPastEvent && nextFutureEvent) {
-                const start = parseDateUTC(lastPastEvent.endDate);
-                start.setUTCDate(start.getUTCDate() + 1); // Day after last period ended
-                const end = parseDateUTC(nextFutureEvent.startDate);
-                end.setUTCDate(end.getUTCDate() - 1); // Day before next period starts
-                startInput.value = formatDateAsUTC(start);
-                endInput.value = formatDateAsUTC(end);
-                displayElement.textContent = `Viewing: Active Period (Between Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-                currentPeriodTargetPoints = null;
-                currentViewingPeriodName = null;
-                updateRequiredPointsDisplay();
-                loadDashboard();
-                return;
-              }
-              
-              // Otherwise use last event as reference
-              activePeriod = lastPastEvent || periodEvents[periodEvents.length - 1];
-            }
-            
-            // Use the active period dates
-            const start = parseDateUTC(activePeriod.startDate);
-            const end = parseDateUTC(activePeriod.endDate);
-            startInput.value = formatDateAsUTC(start);
-            endInput.value = formatDateAsUTC(end);
-            displayElement.textContent = `Viewing: Active Period (${activePeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-            currentViewingPeriodName = activePeriod.eventName || null;
-            currentPeriodTargetPoints = activePeriod.targetPoints || null;
-            updateRequiredPointsDisplay();
-            const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
-       //     console.log('[Countdown] Calling updateCountdownTimer (Active Period) with:', endDateStr);
-            updateCountdownTimer(endDateStr);
-            loadDashboard();
-          })
-          .catch(error => {
-            console.error('Error fetching events:', error);
-            // Fallback to Sunday-Saturday (UTC)
-            const start = new Date(todayUTC);
-            const dayOfWeekUTC = start.getUTCDay();
-            start.setUTCDate(start.getUTCDate() - dayOfWeekUTC);
-            const end = new Date(start);
-            end.setUTCDate(end.getUTCDate() + 6);
-            startInput.value = formatDateAsUTC(start);
-            endInput.value = formatDateAsUTC(end);
-            displayElement.textContent = `Viewing: Active Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-            currentPeriodTargetPoints = null;
-            currentViewingPeriodName = null;
-            updateRequiredPointsDisplay();
-            const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
-            console.log('[Countdown] Calling updateCountdownTimer (Error) with:', endDateStr);
-            updateCountdownTimer(endDateStr);
-            loadDashboard();
-          });
-        return;
-      }
-      if (preset === 'prevweek') {
-        // Previous Period: Based on Ruthless Slaughter events
-        displayElement.textContent = 'Loading Previous Period...';
-        fetch(window.GAS_WEB_APP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'getDashboardInit' })
-        })
-          .then(res => res.json())
-          .then(initData => {
-            // Apply point targets from combined endpoint
-            const ptData = initData?.pointTargets;
-            if (ptData) {
-              const obj = { default: ptData.default || 6000, overrides: Array.isArray(ptData.overrides) ? ptData.overrides : [] };
-              pointTargetsCache = obj;
-              try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
-            }
-            // Extract events - handle multiple response formats
-            let result;
-            const evRaw = initData?.events;
-            if (Array.isArray(evRaw)) {
-              result = { success: true, events: evRaw };
-            } else if (evRaw && typeof evRaw === 'object' && evRaw.success) {
-              result = evRaw;
-            } else if (initData?.success && Array.isArray(initData?.events)) {
-              result = { success: true, events: initData.events };
-            } else {
-              result = initData;
-            }
-            if (!result || !result.success || !result.events || result.events.length === 0) {
-              // Fallback to previous Sunday-Saturday (UTC)
-              const start = new Date(todayUTC);
-              const dayOfWeekUTC = start.getUTCDay();
-              start.setUTCDate(start.getUTCDate() - dayOfWeekUTC - 7);
-              const end = new Date(start);
-              end.setUTCDate(end.getUTCDate() + 6);
-              startInput.value = formatDateAsUTC(start);
-              endInput.value = formatDateAsUTC(end);
-              displayElement.textContent = `Viewing: Previous Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              currentPeriodTargetPoints = null;
-              currentViewingPeriodName = null;
-              updateRequiredPointsDisplay();
-              loadDashboard();
-              return;
-            }
-            
-            // Filter for Ruthless Slaughter events (period markers)
-            const allEvents = result.events || [];
-            const periodEvents = allEvents.filter(e => 
-              e.eventType === 'Ruthless Slaughter' || e.participationMethod === 'period-marker'
-            );
-            
-            if (periodEvents.length === 0) {
-              // Fallback to previous Sunday-Saturday (UTC)
-              const start = new Date(todayUTC);
-              const dayOfWeekUTC = start.getUTCDay();
-              start.setUTCDate(start.getUTCDate() - dayOfWeekUTC - 7);
-              const end = new Date(start);
-              end.setUTCDate(end.getUTCDate() + 6);
-              startInput.value = formatDateAsUTC(start);
-              endInput.value = formatDateAsUTC(end);
-              displayElement.textContent = `Viewing: Previous Period (No Events): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              currentPeriodTargetPoints = null;
-              currentViewingPeriodName = null;
-              updateRequiredPointsDisplay();
-              loadDashboard();
-              return;
-            }
-            
-            // Sort events by start date
-            periodEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-            
-            // Use effective date (accounts for 5PM UTC boundary)
-            const effectiveDate = getEffectiveDateUTC();
-            const todayStr = formatDateAsUTC(effectiveDate);
-            
-            // Find the current active period first
-            let activePeriod = null;
-            for (let i = 0; i < periodEvents.length; i++) {
-              const event = periodEvents[i];
-              if (event.startDate <= todayStr && event.endDate >= todayStr) {
-                activePeriod = event;
-                break;
-              }
-            }
-            
-            // If no active period, find the most recent past event
-            if (!activePeriod) {
-              for (let i = periodEvents.length - 1; i >= 0; i--) {
-                if (periodEvents[i].endDate < todayStr) {
-                  activePeriod = periodEvents[i];
-                  break;
-                }
-              }
-            }
-            
-            // Find the event before the active period
-            let previousPeriod = null;
-            if (activePeriod) {
-              const activeStartStr = activePeriod.startDate;
-              for (let i = periodEvents.length - 1; i >= 0; i--) {
-                // Use <= because events share boundary days (e.g. Jun 1-6 ends on 6, Jun 6-12 starts on 6)
-                if (periodEvents[i] !== activePeriod && periodEvents[i].endDate <= activeStartStr) {
-                  previousPeriod = periodEvents[i];
-                  break;
-                }
-              }
-            }
-            
-            if (!previousPeriod) {
-              // Fallback to previous Sunday-Saturday (UTC)
-              const start = new Date(todayUTC);
-              const dayOfWeekUTC = start.getUTCDay();
-              start.setUTCDate(start.getUTCDate() - dayOfWeekUTC - 7);
-              const end = new Date(start);
-              end.setUTCDate(end.getUTCDate() + 6);
-              startInput.value = formatDateAsUTC(start);
-              endInput.value = formatDateAsUTC(end);
-              displayElement.textContent = `Viewing: Previous Period (Fallback): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-              currentPeriodTargetPoints = null;
-              currentViewingPeriodName = null;
-              updateRequiredPointsDisplay();
-              loadDashboard();
-              return;
-            }
-            
-            // Use the previous period dates
-            const start = parseDateUTC(previousPeriod.startDate);
-            const end = parseDateUTC(previousPeriod.endDate);
-            startInput.value = formatDateAsUTC(start);
-            endInput.value = formatDateAsUTC(end);
-            displayElement.textContent = `Viewing: Previous Period (${previousPeriod.eventName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-            currentViewingPeriodName = previousPeriod.eventName || null;
-            currentPeriodTargetPoints = previousPeriod.targetPoints || null;
-            updateRequiredPointsDisplay();
-            loadDashboard();
-          })
-          .catch(error => {
-            console.error('Error fetching events:', error);
-            // Fallback to previous Sunday-Saturday (UTC)
-            const start = new Date(todayUTC);
-            const dayOfWeekUTC = start.getUTCDay();
-            start.setUTCDate(start.getUTCDate() - dayOfWeekUTC - 7);
-            const end = new Date(start);
-            end.setUTCDate(end.getUTCDate() + 6);
-            startInput.value = formatDateAsUTC(start);
-            endInput.value = formatDateAsUTC(end);
-            displayElement.textContent = `Viewing: Previous Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
-            currentPeriodTargetPoints = null;
-            currentViewingPeriodName = null;
-            updateRequiredPointsDisplay();
-            loadDashboard();
-          });
-        return;
-      }
-    }
-    
-    function loadDashboard() {
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
-      currentViewingStartDate = startDate; // Store for new member highlighting
-      currentViewingPeriodName = null; // Note: will be overridden by preset logic if applicable
+      
+      // Single API call — getDashboardBundle returns ALL data at once
+      displayElement.textContent = preset === 'lastday' ? 'Loading Active Period...' : 'Loading Previous Period...';
       document.getElementById('playerList').innerHTML = '<div class="loading">Loading...</div>';
-      const requestId = `dash-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       
-      // Store for re-rendering after splits load
-      let lastPlayerStats = null;
-      
-      // Use CORS proxy (Cloudflare Worker) for API calls
-      // 1. Get summary
       fetch(window.GAS_WEB_APP_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'getStatsSummary', startDate, endDate, periodPreset: currentPreset })
+        body: JSON.stringify({ action: 'getDashboardBundle', periodPreset: preset })
       })
         .then(res => res.json())
-        .then(displaySummary)
-        .catch(e => console.error('Summary error:', e));
-
-      // 2. Get player stats
-      const playerStatsPayload = { action: 'getPlayerStats', startDate, endDate, periodPreset: currentPreset, requestId };
-      console.log('[DEBUG] getPlayerStats request payload:', playerStatsPayload);
-      fetch(window.GAS_WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(playerStatsPayload)
-      })
-        .then(res => res.json())
-        .then(stats => {
-          console.log('[DEBUG] getPlayerStats response meta:', {
-            requestId,
-            type: typeof stats,
-            isArray: Array.isArray(stats),
-            count: Array.isArray(stats) ? stats.length : null
-          });
-          lastPlayerStats = stats;
-          displayPlayerStats(stats);
-        })
-        .catch(e => {
-          console.error('Stats error:', e);
-          document.getElementById('playerList').innerHTML = '<div class="loading" style="color:#d93025;">Error loading player stats</div>';
-        });
-
-      // 3. Get chest splits
-      fetch(window.GAS_WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'getSplits', startDate, endDate, periodPreset: currentPreset })
-      })
-        .then(res => res.json())
-        .then(splits => {
-          console.log('[DEBUG] getSplits response:', splits);
-          window.currentSplits = splits || {};
-          // Re-render player stats now that splits are available
-          if (lastPlayerStats) {
-            console.log('[DEBUG] Re-rendering player stats with splits data');
-            displayPlayerStats(lastPlayerStats);
+        .then(bundle => {
+          console.log('[DEBUG] getDashboardBundle response keys:', Object.keys(bundle || {}));
+          if (bundle._timing) console.log('[DEBUG] Server build time:', bundle._timing.ms + 'ms');
+          
+          // 1. Apply point targets
+          if (bundle.pointTargets) {
+            const pt = bundle.pointTargets;
+            const obj = { default: pt.default || 6000, overrides: Array.isArray(pt.overrides) ? pt.overrides : [] };
+            pointTargetsCache = obj;
+            try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
+          }
+          
+          // 2. Set period dates and display
+          const periodRange = bundle.periodRange || {};
+          const periodEvent = bundle.periodEvent || {};
+          const start = parseDateUTC(periodRange.startDate);
+          const end = parseDateUTC(periodRange.endDate);
+          
+          if (start && end) {
+            startInput.value = formatDateAsUTC(start);
+            endInput.value = formatDateAsUTC(end);
+            const periodLabel = preset === 'lastday' ? 'Active Period' : 'Previous Period';
+            const sourceName = periodEvent.name || 'Unknown';
+            displayElement.textContent = `Viewing: ${periodLabel} (${sourceName}): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+            currentViewingStartDate = formatDateAsUTC(start);
+            currentViewingPeriodName = periodEvent.name || null;
+            currentPeriodTargetPoints = periodEvent.targetPoints || null;
+          } else {
+            // Fallback dates
+            const todayUTC = getTodayUTC();
+            const fallbackStart = new Date(todayUTC);
+            const dayOfWeekUTC = fallbackStart.getUTCDay();
+            fallbackStart.setUTCDate(fallbackStart.getUTCDate() - dayOfWeekUTC - (preset === 'prevweek' ? 7 : 0));
+            const fallbackEnd = new Date(fallbackStart);
+            fallbackEnd.setUTCDate(fallbackEnd.getUTCDate() + 6);
+            startInput.value = formatDateAsUTC(fallbackStart);
+            endInput.value = formatDateAsUTC(fallbackEnd);
+            displayElement.textContent = `Viewing: ${preset === 'lastday' ? 'Active' : 'Previous'} Period (Fallback): ${formatDisplayDate(fallbackStart)} – ${formatDisplayDate(fallbackEnd)}`;
+            currentViewingStartDate = formatDateAsUTC(fallbackStart);
+            currentPeriodTargetPoints = null;
+            currentViewingPeriodName = null;
+          }
+          
+          updateRequiredPointsDisplay();
+          
+          // 3. Countdown timer (active period only)
+          if (preset === 'lastday' && end) {
+            const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
+            updateCountdownTimer(endDateStr);
+          }
+          
+          // 4. Render summary
+          if (bundle.statsSummary) {
+            displaySummary(bundle.statsSummary);
+          }
+          // Override with bundle's lastImportTimestamp if available
+          if (bundle.lastImportTimestamp) {
+            updateLastImportedDisplay(bundle.lastImportTimestamp);
+          }
+          
+          // 5. Render splits + player stats
+          window.currentSplits = bundle.splits || {};
+          if (bundle.playerStats) {
+            displayPlayerStats(bundle.playerStats);
           }
         })
-        .catch(e => console.error('Splits error:', e));
+        .catch(error => {
+          console.error('Error fetching dashboard bundle:', error);
+          const todayUTC = getTodayUTC();
+          const start = new Date(todayUTC);
+          const dayOfWeekUTC = start.getUTCDay();
+          start.setUTCDate(start.getUTCDate() - dayOfWeekUTC - (preset === 'prevweek' ? 7 : 0));
+          const end = new Date(start);
+          end.setUTCDate(end.getUTCDate() + 6);
+          startInput.value = formatDateAsUTC(start);
+          endInput.value = formatDateAsUTC(end);
+          displayElement.textContent = `Viewing: ${preset === 'lastday' ? 'Active' : 'Previous'} Period (Error): ${formatDisplayDate(start)} – ${formatDisplayDate(end)}`;
+          currentPeriodTargetPoints = null;
+          currentViewingPeriodName = null;
+          updateRequiredPointsDisplay();
+          if (preset === 'lastday') {
+            const endDateStr = formatDateAsUTC(end) + 'T17:00:00Z';
+            updateCountdownTimer(endDateStr);
+          }
+          document.getElementById('playerList').innerHTML = '<div class="loading" style="color:#d93025;">Error loading dashboard</div>';
+        });
+    }
+    
+    // loadDashboard kept for any manual refresh scenarios (not called by setDateRange anymore)
+    function loadDashboard() {
+      setDateRange(currentPreset);
     }
     
     function displaySummary(data) {
