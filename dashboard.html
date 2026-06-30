@@ -1128,16 +1128,30 @@ function filterPlayerTable() {
         })
           .then(res => res.json())
           .then(initData => {
+            console.log('[DEBUG] getDashboardInit response keys:', Object.keys(initData || {}));
             // Apply point targets from combined endpoint
-            if (initData && initData.pointTargets) {
-              const pt = initData.pointTargets;
-              const obj = { default: pt.default || 6000, overrides: Array.isArray(pt.overrides) ? pt.overrides : [] };
+            const ptData = initData?.pointTargets;
+            if (ptData) {
+              const obj = { default: ptData.default || 6000, overrides: Array.isArray(ptData.overrides) ? ptData.overrides : [] };
               pointTargetsCache = obj;
               try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
             }
-            const result = (initData && initData.events) ? initData.events : initData;
+            // Extract events - handle multiple response formats
+            let result;
+            const evRaw = initData?.events;
+            if (Array.isArray(evRaw)) {
+              // getAllEvents returned raw array internally
+              result = { success: true, events: evRaw };
+            } else if (evRaw && typeof evRaw === 'object' && evRaw.success) {
+              // getAllEvents returned { success: true, events: [...] }
+              result = evRaw;
+            } else if (initData?.success && Array.isArray(initData?.events)) {
+              result = { success: true, events: initData.events };
+            } else {
+              result = initData;
+            }
             if (!result || !result.success) {
-              console.error('Error loading events for active period');
+              console.error('Error loading events for active period', result);
               // Fallback to Sunday-Saturday (UTC)
               const start = new Date(todayUTC);
               const dayOfWeekUTC = start.getUTCDay();
@@ -1281,13 +1295,24 @@ function filterPlayerTable() {
           .then(res => res.json())
           .then(initData => {
             // Apply point targets from combined endpoint
-            if (initData && initData.pointTargets) {
-              const pt = initData.pointTargets;
-              const obj = { default: pt.default || 6000, overrides: Array.isArray(pt.overrides) ? pt.overrides : [] };
+            const ptData = initData?.pointTargets;
+            if (ptData) {
+              const obj = { default: ptData.default || 6000, overrides: Array.isArray(ptData.overrides) ? ptData.overrides : [] };
               pointTargetsCache = obj;
               try { localStorage.setItem(PT_KEY, JSON.stringify(obj)); } catch(e) {}
             }
-            const result = (initData && initData.events) ? initData.events : initData;
+            // Extract events - handle multiple response formats
+            let result;
+            const evRaw = initData?.events;
+            if (Array.isArray(evRaw)) {
+              result = { success: true, events: evRaw };
+            } else if (evRaw && typeof evRaw === 'object' && evRaw.success) {
+              result = evRaw;
+            } else if (initData?.success && Array.isArray(initData?.events)) {
+              result = { success: true, events: initData.events };
+            } else {
+              result = initData;
+            }
             if (!result || !result.success || !result.events || result.events.length === 0) {
               // Fallback to previous Sunday-Saturday (UTC)
               const start = new Date(todayUTC);
