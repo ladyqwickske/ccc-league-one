@@ -1632,7 +1632,13 @@
               status.classList.add('ok');
               document.getElementById('newMemberNameInput').value = '';
               document.getElementById('startMight').value = '';
-              setTimeout(loadMembers, 800);
+              // Update client-side state immediately (no stale-cache reload needed)
+              const newMember = { name: name, joinDate: joinDate, startMight: startMight, latestMight: startMight, latestMightDate: null, recentGrowthPercent: 0 };
+              membersData.push(newMember);
+              filteredData = [...membersData];
+              populateMemberSelect();
+              renderTable();
+              updateStats();
             } else {
               status.textContent = result?.message || 'Failed to add.';
               status.classList.add('err');
@@ -1665,7 +1671,12 @@
               status.textContent = result.message || `Updated "${oldName}" to "${newName}".`;
               status.classList.add('ok');
               document.getElementById('newMemberName').value = '';
-              setTimeout(loadMembers, 800);
+              // Update client-side state immediately
+              const idx = membersData.findIndex(m => m.name === oldName);
+              if (idx >= 0) membersData[idx].name = newName;
+              filteredData = [...membersData];
+              populateMemberSelect();
+              renderTable();
             } else {
               status.textContent = result?.message || 'Failed to update.';
               status.classList.add('err');
@@ -1697,7 +1708,12 @@
             if (result && result.success) {
               status.textContent = result.message || `Removed "${memberName}".`;
               status.classList.add('ok');
-              setTimeout(loadMembers, 800);
+              // Update client-side state immediately
+              membersData = membersData.filter(m => m.name !== memberName);
+              filteredData = filteredData.filter(m => m.name !== memberName);
+              populateMemberSelect();
+              renderTable();
+              updateStats();
             } else {
               status.textContent = result?.message || 'Failed to remove.';
               status.classList.add('err');
