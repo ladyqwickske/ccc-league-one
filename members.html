@@ -916,6 +916,7 @@
         <thead>
           <tr>
             <th class="sortable" data-column="name">Name</th>
+            <th class="sortable" data-column="accounts" title="Number of tracked alt accounts">Accounts</th>
             <th class="sortable" data-column="heroLevel" title="Latest recorded hero level">Hero Level</th>
             <th class="sortable" data-column="startMight">Starting Might</th>
             <th class="sortable" data-column="joinDate">Join Date</th>
@@ -1489,6 +1490,7 @@
           let aVal, bVal;
           switch (column) {
             case 'name': aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase(); break;
+            case 'accounts': aVal = a.altAccountCount || 0; bVal = b.altAccountCount || 0; break;
             case 'joinDate': aVal = parseDateUTC(a.joinDate); bVal = parseDateUTC(b.joinDate); break;
             case 'startMight': aVal = a.startMight || 0; bVal = b.startMight || 0; break;
             case 'latestMight': aVal = a.latestMight || 0; bVal = b.latestMight || 0; break;
@@ -1527,7 +1529,13 @@
           const heroLevelDisplay = member.heroLevel !== null && member.heroLevel !== undefined
             ? (() => { const lvl = member.heroLevel; let bg, fg; if (lvl > 500) { bg='#4a148c'; fg='#e1bee7'; } else if (lvl > 400) { bg='#0d47a1'; fg='#bbdefb'; } else if (lvl > 300) { bg='#1b5e20'; fg='#c8e6c9'; } else if (lvl > 200) { bg='#827717'; fg='#fff9c4'; } else if (lvl > 100) { bg='#37474f'; fg='#eceff1'; } else { bg='#4e342e'; fg='#d7ccc8'; } return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${bg};color:${fg};" title="Updated: ${member.heroLevelDate || '?'}">${lvl}</span>`; })()
             : '<span style="color:#666">—</span>';
-          row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td style="text-align:center;">${heroLevelDisplay}</td><td class="might-value">${formatMight(member.startMight)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td class="might-value">${growthPercent}</td><td class="might-value">${formatMight(member.latestMight)}</td><td class="date-value">${formatDate(member.latestMightDate)}</td><td class="might-value">${recentGrowthPercent}</td>`;
+          const altCount = member.altAccountCount || 0;
+          const accountsBadge = altCount === 0
+            ? '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:#37474f;color:#90a4ae;" title="No accounts tracked">—</span>'
+            : altCount === 1
+              ? '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#e65100;color:#fff3e0;" title="Only 1 account tracked">1</span>'
+              : `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#1b5e20;color:#c8e6c9;" title="${altCount} accounts tracked">${altCount}</span>`;
+          row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td style="text-align:center;">${accountsBadge}</td><td style="text-align:center;">${heroLevelDisplay}</td><td class="might-value">${formatMight(member.startMight)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td class="might-value">${growthPercent}</td><td class="might-value">${formatMight(member.latestMight)}</td><td class="date-value">${formatDate(member.latestMightDate)}</td><td class="might-value">${recentGrowthPercent}</td>`;
           tbody.appendChild(row);
         });
       }
