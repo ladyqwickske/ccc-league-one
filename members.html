@@ -722,10 +722,6 @@
           <img src="troops.png" alt="Troops" class="tab-icon desktop-only">
           <span class="tab-label mobile-only">Troops</span>
         </a>
-        <a href="progress.html" class="tab-btn" title="Progress">
-          <img src="progress.png" alt="Progress" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Progress</span>
-        </a>
         <a href="profile.html" class="tab-btn" title="Profile">
           <img src="profile.png" alt="Profile" class="tab-icon desktop-only">
           <span class="tab-label mobile-only">Profile</span>
@@ -862,7 +858,7 @@
       </div>
       <div id="altAccountsTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Alt Accounts Tracker</h3>
-        <p style="font-size:12px;color:#6b6f85;margin:0 0 14px 0;">Track which alt accounts belong to which player, and in which clan &amp; kingdom they are.</p>
+        <p style="font-size:12px;color:#6b6f85;margin:0 0 14px 0;">Track players' accounts across clans &amp; kingdoms. Mark which account is their <strong>main</strong>. Members with no entries are assumed to have a single account.</p>
 
         <!-- Filter by member -->
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
@@ -871,40 +867,45 @@
             <option value="">— All members —</option>
           </select>
           <button class="btn" onclick="MembersTab.loadAltAccounts()" style="padding:5px 14px;font-size:12px;">🔄 Refresh</button>
+          <span id="altSummaryBadge" style="font-size:12px;color:#6b6f85;margin-left:8px;"></span>
         </div>
 
-        <!-- Add alt form -->
+        <!-- Add account form -->
         <div style="background:rgba(255,255,255,0.06);border:1px solid #c0c4d8;border-radius:8px;padding:14px 16px;margin-bottom:14px;">
-          <div style="font-size:13px;font-weight:600;color:#4f46e5;margin-bottom:10px;">Add Alt Account</div>
+          <div style="font-size:13px;font-weight:600;color:#4f46e5;margin-bottom:10px;">Add Account</div>
           <div class="form-grid" style="grid-template-columns:1fr 1fr 1fr 100px 1fr;">
-            <div><label for="altMainSelect" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">Main Account</label><select id="altMainSelect" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></select></div>
-            <div><label for="altNameInput" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">Alt Name</label><input type="text" id="altNameInput" placeholder="Alt account name" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></div>
+            <div><label for="altMainSelect" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">CLO Member</label><select id="altMainSelect" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></select></div>
+            <div><label for="altNameInput" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">Account Name</label><input type="text" id="altNameInput" placeholder="Account name" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></div>
             <div><label for="altClanInput" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">Clan</label><input type="text" id="altClanInput" placeholder="e.g. cCc Champions" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></div>
             <div><label for="altKingdomInput" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">Kingdom</label><input type="text" id="altKingdomInput" placeholder="e.g. 276" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></div>
             <div><label for="altNotesInput" style="font-size:11px;font-weight:600;color:#6b6f85;text-transform:uppercase;letter-spacing:0.5px;">Notes</label><input type="text" id="altNotesInput" placeholder="Optional notes" style="width:100%;padding:7px 10px;border:1px solid #c0c4d8;border-radius:6px;background:#fff;color:#2c2f45;font-size:13px;"></div>
           </div>
-          <button class="btn" onclick="MembersTab.submitAddAlt()" style="margin-top:10px;">➕ Add Alt</button>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:#2c2f45;cursor:pointer;"><input type="checkbox" id="altIsMainCheck"> <span>⭐ This is their <strong>main</strong> account</span></label>
+          </div>
+          <button class="btn" onclick="MembersTab.submitAddAlt()" style="margin-top:10px;">➕ Add Account</button>
           <div id="altAddStatus" class="status"></div>
         </div>
 
         <!-- Alt accounts table -->
         <div class="table-container" style="max-height:52vh;">
-          <div id="altLoading" class="loading" style="display:none;"><div class="spinner"></div>Loading alt accounts...</div>
+          <div id="altLoading" class="loading" style="display:none;"><div class="spinner"></div>Loading accounts...</div>
           <div id="altError" class="error" style="display:none;"></div>
           <table id="altAccountsTable" style="display:none;">
             <thead>
               <tr>
-                <th>Main Account</th>
-                <th>Alt Name</th>
+                <th>CLO Member</th>
+                <th>Account Name</th>
                 <th>Clan</th>
                 <th>Kingdom</th>
+                <th style="width:60px;text-align:center;">Main</th>
                 <th>Notes</th>
                 <th style="width:60px;"></th>
               </tr>
             </thead>
             <tbody id="altAccountsBody"></tbody>
           </table>
-          <div id="altEmpty" style="display:none; text-align:center; padding:30px; color:#6b6f85;">No alt accounts recorded yet</div>
+          <div id="altEmpty" style="display:none; text-align:center; padding:30px; color:#6b6f85;">No accounts recorded yet. Members without entries are assumed to have a single account.</div>
         </div>
       </div>
     </div>
@@ -1853,7 +1854,7 @@
 
         if (mainSel) {
           const cur = mainSel.value;
-          mainSel.innerHTML = '<option value="">-- Select member --</option>' + opts;
+          mainSel.innerHTML = '<option value="">-- Select CLO member --</option>' + opts;
           if (cur) mainSel.value = cur;
         }
         if (filterSel) {
@@ -1879,7 +1880,7 @@
 
         try {
           const payload = { action: 'getAltAccounts' };
-          if (filterMember) payload.mainAccount = filterMember;
+          if (filterMember) payload.cloMember = filterMember;
 
           const res = await fetch(window.GAS_WEB_APP_URL, {
             method: 'POST',
@@ -1887,16 +1888,40 @@
             body: JSON.stringify(payload)
           });
           const result = await res.json();
-          if (!result || !result.success) throw new Error(result?.message || 'Failed to load alt accounts');
+          if (!result || !result.success) throw new Error(result?.message || 'Failed to load accounts');
 
           altAccountsCache = result.alts || [];
           renderAltAccountsTable();
+          updateAltSummaryBadge();
         } catch (e) {
           error.textContent = `Error: ${e.message || e}`;
           error.style.display = 'block';
         } finally {
           loading.style.display = 'none';
         }
+      }
+
+      function updateAltSummaryBadge() {
+        const badge = document.getElementById('altSummaryBadge');
+        if (!badge) return;
+        const alts = altAccountsCache || [];
+        if (alts.length === 0) { badge.textContent = ''; return; }
+
+        // Count unique CLO members with entries
+        const byMember = {};
+        alts.forEach(a => {
+          const key = a.cloMember;
+          if (!byMember[key]) byMember[key] = { accounts: 0, hasMain: false };
+          byMember[key].accounts++;
+          if (a.isMain) byMember[key].hasMain = true;
+        });
+        const membersWithAlts = Object.keys(byMember).length;
+        const totalAccounts = alts.length;
+        const withoutMain = Object.values(byMember).filter(m => !m.hasMain).length;
+
+        let text = `${membersWithAlts} member(s), ${totalAccounts} account(s) tracked`;
+        if (withoutMain > 0) text += ` · ⚠ ${withoutMain} without main set`;
+        badge.textContent = text;
       }
 
       function renderAltAccountsTable() {
@@ -1912,16 +1937,36 @@
           return;
         }
 
+        // Sort: group by CLO member, main accounts first within each group
+        const sorted = [...alts].sort((a, b) => {
+          const cmp = a.cloMember.localeCompare(b.cloMember);
+          if (cmp !== 0) return cmp;
+          if (a.isMain && !b.isMain) return -1;
+          if (!a.isMain && b.isMain) return 1;
+          return a.accountName.localeCompare(b.accountName);
+        });
+
         body.innerHTML = '';
-        alts.forEach(alt => {
+        let prevMember = '';
+        sorted.forEach(alt => {
           const row = document.createElement('tr');
+          const isNewGroup = alt.cloMember !== prevMember;
+          prevMember = alt.cloMember;
+          const mainBadge = alt.isMain
+            ? '<span style="display:inline-block;background:#4f46e5;color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;cursor:pointer;" onclick="MembersTab.toggleMain(' + alt.rowIndex + ',false)" title="Click to unset as main">⭐ Main</span>'
+            : '<span style="display:inline-block;background:#e2e5ef;color:#6b6f85;font-size:10px;padding:1px 6px;border-radius:8px;cursor:pointer;" onclick="MembersTab.toggleMain(' + alt.rowIndex + ',true)" title="Click to set as main">Set main</span>';
+          const memberCell = isNewGroup
+            ? `<td style="font-weight:600;border-top:2px solid #c0c4d8;">${escapeHtml(alt.cloMember)}</td>`
+            : `<td style="color:#999;">${escapeHtml(alt.cloMember)}</td>`;
+          const borderTop = isNewGroup ? 'border-top:2px solid #c0c4d8;' : '';
           row.innerHTML =
-            `<td>${escapeHtml(alt.mainAccount)}</td>` +
-            `<td>${escapeHtml(alt.altName)}</td>` +
-            `<td>${escapeHtml(alt.clan)}</td>` +
-            `<td>${escapeHtml(alt.kingdom)}</td>` +
-            `<td>${escapeHtml(alt.notes)}</td>` +
-            `<td><button onclick="MembersTab.deleteAlt(${alt.rowIndex})" style="background:#c62828;color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;" title="Remove this alt">✕</button></td>`;
+            memberCell +
+            `<td style="${borderTop}">${escapeHtml(alt.accountName)}</td>` +
+            `<td style="${borderTop}">${escapeHtml(alt.clan)}</td>` +
+            `<td style="${borderTop}">${escapeHtml(alt.kingdom)}</td>` +
+            `<td style="${borderTop}text-align:center;">${mainBadge}</td>` +
+            `<td style="${borderTop}">${escapeHtml(alt.notes)}</td>` +
+            `<td style="${borderTop}"><button onclick="MembersTab.deleteAlt(${alt.rowIndex})" style="background:#c62828;color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;" title="Remove">✕</button></td>`;
           body.appendChild(row);
         });
 
@@ -1929,37 +1974,63 @@
         table.style.display = 'table';
       }
 
+      async function toggleMain(rowIndex, setMain) {
+        // Find the alt in cache to get current data
+        const alt = (altAccountsCache || []).find(a => a.rowIndex === rowIndex);
+        if (!alt) return;
+        try {
+          await fetch(window.GAS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'updateAltAccount',
+              rowIndex,
+              accountName: alt.accountName,
+              clan: alt.clan,
+              kingdom: alt.kingdom,
+              notes: alt.notes,
+              isMain: setMain
+            })
+          });
+          loadAltAccounts();
+        } catch (e) {
+          alert(`Error: ${e.message}`);
+        }
+      }
+
       async function submitAddAlt() {
-        const mainAccount = (document.getElementById('altMainSelect')?.value || '').trim();
-        const altName = (document.getElementById('altNameInput')?.value || '').trim();
+        const cloMember = (document.getElementById('altMainSelect')?.value || '').trim();
+        const accountName = (document.getElementById('altNameInput')?.value || '').trim();
         const clan = (document.getElementById('altClanInput')?.value || '').trim();
         const kingdom = (document.getElementById('altKingdomInput')?.value || '').trim();
         const notes = (document.getElementById('altNotesInput')?.value || '').trim();
+        const isMain = document.getElementById('altIsMainCheck')?.checked || false;
         const status = document.getElementById('altAddStatus');
         status.textContent = '';
         status.className = 'status';
 
-        if (!mainAccount) { status.textContent = 'Please select a main account.'; status.classList.add('err'); return; }
-        if (!altName) { status.textContent = 'Please enter an alt name.'; status.classList.add('err'); return; }
+        if (!cloMember) { status.textContent = 'Please select a CLO member.'; status.classList.add('err'); return; }
+        if (!accountName) { status.textContent = 'Please enter an account name.'; status.classList.add('err'); return; }
 
         status.textContent = 'Adding...';
         try {
           const res = await fetch(window.GAS_WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'addAltAccount', mainAccount, altName, clan, kingdom, notes })
+            body: JSON.stringify({ action: 'addAltAccount', cloMember, accountName, clan, kingdom, notes, isMain })
           });
           const result = await res.json();
           if (result && result.success) {
-            status.textContent = result.message || 'Alt added!';
+            status.textContent = result.message || 'Account added!';
             status.classList.add('ok');
             document.getElementById('altNameInput').value = '';
             document.getElementById('altClanInput').value = '';
             document.getElementById('altKingdomInput').value = '';
             document.getElementById('altNotesInput').value = '';
+            document.getElementById('altIsMainCheck').checked = false;
             loadAltAccounts();
           } else {
-            status.textContent = result?.message || 'Failed to add alt.';
+            status.textContent = result?.message || 'Failed to add account.';
             status.classList.add('err');
           }
         } catch (e) {
@@ -1969,7 +2040,7 @@
       }
 
       async function deleteAlt(rowIndex) {
-        if (!confirm('Remove this alt account?')) return;
+        if (!confirm('Remove this account entry?')) return;
         try {
           const res = await fetch(window.GAS_WEB_APP_URL, {
             method: 'POST',
@@ -1980,7 +2051,7 @@
           if (result && result.success) {
             loadAltAccounts();
           } else {
-            alert(result?.message || 'Failed to remove alt.');
+            alert(result?.message || 'Failed to remove account.');
           }
         } catch (e) {
           alert(`Error: ${e.message}`);
@@ -1988,7 +2059,7 @@
       }
       // ──────────────────────────────────────────────────────────────────────
 
-      return { init, loadMembers, switchTab, submitMightEntry, submitHeroLevelEntry, submitAddMember, submitNameChange, submitRemoveMember, loadChestPointsTabData, togglePointTargetsPanel, savePtDefault, addPtOverride, updatePtOverride, loadAltAccounts, submitAddAlt, deleteAlt };
+      return { init, loadMembers, switchTab, submitMightEntry, submitHeroLevelEntry, submitAddMember, submitNameChange, submitRemoveMember, loadChestPointsTabData, togglePointTargetsPanel, savePtDefault, addPtOverride, updatePtOverride, loadAltAccounts, submitAddAlt, deleteAlt, toggleMain };
     })();
   </script>
 </body>
