@@ -285,29 +285,34 @@
   </div>
 
   <script>
-    let profilingData = null;
+    let rankingsData = null;
+    let currentMemberDetail = null;
 
     function runGASFunction(functionName, ...args) {
       return new Promise((resolve, reject) => { google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[functionName](...args); });
     }
 
+    // ─── Load Rankings from cache (fast) ───
     async function loadProfilingData() {
       const loading = document.getElementById('rankingsLoading');
       const content = document.getElementById('rankingsContent');
       loading.style.display = 'block'; content.innerHTML = '';
       try {
-        const res = await runGASFunction('getProfilingBundle');
-        if (res && res.success) { profilingData = res; populateSelect(); renderRankings(); }
-        else { content.innerHTML = '<div class="empty-state"><p>Failed to load profiling data: ' + (res?.message || 'Unknown error') + '</p></div>'; }
+        const res = await runGASFunction('getProfilingRankings');
+        if (res && res.success) { rankingsData = res; populateSelect(); renderRankings(); }
+        else if (res && res.empty) {
+          content.innerHTML = '<div class="empty-state"><p>' + (res.message || 'Rankings not yet calculated.') + '</p></div>';
+        }
+        else { content.innerHTML = '<div class="empty-state"><p>Failed to load rankings: ' + (res?.message || 'Unknown error') + '</p></div>'; }
       } catch (e) { content.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>'; }
       finally { loading.style.display = 'none'; }
     }
 
     function populateSelect() {
       const select = document.getElementById('memberSelect');
-      if (!profilingData || !profilingData.members) return;
-      [...profilingData.members].sort((a, b) => a.name.localeCompare(b.name)).forEach(m => {
-        const opt = document.createElement('option'); opt.value = m.name; opt.textContent = m.name; select.appendChild(opt);
+      if (!rankingsData || !rankingsData.rankings) return;
+      [...rankingsData.rankings].sort((a, b) => a.member.localeCompare(b.member)).forEach(m => {
+        const opt = document.createElement('option'); opt.value = m.member; opt.textContent = m.member; select.appendChild(opt);
       });
     }
 
@@ -329,40 +334,38 @@
     }
     function scoreBg(score) { return scoreColor(score) + '18'; }
 
-    // ─── Rankings ───
+    // ─── Rankings (from cache) ───
     function renderRankings() {
-      if (!profilingData || !profilingData.members || profilingData.members.length === 0) {
+      if (!rankingsData || !rankingsData.rankings || rankingsData.rankings.length === 0) {
         document.getElementById('rankingsContent').innerHTML = '<div class="empty-state"><p>No profiling data available yet.</p></div>'; return;
       }
-      const sorted = [...profilingData.members].sort((a, b) => b.overallScore - a.overallScore);
-      const W = profilingData.weights || {};
-      const metaNote = profilingData.lastUpdated ? '<span style="font-size:11px;color:#9ca3af;font-weight:400;margin-left:8px;">Updated: ' + profilingData.lastUpdated + '</span>' : '';
+      const sorted = [...rankingsData.rankings]; // already sorted by score desc
+      const W = rankingsData.weights || {};
+      const metaNote = rankingsData.lastUpdated ? '<span style="font-size:11px;color:#9ca3af;font-weight:400;margin-left:8px;">Updated: ' + rankingsData.lastUpdated + '</span>' : '';
 
       function rankingCardHtml(m, rank) {
         const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
         const medal = rank <= 3 ? ['🥇','🥈','🥉'][rank - 1] + ' ' : '';
-        const b = m.breakdown || {};
         const barHtml = [
-          { score: b.targetHitRate?.score, color: '#8bc34a', title: 'Target' },
-          { score: b.eventParticipation?.score, color: '#42a5f5', title: 'Events' },
-          { score: b.consistency?.score, color: '#ff9800', title: 'Consistency' },
-          { score: b.warnings?.score, color: b.warnings && b.warnings.score < 100 ? '#ef5350' : '#4caf50', title: 'Warnings' }
+          { score: m.targetHitRate, color: '#8bc34a', title: 'Target' },
+          { score: m.eventRate, color: '#42a5f5', title: 'Events' },
+          { score: m.consistency, color: '#ff9800', title: 'Consistency' },
+          { score: m.warningScore, color: m.warningScore < 100 ? '#ef5350' : '#4caf50', title: 'Warnings' }
         ].map(bar => {
           const w = bar.score != null ? Math.max(2, bar.score * 0.5) : 0;
           return w > 0 ? '<div class="ranking-bar" style="background:' + bar.color + '44;width:' + w + 'px;" title="' + bar.title + ': ' + (bar.score ?? '—') + '"></div>' : '';
         }).join('');
-        const tc = m.targetCompletion || {};
         const metaParts = [m.rating];
-        if (tc.total > 0) metaParts.push(tc.met + '/' + tc.total + ' targets met');
+        if (m.periodsTotal > 0) metaParts.push(m.periodsMet + '/' + m.periodsTotal + ' targets met');
         if (m.joinDate) metaParts.push('Joined ' + m.joinDate);
-        if (b.warnings && b.warnings.count > 0) metaParts.push('⚠️ ' + b.warnings.count + ' warning' + (b.warnings.count > 1 ? 's' : ''));
+        if (m.warnings > 0) metaParts.push('⚠️ ' + m.warnings + ' warning' + (m.warnings > 1 ? 's' : ''));
         return '<div class="ranking-card">'
           + '<div class="ranking-rank ' + rankClass + '">#' + rank + '</div>'
           + '<div class="ranking-info">'
-          + '<div class="ranking-name" onclick="jumpToProfile(\'' + escapeAttr(m.name) + '\')">' + medal + escapeHtml(m.name) + '</div>'
+          + '<div class="ranking-name" onclick="jumpToProfile(\'' + escapeAttr(m.member) + '\')">' + medal + escapeHtml(m.member) + '</div>'
           + '<div class="ranking-meta">' + metaParts.join(' · ') + '</div>'
           + '<div class="ranking-bars">' + barHtml + '</div></div>'
-          + '<div class="ranking-score-pill" style="background:' + scoreBg(m.overallScore) + ';color:' + scoreColor(m.overallScore) + ';">' + m.overallScore + '</div></div>';
+          + '<div class="ranking-score-pill" style="background:' + scoreBg(m.score) + ';color:' + scoreColor(m.score) + ';">' + m.score + '</div></div>';
       }
 
       const HIGHLIGHT = 5, NEW_DAYS = 5, today = new Date();
@@ -388,19 +391,33 @@
 
     function jumpToProfile(name) { document.getElementById('memberSelect').value = name; switchSubTab('individual'); showIndividual(); }
 
-    // ─── Individual Profile ───
-    function showIndividual() {
+    // ─── Individual Profile (fetches detail for one member) ───
+    async function showIndividual() {
       const name = document.getElementById('memberSelect').value;
-      if (!name || !profilingData) { document.getElementById('individualContent').style.display = 'none'; document.getElementById('individualEmpty').style.display = 'block'; return; }
-      const member = profilingData.members.find(m => m.name === name);
-      if (!member) { document.getElementById('individualContent').style.display = 'none'; document.getElementById('individualEmpty').style.display = 'block'; return; }
-      document.getElementById('individualEmpty').style.display = 'none';
-      renderIndividual(member);
-      document.getElementById('individualContent').style.display = 'block';
+      if (!name) { document.getElementById('individualContent').style.display = 'none'; document.getElementById('individualEmpty').style.display = 'block'; return; }
+
+      // Show loading state
+      document.getElementById('individualEmpty').innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading profile for ' + escapeHtml(name) + '...</p></div>';
+      document.getElementById('individualEmpty').style.display = 'block';
+      document.getElementById('individualContent').style.display = 'none';
+
+      try {
+        const res = await runGASFunction('getProfilingMemberDetail', name);
+        if (res && res.success) {
+          currentMemberDetail = res;
+          document.getElementById('individualEmpty').style.display = 'none';
+          renderIndividual(res);
+          document.getElementById('individualContent').style.display = 'block';
+        } else {
+          document.getElementById('individualEmpty').innerHTML = '<div class="empty-state"><p>Failed to load profile: ' + (res?.message || 'Unknown error') + '</p></div>';
+        }
+      } catch (e) {
+        document.getElementById('individualEmpty').innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>';
+      }
     }
 
     function renderIndividual(m) {
-      const W = profilingData.weights || {};
+      const W = m.weights || {};
       const b = m.breakdown || {};
 
       // Score ring
