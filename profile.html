@@ -1,119 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>cCc League One - Profiling</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <script src="perf-debug.js"></script>
   <script src="config.js"></script>
-  <script src="site-config.js"></script>
   <script src="portal-shim.js"></script>
   <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --accent: #a5b4fc;
-      --accent-light: #c7d2fe;
-      --bg-body: linear-gradient(135deg, #f0f2f5 0%, #d8dce8 100%);
-      --bg-card: rgba(82, 90, 114, 0.93);
-      --bg-inner: #f0f2f5;
-      --text: #1a1c2e;
-      --text-light: #d1d5e6;
-      --text-muted: #9ca3af;
-      --success: #22c55e;
-      --danger: #ef4444;
-      --border: #c0c4d8;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
-      background: var(--bg-body);
-      color: var(--text); min-height: 100vh;
-      background-attachment: fixed; padding: 32px 16px 80px 16px;
+      background: linear-gradient(135deg, #f0f2f5 0%, #d8dce8 100%);
+      color: #1a1c2e;
+      text-align: center;
+      padding: 32px 16px 60px 16px;
+      min-height: 100vh;
+      background-attachment: fixed;
     }
     body { top: 0 !important; }
     .goog-te-banner-frame.skiptranslate { display: none !important; }
     .goog-te-balloon-frame { display: none !important; }
     html, body { margin-top: 0 !important; top: 0 !important; }
+    body.translated-ltr, body.translated-rtl { margin-top: 0 !important; top: 0 !important; }
+    .goog-te-banner-frame, iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate { display: none !important; visibility: hidden !important; height: 0 !important; }
+    #goog-gt-tt, .goog-te-balloon-frame { display: none !important; visibility: hidden !important; }
+    .goog-text-highlight { background: transparent !important; box-shadow: none !important; }
+    #google_translate_element, #translateToggleBtn { top: auto !important; right: 8px !important; bottom: 8px !important; }
 
-    /* Nav */
+    /* Top Tabs */
     .tab-nav {
       background: rgba(70, 80, 105, 0.92);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid #c0c4d8;
       box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-      position: sticky; top: 0; z-index: 9999;
-      width: 100%; left: 0; right: 0;
+      position: sticky; top: 0; z-index: 1000;
     }
-    .tab-nav-container {
-      max-width: 1400px; margin: 0 auto;
-      display: flex; align-items: center; padding: 0 16px;
-      flex-wrap: wrap;
-    }
-    .nav-brand { font-size: 20px; font-weight: 700; color: var(--accent); padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
+    .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
-    .tab-buttons { display: flex; gap: 4px; flex: 1; overflow-x: auto; overflow-y: hidden; align-items: center; height: 100px; }
+    .tab-buttons {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+      overflow-x: auto;
+      overflow-y: hidden;
+      align-items: center;
+      height: 100px;
+    }
     .tab-btn {
-      padding: 12px 16px; background: none; border: none; color: #c7cce0;
-      font-size: 28px; font-weight: 500; border-bottom: 3px solid transparent;
-      transition: all 0.2s; white-space: nowrap; text-decoration: none;
-      display: block; cursor: pointer; position: relative;
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      color: #c7cce0;
+      font-size: 28px;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      position: relative;
     }
-    .tab-btn:hover { color: var(--primary); background: var(--bg-inner); }
-    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
+    .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
     .tab-btn[title]:hover::after {
-      content: attr(title); position: absolute; top: -42px; left: 50%; transform: translateX(-50%);
-      background: var(--bg-inner); color: var(--primary); padding: 6px 12px; border-radius: 4px;
-      font-size: 12px; white-space: nowrap; z-index: 1001; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      content: attr(title);
+      position: absolute;
+      top: -42px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f0f2f5;
+      color: #4f46e5;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 1001;
+      border: 1px solid #c0c4d8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
-    .tab-btn .tab-icon { display: block; margin: 0 auto; height: 40px; width: auto; font-size: 16px; line-height: 1.2; font-weight: 500; white-space: nowrap; filter: drop-shadow(0 2px 8px #000a); }
-    .tab-label.mobile-only { display: none; }
-    .tab-icon.desktop-only { display: block; margin: 0 auto; height: 40px; width: auto; }
-
-    /* Auth */
-    .login-bar { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-    .login-bar .user-email { font-size: 0.8em; color: var(--accent); background: rgba(165,180,252,0.1); padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border); }
-    .login-bar button { background: var(--primary); color: #fff; border: none; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: 0.85em; }
-    .login-bar button:hover { background: var(--primary-hover); }
-    .login-bar .logout-btn { background: #c62828; color: #fff; }
-
-    /* Toast */
-    .toast {
-      position: fixed; bottom: 20px; right: 20px; z-index: 3000;
-      background: var(--bg-inner); color: var(--text); padding: 12px 20px;
-      border-radius: 8px; font-size: 0.9em; display: none;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    .tab-btn .tab-icon {
+      display: block;
+      margin: 0 auto;
+      height: 40px;
+      width: auto;
+      font-size: 16px;
+      line-height: 1.2;
+      font-weight: 500;
+      white-space: nowrap;
+      filter: drop-shadow(0 2px 8px #000a);
     }
-    .toast.success { border-left: 4px solid var(--success); }
-    .toast.error { border-left: 4px solid var(--danger); }
 
-    /* Button */
-    .btn {
-      background: var(--primary); color: #fff; border: none; border-radius: 8px;
-      padding: 8px 16px; cursor: pointer; font-weight: 600; font-size: 0.9em;
+    /* Tab Content */
+    .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
+    .tab-content.active { display: block; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; text-shadow: 0 2px 8px #000a; }
+    h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #f0f2f5; }
+    h3 { color: #a5b4fc; }
+    .loading { text-align: center; padding: 32px; color: #d1d5e6; }
+    .spinner { border: 4px solid #c0c4d8; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Header */
+    .header { margin-bottom: 16px; }
+    .header p { color: #d8dce8; font-size: 14px; margin-top: 8px; }
+
+    /* Sub-tabs (internal tabs) */
+    .tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid rgba(255,255,255,0.25); flex-wrap: wrap; padding-bottom: 12px; }
+    .tab {
+      padding: 8px 12px;
+      background: none;
+      border: none;
+      color: #d8dce8;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .btn:hover { background: var(--primary-hover); }
-
-    /* Container */
-    .container {
-      max-width: 1000px; margin: 0 auto;
-      background: var(--bg-card); border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.25); padding: 24px 16px;
-    }
-    h1 { color: var(--accent); text-align: center; margin-bottom: 4px; font-size: 1.8em; text-shadow: 0 2px 8px #000a; }
-    .subtitle { text-align: center; color: var(--text-light); margin-bottom: 16px; font-size: 0.9em; }
-    h2 { font-size: 1.1em; font-weight: 600; color: var(--accent); margin: 20px 0 10px 0; }
-
-    /* Sub-tabs */
-    .sub-tabs { display: flex; gap: 4px; margin: 16px 0 8px 0; border-bottom: 2px solid rgba(165,180,252,0.2); }
-    .sub-tab { padding: 10px 18px; background: none; border: none; color: var(--text-light); font-size: 0.9em; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; border-radius: 6px 6px 0 0; }
-    .sub-tab:hover { color: var(--accent); background: rgba(79,70,229,0.08); }
-    .sub-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(79,70,229,0.12); }
+    .tab:hover { color: #f0f2f5; }
+    .tab.active { color: #f0f2f5; border-bottom-color: #f0f2f5; }
 
     /* Member Selector */
     .selector-container { display: flex; gap: 12px; align-items: center; margin: 12px 0; flex-wrap: wrap; }
-    .selector-container select { flex: 1; min-width: 220px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95em; background: var(--bg-inner); color: var(--text); }
-    .selector-container select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(79,70,229,0.2); }
+    .selector-container select {
+      flex: 1; min-width: 220px; padding: 10px 12px;
+      border: 1px solid #c0c4d8; border-radius: 6px; font-size: 14px;
+      background: #f0f2f5; color: #2c2f45; font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .selector-container select:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
 
     /* Score Ring */
     .score-section { display: flex; align-items: center; gap: 24px; margin: 16px 0; flex-wrap: wrap; }
@@ -123,614 +141,853 @@
     .score-ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
     .score-ring-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
     .score-ring-label .score-value { font-size: 32px; font-weight: 700; }
-    .score-ring-label .score-rating { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+    .score-ring-label .score-rating { font-size: 11px; color: #d1d5e6; margin-top: 2px; }
     .score-breakdown { flex: 1; min-width: 200px; }
     .breakdown-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .breakdown-row .label { font-size: 0.8em; color: var(--text-light); width: 140px; }
+    .breakdown-row .label { font-size: 12px; color: #d1d5e6; width: 140px; text-align: left; }
     .breakdown-row .bar-bg { flex: 1; height: 8px; background: rgba(165,180,252,0.12); border-radius: 4px; overflow: hidden; }
     .breakdown-row .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
-    .breakdown-row .bar-value { font-size: 0.75em; color: var(--text-light); width: 36px; text-align: right; font-weight: 600; }
+    .breakdown-row .bar-value { font-size: 12px; color: #d1d5e6; width: 36px; text-align: right; font-weight: 600; }
 
     /* Info Cards */
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 12px 0; }
-    .info-card { background: var(--bg-inner); border-radius: 8px; padding: 12px; border: 1px solid var(--border); }
-    .info-card .card-label { font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-    .info-card .card-value { font-size: 1.2em; font-weight: 700; color: var(--text); }
-    .info-card .card-sub { font-size: 0.7em; color: var(--text-muted); margin-top: 2px; }
+    .info-card { background: #f0f2f5; border-radius: 8px; padding: 12px; border: 1px solid #c0c4d8; text-align: left; }
+    .info-card .card-label { font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .info-card .card-value { font-size: 18px; font-weight: 700; color: #2c2f45; }
+    .info-card .card-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 
     /* Rankings */
-    .ranking-card { background: var(--bg-inner); border-radius: 10px; padding: 12px 16px; border: 1px solid var(--border); display: flex; align-items: center; gap: 14px; margin-bottom: 8px; transition: transform 0.15s, box-shadow 0.15s; }
+    .ranking-card { background: #f0f2f5; border-radius: 10px; padding: 12px 16px; border: 1px solid #c0c4d8; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; transition: transform 0.15s, box-shadow 0.15s; text-align: left; }
     .ranking-card:hover { transform: translateX(4px); box-shadow: 0 2px 10px rgba(79,70,229,0.15); }
-    .ranking-rank { font-size: 1.2em; font-weight: 700; color: var(--primary); width: 36px; text-align: center; flex-shrink: 0; }
+    .ranking-rank { font-size: 18px; font-weight: 700; color: #4f46e5; width: 36px; text-align: center; flex-shrink: 0; }
     .ranking-rank.top1 { color: #facc15; }
     .ranking-rank.top2 { color: #94a3b8; }
     .ranking-rank.top3 { color: #d97706; }
     .ranking-info { flex: 1; min-width: 0; }
-    .ranking-name { font-size: 0.95em; font-weight: 600; color: var(--text); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .ranking-name:hover { color: var(--primary); text-decoration: underline; }
-    .ranking-meta { font-size: 0.7em; color: var(--text-muted); margin-top: 2px; }
-    .ranking-score-pill { padding: 6px 12px; border-radius: 20px; font-size: 0.95em; font-weight: 700; flex-shrink: 0; }
+    .ranking-name { font-size: 14px; font-weight: 600; color: #2c2f45; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ranking-name:hover { color: #4f46e5; text-decoration: underline; }
+    .ranking-meta { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    .ranking-score-pill { padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 700; flex-shrink: 0; }
     .ranking-bars { display: flex; gap: 3px; align-items: center; margin-top: 4px; }
     .ranking-bar { height: 5px; border-radius: 3px; }
-    .ranking-section-title { font-size: 1em; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .ranking-section-title { font-size: 15px; font-weight: 600; color: #a5b4fc; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; text-align: left; }
 
     /* Badges */
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
     .badge-green { background: rgba(34,197,94,0.15); color: #22c55e; }
     .badge-orange { background: rgba(245,158,11,0.15); color: #f59e0b; }
     .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
-    .badge-blue { background: rgba(79,70,229,0.15); color: var(--primary); }
+    .badge-blue { background: rgba(79,70,229,0.15); color: #4f46e5; }
     .badge-gray { background: rgba(156,163,175,0.15); color: #9ca3af; }
 
     /* Table */
-    .table-container { overflow-x: auto; margin: 12px 0; border-radius: 8px; border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; background: var(--bg-inner); }
-    th { padding: 10px 8px; font-size: 0.7em; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border); text-align: left; background: #e2e5ef; }
-    td { padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 0.85em; color: var(--text); }
-    tr:hover { background: rgba(79,70,229,0.04); }
+    .table-container { margin-top: 12px; margin-bottom: 12px; overflow: auto; max-height: 70vh; position: relative; border-radius: 8px; border: 1px solid #c0c4d8; }
+    table { width: 100%; border-collapse: collapse; background: #f0f2f5; }
+    thead { background: #e8eaf2; }
+    th {
+      padding: 12px 8px;
+      font-weight: 600;
+      font-size: 11px;
+      color: #4f46e5;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #c0c4d8;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      background: #e8eaf2;
+      z-index: 10;
+    }
+    td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #c0c4d8;
+      color: #2c2f45;
+      font-size: 13px;
+    }
+    tr:hover { background: #e2e5ef; }
 
-    /* Loading & Empty */
-    .loading { text-align: center; padding: 40px; color: var(--text-light); }
-    .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid rgba(165,180,252,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .empty-state { text-align: center; padding: 40px; color: var(--text-light); font-size: 0.9em; }
+    /* Empty State */
+    .empty-state { text-align: center; padding: 40px; color: #d1d5e6; font-size: 14px; }
 
-    /* Login Gate */
-    .login-gate {
-      max-width: 500px; margin: 80px auto; text-align: center;
-      background: var(--bg-card); border-radius: 16px; padding: 40px 24px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    /* Read-only Mode */
+    .read-only-mode input,
+    .read-only-mode select,
+    .read-only-mode textarea,
+    .read-only-mode button:not(.tab-btn):not(.tab):not(.hamburger) {
+      pointer-events: none !important;
+      background: #f5f5f5 !important;
+      color: #6b6f85 !important;
+      cursor: not-allowed !important;
+      opacity: 0.7 !important;
+      border-color: #c0c4d8 !important;
     }
 
-    /* Hamburger */
-    .hamburger { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
-    .hamburger span { display: block; width: 24px; height: 3px; background: var(--accent); border-radius: 2px; transition: all 0.2s; }
+    /* Hamburger menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 3px;
+      background: #a5b4fc;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
 
-    /* Mobile */
+    /* Responsive navigation */
+    .tab-label.mobile-only { display: none; }
+    .tab-icon.desktop-only { display: block; margin: 0 auto; height: 40px; width: auto; }
+
     @media (max-width: 800px) {
-      body { padding: 100px 8px 70px 8px; }
-      .tab-nav { position: fixed; top: 0; left: 0; right: 0; width: 100%; }
-      .tab-nav-container { flex-wrap: wrap; padding: 8px; }
-      .nav-brand { flex: 1; margin-right: 8px; font-size: 16px; padding: 8px 0; }
-      .nav-brand img { height: 24px; width: 24px; }
-      .hamburger { display: flex; order: 2; }
-      .tab-buttons {
-        flex-direction: column; align-items: stretch; max-height: 60vh; overflow-y: auto;
-        background: var(--bg-inner); position: absolute; top: 60px; left: 0; right: 0; width: 100%;
-        z-index: 10000; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: none; order: 10; height: auto;
+      .tab-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 9999;
       }
-      .tab-buttons.open { display: flex; }
-      .tab-btn { font-size: 18px; padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-start; height: auto; }
+      .tab-nav-container {
+        flex-wrap: wrap;
+        padding: 8px;
+      }
+      .nav-brand {
+        flex: 1;
+        margin-right: 8px;
+        font-size: 16px;
+        padding: 8px 0;
+      }
+      .nav-brand img {
+        height: 24px;
+        width: 24px;
+      }
+      .hamburger {
+        display: flex;
+        order: 2;
+      }
+      .tab-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        max-height: 60vh;
+        overflow-y: auto;
+        background: #f0f2f5;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 10000;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        display: none;
+        order: 10;
+      }
+      .tab-buttons.open {
+        display: flex;
+      }
+      .tab-btn {
+        font-size: 18px;
+        padding: 18px 24px;
+        border-bottom: 1px solid #c0c4d8;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background: none;
+        height: auto;
+      }
       .tab-btn:last-child { border-bottom: none; }
       .tab-label.mobile-only { display: inline; }
-      .tab-btn .tab-icon { display: none; }
-      .tab-icon.desktop-only { display: none !important; }
+      .tab-icon.desktop-only { display: none; }
+      #readOnlyBadge,
+      #signedInUserBadge,
+      #logoutBtn,
+      #signInManageBtn {
+        order: 3;
+        margin: 4px 0 4px auto !important;
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+      }
+      body {
+        padding-top: 100px;
+      }
       .score-section { flex-direction: column; align-items: center; }
       .info-grid { grid-template-columns: 1fr 1fr; }
-      .sub-tabs { flex-wrap: wrap; }
-      .login-bar { margin-left: 0; order: 3; }
+    }
+
+    @media (min-width: 801px) {
+      .tab-label.mobile-only { display: none; }
+      .tab-icon.desktop-only { display: block; }
+      .tab-buttons {
+        flex-direction: row;
+        align-items: center;
+        position: static;
+        max-height: none;
+        overflow-y: visible;
+        background: none;
+        box-shadow: none;
+        border-radius: 0;
+        display: flex !important;
+      }
+      .tab-btn {
+        font-size: 28px;
+        padding: 12px 16px;
+        border-bottom: 3px solid transparent;
+        display: block;
+        justify-content: center;
+      }
+      .hamburger { display: none; }
     }
   </style>
 </head>
 <body>
-
-<nav class="tab-nav">
-  <div class="tab-nav-container">
-    <div class="nav-brand"><img src="favicon.png" alt="" style="height: 32px; width: 32px; vertical-align: middle; margin-right: 8px;"> cCc League One</div>
-    <button class="hamburger" id="navHamburger" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="tab-buttons" id="navTabs">
-      <a href="dashboard.html" class="tab-btn" title="Dashboard">
-        <img src="chests.png" alt="Dashboard" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Dashboard</span>
-      </a>
-      <a href="events.html" class="tab-btn" title="Events">
-        <img src="events.png" alt="Events" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Events</span>
-      </a>
-      <a href="members.html" class="tab-btn" title="Members">
-        <img src="members.png" alt="Members" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Members</span>
-      </a>
-      <a href="troops.html" class="tab-btn" title="Troops">
-        <img src="troops.png" alt="Troops" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Troops</span>
-      </a>
-      <a href="profile.html" class="tab-btn active" title="Profiling">
-        <img src="profile.png" alt="Profiling" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Profiling</span>
-      </a>
-      <a href="warnings.html" class="tab-btn" title="Warnings">
-        <img src="warning.png" alt="Warnings" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Warnings</span>
-      </a>
-      <a href="competition.html" class="tab-btn" title="Competition">
-        <img src="competition.png" alt="Competition" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Competition</span>
-      </a>
-      <a href="calendar.html" class="tab-btn" title="Calendar">
-        <img src="calendar.png" alt="Calendar" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Calendar</span>
-      </a>
-    </div>
-    <div class="login-bar">
-      <span class="user-email" id="userEmail" style="display:none"></span>
-      <button id="loginBtn" onclick="handleLogin()">🔑 Login</button>
-      <button id="logoutBtn" class="logout-btn" style="display:none" onclick="handleLogout()">Log out</button>
-    </div>
-  </div>
-</nav>
-
-<div class="login-gate" id="loginGate">
-  <h2 style="color:var(--accent);margin-bottom:12px;">🔒 Login Required</h2>
-  <p style="color:var(--text-light);margin-bottom:20px;">You need to be logged in to view the Profiling page.</p>
-  <button class="btn" onclick="handleLogin()" style="padding:12px 32px;font-size:1em;">🔑 Login</button>
-</div>
-
-<div class="container" id="mainContent" style="display:none">
-  <h1>⚔️ Member Profiling</h1>
-  <p class="subtitle">Performance scoring based on Crypts, Tinman, Ragnarok, Tower, Carter & Hero metrics</p>
-
-  <!-- Sub-tabs -->
-  <div class="sub-tabs">
-    <button class="sub-tab active" data-tab="rankings" onclick="switchSubTab('rankings')">🏆 Rankings</button>
-    <button class="sub-tab" data-tab="individual" onclick="switchSubTab('individual')">👤 Individual</button>
-  </div>
-
-  <!-- Rankings Tab -->
-  <div id="tabRankings">
-    <div id="rankingsLoading" class="loading" style="display:none;"><div class="spinner"></div><p>Loading profiling data...</p></div>
-    <div id="rankingsContent"></div>
-  </div>
-
-  <!-- Individual Tab -->
-  <div id="tabIndividual" style="display:none;">
-    <div class="selector-container">
-      <select id="memberSelect" onchange="showIndividual()">
-        <option value="">— Select a member —</option>
-      </select>
-    </div>
-    <div id="individualEmpty" class="empty-state"><p>Select a member above to view their profile.</p></div>
-    <div id="individualContent" style="display:none;">
-
-      <!-- Score Ring + Breakdown -->
-      <h2>Performance Score</h2>
-      <div class="score-section">
-        <div class="score-ring-container">
-          <svg viewBox="0 0 120 120">
-            <circle class="score-ring-bg" cx="60" cy="60" r="50"/>
-            <circle class="score-ring-fill" id="scoreRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
-          </svg>
-          <div class="score-ring-label">
-            <div class="score-value" id="scoreValue">—</div>
-            <div class="score-rating" id="scoreRating"></div>
-          </div>
-        </div>
-        <div class="score-breakdown" id="scoreBreakdown"></div>
-      </div>
-
-      <!-- Metric Detail Cards -->
-      <h2>Metric Details</h2>
-      <div class="info-grid" id="metricCards"></div>
-
-      <!-- Breakdown Table -->
-      <h2>Full Breakdown</h2>
-      <div class="table-container">
-        <table>
-          <thead><tr><th>Metric</th><th>Score</th><th>Weight</th><th>Detail</th></tr></thead>
-          <tbody id="breakdownBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<script>
-  let profilingData = null;
-  let isLoggedIn = false;
-  let currentUser = null;
-
-  // Hamburger toggle
-  document.getElementById('navHamburger').addEventListener('click', function() {
-    document.getElementById('navTabs').classList.toggle('open');
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    history.replaceState({ tab: 'rankings' }, '', '#rankings');
-    checkLoginState();
-    if (isLoggedIn) {
-      document.getElementById('loginGate').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-      loadProfilingData();
-    }
-  });
-
-  // AUTH (uses CLO auth keys)
-  const AUTH_KEY = 'clo_portal_google_auth';
-  const AUTH_EMAIL_KEY = 'clo_portal_google_email';
-
-  function checkLoginState() {
-    try {
-      const authed = localStorage.getItem(AUTH_KEY) === '1';
-      const email = localStorage.getItem(AUTH_EMAIL_KEY);
-      if (authed && email) {
-        isLoggedIn = true;
-        currentUser = { email: email, allowed: true };
-        updateLoginUI();
+  <!-- Google Translate Widget -->
+  <div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
+  <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">🌐</button>
+  <style>
+    @media (max-width: 800px) {
+      #google_translate_element {
+        max-width: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: max-width 0.2s ease, opacity 0.2s ease;
       }
-    } catch (e) {}
-  }
-
-  function handleLogin() {
-    if (!document.getElementById('gsi-script')) {
-      const s = document.createElement('script'); s.id = 'gsi-script';
-      s.src = 'https://accounts.google.com/gsi/client';
-      s.onload = () => {
-        google.accounts.id.initialize({ client_id: SITE_CONFIG.googleClientId, callback: handleGoogleCallback });
-        google.accounts.id.prompt();
-      };
-      document.head.appendChild(s);
-    } else { google.accounts.id.prompt(); }
-  }
-
-  async function handleGoogleCallback(response) {
-    try {
-      const cfWorkerUrl = window.CLOUDFLARE_WORKER_URL || window.GAS_WEB_APP_URL;
-      const res = await fetch(cfWorkerUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken: response.credential })
+      body.translate-open #google_translate_element {
+        max-width: 260px;
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #translateToggleBtn { display: inline-flex !important; }
+    }
+    @media (min-width: 801px) {
+      #translateToggleBtn { display: none !important; }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const translateToggleBtn = document.getElementById('translateToggleBtn');
+      const translateWidget = document.getElementById('google_translate_element');
+      if (!translateToggleBtn || !translateWidget) return;
+      translateToggleBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        document.body.classList.toggle('translate-open');
       });
-      const data = await res.json();
-      if (data.success && data.email) {
-        const vRes = await fetch(cfWorkerUrl, {
+      document.addEventListener('click', function (e) {
+        if (!document.body.classList.contains('translate-open')) return;
+        if (translateWidget.contains(e.target) || translateToggleBtn.contains(e.target)) return;
+        document.body.classList.remove('translate-open');
+      });
+    });
+  </script>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <!-- Google Sign-In integration -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    // --- Google Sign-In for edit access ---
+    const BACKEND_VERIFY_URL = window.GAS_WEB_APP_URL;
+    const AUTH_KEY = 'clo_portal_google_auth';
+    const AUTH_EMAIL_KEY = 'clo_portal_google_email';
+
+    function setReadOnlyMode(enabled) {
+      if (enabled) {
+        document.documentElement.classList.add('read-only-mode');
+        if (document.body) document.body.classList.add('read-only-mode');
+      } else {
+        document.documentElement.classList.remove('read-only-mode');
+        if (document.body) document.body.classList.remove('read-only-mode');
+      }
+    }
+
+    function updateSignedInBadge(email) {
+      const badge = document.getElementById('signedInUserBadge');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const signInBtn = document.getElementById('signInManageBtn');
+      if (!badge) return;
+      if (email) {
+        badge.innerHTML = email;
+        badge.style.display = 'inline-block';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        if (signInBtn) signInBtn.style.display = 'none';
+      } else {
+        badge.textContent = '';
+        badge.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (signInBtn) signInBtn.style.display = 'inline-block';
+      }
+    }
+
+    function handleLogout() {
+      try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+      try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {}
+      setReadOnlyMode(true);
+      updateSignedInBadge(null);
+      setTimeout(() => { window.location.reload(); }, 200);
+    }
+
+    function showGoogleLogin() {
+      const loginDiv = document.createElement('div');
+      loginDiv.id = 'login-overlay';
+      loginDiv.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      loginDiv.innerHTML = `
+        <div style="background:#f0f2f5;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #c0c4d8;">
+          <h2 style="margin-bottom:8px;color:#4f46e5;">Sign in to Manage</h2>
+          <p style="font-size:14px;color:#2c2f45;text-align:center;margin:0 0 8px 0;">Use your Google account to access management features</p>
+          <div id="g_id_onload" data-client_id="47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com" data-callback="onGoogleSignIn" data-auto_prompt="false" data-ux_mode="popup"></div>
+          <div id="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
+          <div style="width:100%;height:1px;background:#c0c4d8;margin:8px 0;"></div>
+          <button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button>
+          <div id="login-error" style="color:#ff5252;font-size:13px;display:none;"></div>
+        </div>
+      `;
+      document.body.appendChild(loginDiv);
+      setTimeout(() => {
+        const guestBtn = document.getElementById('guest-btn');
+        if (guestBtn) {
+          guestBtn.onclick = function() {
+            document.getElementById('login-overlay').remove();
+            setReadOnlyMode(true);
+            try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+            try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {}
+            updateSignedInBadge(null);
+          };
+        }
+        if (window.google && google.accounts && google.accounts.id) {
+          try {
+            google.accounts.id.initialize({
+              client_id: '47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com',
+              callback: onGoogleSignIn,
+              auto_select: false,
+              ux_mode: 'popup'
+            });
+            google.accounts.id.renderButton(document.getElementById('g_id_signin'),
+              { type: 'standard', size: 'large', theme: 'outline', text: 'signin', shape: 'rectangular', logo_alignment: 'left' });
+          } catch (e) { console.error('Error rendering Google Sign-In button:', e); }
+        }
+      }, 100);
+    }
+
+    window.onGoogleSignIn = async function(response) {
+      const idToken = response.credential;
+      try {
+        const cfWorkerUrl = window.CLOUDFLARE_WORKER_URL || window.GAS_WEB_APP_URL;
+        let tokenRes = await fetch(cfWorkerUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'api', fn: 'verifyGoogleLogin', args: [{ email: data.email }] })
+          body: JSON.stringify({ idToken })
         });
-        const vData = await vRes.json();
-        const auth = vData.data || vData;
-        if (auth.success && auth.allowed) {
-          isLoggedIn = true;
-          currentUser = { email: data.email, allowed: true };
-          localStorage.setItem(AUTH_KEY, '1');
-          localStorage.setItem(AUTH_EMAIL_KEY, data.email);
-          updateLoginUI();
-          showToast('Logged in', 'success');
-        } else { showToast('Access denied', 'error'); }
+        let tokenData = await tokenRes.json();
+        if (!tokenData.success || !tokenData.token_verified) {
+          throw new Error(tokenData.error || 'Token verification failed');
+        }
+        const email = tokenData.email;
+        const res = await fetch(BACKEND_VERIFY_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'verifyUserPermission', email })
+        });
+        const data = await res.json();
+        const isAllowed = Boolean(data && (data.isAllowedEditor === true || data.allowed === true));
+        if (isAllowed) {
+          try { localStorage.setItem(AUTH_KEY, idToken); } catch (e) {}
+          try { localStorage.setItem(AUTH_EMAIL_KEY, email); } catch (e) {}
+          setReadOnlyMode(false);
+          updateSignedInBadge(email);
+          const overlay = document.getElementById('login-overlay');
+          if (overlay) overlay.style.display = 'none';
+          setTimeout(() => { window.location.reload(); }, 200);
+        } else {
+          setReadOnlyMode(true);
+          const errorDiv = document.getElementById('login-error');
+          if (errorDiv) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Your account does not have editor access';
+          }
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        const errorDiv = document.getElementById('login-error');
+        if (errorDiv) {
+          errorDiv.style.display = 'block';
+          errorDiv.textContent = 'Sign-in failed: ' + error.message;
+        }
       }
-    } catch (err) { showToast('Login error: ' + err.message, 'error'); }
-  }
+    };
 
-  function handleLogout() {
-    isLoggedIn = false; currentUser = null;
-    try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
-    try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {}
-    window.location.href = 'dashboard.html';
-  }
-
-  function updateLoginUI() {
-    document.getElementById('userEmail').textContent = isLoggedIn ? currentUser.email : '';
-    document.getElementById('userEmail').style.display = isLoggedIn ? 'inline' : 'none';
-    document.getElementById('loginBtn').style.display = isLoggedIn ? 'none' : 'inline';
-    document.getElementById('logoutBtn').style.display = isLoggedIn ? 'inline' : 'none';
-    document.getElementById('loginGate').style.display = isLoggedIn ? 'none' : 'block';
-    document.getElementById('mainContent').style.display = isLoggedIn ? 'block' : 'none';
-    if (isLoggedIn && !profilingData) loadProfilingData();
-  }
-
-  function showToast(message, type) {
-    const toast = document.getElementById('toast');
-    toast.textContent = message;
-    toast.className = 'toast ' + (type || '');
-    toast.style.display = 'block';
-    setTimeout(() => { toast.style.display = 'none'; }, 3000);
-  }
-
-  async function loadProfilingData() {
-    const loading = document.getElementById('rankingsLoading');
-    const content = document.getElementById('rankingsContent');
-    loading.style.display = 'block';
-    content.innerHTML = '';
-
-    try {
-      const res = await callFunction('getProfilingBundle');
-      if (res && res.success) {
-        profilingData = res;
-        populateSelect();
-        renderRankings();
+    window.addEventListener('DOMContentLoaded', () => {
+      const setRestrictedTabsVisibility = (isVisible) => {
+        const displayValue = isVisible ? '' : 'none';
+        ['events.html', 'members.html', 'troops.html', 'profile.html', 'warnings.html'].forEach((href) => {
+          document.querySelectorAll(`.tab-buttons .tab-btn[href="${href}"]`).forEach((link) => {
+            link.style.display = displayValue;
+          });
+        });
+      };
+      const token = (() => { try { return localStorage.getItem(AUTH_KEY); } catch (e) { return null; } })();
+      const email = (() => { try { return localStorage.getItem(AUTH_EMAIL_KEY); } catch (e) { return null; } })();
+      if (token && email) {
+        setReadOnlyMode(false);
+        updateSignedInBadge(email);
+        setRestrictedTabsVisibility(true);
+        const bankTab = document.getElementById('bankTabBtn');
+        if (bankTab) bankTab.style.display = 'flex';
       } else {
-        content.innerHTML = '<div class="empty-state"><p>Failed to load profiling data: ' + (res?.message || 'Unknown error') + '</p></div>';
+        setReadOnlyMode(true);
+        updateSignedInBadge(null);
+        setRestrictedTabsVisibility(false);
+        const bankTab = document.getElementById('bankTabBtn');
+        if (bankTab) bankTab.style.display = 'none';
+        let nav = document.querySelector('.tab-nav-container');
+        if (nav && !document.getElementById('signInManageBtn')) {
+          const btn = document.createElement('button');
+          btn.id = 'signInManageBtn';
+          btn.textContent = '🔑 Sign in to Manage';
+          btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
+          btn.onclick = showGoogleLogin;
+          nav.appendChild(btn);
+        }
       }
-    } catch (e) {
-      content.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>';
-    } finally {
-      loading.style.display = 'none';
-    }
-  }
 
-  function callFunction(fn, args) {
-    const payload = { action: 'api', fn, args: args || [] };
-    const url = window.CLOUDFLARE_WORKER_URL || window.GAS_WEB_APP_URL;
-    return fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then(r => r.json())
-      .then(r => r.data !== undefined ? r.data : r);
-  }
+      // Hamburger toggle
+      const navHamburger = document.getElementById('navHamburger');
+      const navTabs = document.getElementById('navTabs');
+      if (navHamburger && navTabs) {
+        navHamburger.addEventListener('click', function(e) {
+          e.stopPropagation();
+          navTabs.classList.toggle('open');
+        });
+        document.addEventListener('click', function(e) {
+          if (navTabs.classList.contains('open') && !navTabs.contains(e.target) && !navHamburger.contains(e.target)) {
+            navTabs.classList.remove('open');
+          }
+        });
+      }
 
-  function populateSelect() {
-    const select = document.getElementById('memberSelect');
-    if (!profilingData || !profilingData.members) return;
-    const sorted = [...profilingData.members].sort((a, b) => a.name.localeCompare(b.name));
-    sorted.forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m.name;
-      opt.textContent = m.name;
-      select.appendChild(opt);
+      // Load profiling data
+      loadProfilingData();
     });
-  }
+  </script>
 
-  // ─── Tab switching (with browser history so Back button works) ───
-  function switchSubTab(tab, pushHistory) {
-    document.querySelectorAll('.sub-tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
-    document.getElementById('tabRankings').style.display = tab === 'rankings' ? '' : 'none';
-    document.getElementById('tabIndividual').style.display = tab === 'individual' ? '' : 'none';
-    if (pushHistory !== false) {
-      history.pushState({ tab: tab }, '', '#' + tab);
-    }
-  }
+  <nav class="tab-nav">
+    <div class="tab-nav-container">
+      <div class="nav-brand" id="navBrand"><img src="favicon.png" alt="" style="height: 32px; width: 32px; vertical-align: middle; margin-right: 8px;"> cCc League One</div>
+      <button class="hamburger" id="navHamburger" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="tab-buttons" id="navTabs">
+        <a href="dashboard.html" class="tab-btn" title="Dashboard">
+          <img src="chests.png" alt="Dashboard" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Dashboard</span>
+        </a>
+        <a href="events.html" class="tab-btn" title="Events">
+          <img src="events.png" alt="Events" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Events</span>
+        </a>
+        <a href="members.html" class="tab-btn" title="Members">
+          <img src="members.png" alt="Members" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Members</span>
+        </a>
+        <a href="troops.html" class="tab-btn" title="Troops">
+          <img src="troops.png" alt="Troops" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Troops</span>
+        </a>
+        <a href="profile.html" class="tab-btn active" title="Profiling">
+          <img src="profile.png" alt="Profiling" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Profiling</span>
+        </a>
+        <a href="warnings.html" class="tab-btn" title="Warnings">
+          <img src="warning.png" alt="Warnings" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Warnings</span>
+        </a>
+        <a href="competition.html" class="tab-btn" title="Competition">
+          <img src="competition.png" alt="Competition" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Competition</span>
+        </a>
+        <a href="calendar.html" class="tab-btn" title="Calendar">
+          <img src="calendar.png" alt="Calendar" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Calendar</span>
+        </a>
+        <a href="bank.html" class="tab-btn" id="bankTabBtn" title="Bank" style="display:none;">
+          <img src="bank.png" alt="Bank" class="tab-icon desktop-only">
+          <span class="tab-label mobile-only">Bank</span>
+        </a>
+      </div>
+      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
+      <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
+      <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
+    </div>
+  </nav>
 
-  window.addEventListener('popstate', function(e) {
-    if (e.state && e.state.tab) {
-      switchSubTab(e.state.tab, false);
-    } else {
-      switchSubTab('rankings', false);
-    }
-  });
+  <div id="profiling" class="tab-content active">
+    <div class="header">
+      <h1><img src="profile.png" alt="Profiling" class="tab-icon" style="height: 64px; vertical-align: middle; margin-right: 8px;"> Member Profiling</h1>
+      <p>Performance scoring based on Crypts, Tinman, Ragnarok, Tower, Carter &amp; Hero metrics</p>
+    </div>
 
-  // ─── Score color ───
-  function scoreColor(score) {
-    if (score >= 90) return '#22c55e';
-    if (score >= 75) return '#4ade80';
-    if (score >= 60) return '#4f46e5';
-    if (score >= 40) return '#f59e0b';
-    if (score >= 20) return '#ea580c';
-    return '#ef4444';
-  }
-  function scoreBg(score) {
-    const c = scoreColor(score);
-    return c + '18';
-  }
+    <!-- Sub-tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="rankings" onclick="switchSubTab('rankings')">🏆 Rankings</button>
+      <button class="tab" data-tab="individual" onclick="switchSubTab('individual')">👤 Individual</button>
+    </div>
 
-  // ─── Rankings ───
-  function renderRankings() {
-    if (!profilingData || !profilingData.members || profilingData.members.length === 0) {
-      document.getElementById('rankingsContent').innerHTML = '<div class="empty-state"><p>No profiling data available yet.</p></div>';
-      return;
-    }
+    <!-- Rankings Tab -->
+    <div id="tabRankings">
+      <div id="rankingsLoading" class="loading"><div class="spinner"></div><p>Loading profiling data...</p></div>
+      <div id="rankingsContent"></div>
+    </div>
 
-    const sorted = [...profilingData.members].sort((a, b) => b.overallScore - a.overallScore);
-    const W = profilingData.weights || {};
-    const metaNote = profilingData.lastUpdated ? '<span style="font-size:0.75em;color:var(--text-muted);font-weight:400;margin-left:8px;">Updated: ' + profilingData.lastUpdated + '</span>' : '';
-    const eventNote = profilingData.eventCounts
-      ? '<span style="font-size:0.75em;color:var(--text-muted);font-weight:400;display:block;margin-top:4px;">Events tracked: Tower (' + profilingData.eventCounts.tower + ') · Tinman (' + profilingData.eventCounts.tinman + ') · Ragnarok (' + (profilingData.eventCounts.ragnarok || 0) + ') · Rag Pts (' + (profilingData.eventCounts.ragnarokPts || 0) + ')</span>'
-      : '';
+    <!-- Individual Tab -->
+    <div id="tabIndividual" style="display:none;">
+      <div class="selector-container">
+        <select id="memberSelect" onchange="showIndividual()">
+          <option value="">— Select a member —</option>
+        </select>
+      </div>
+      <div id="individualEmpty" class="empty-state"><p>Select a member above to view their profile.</p></div>
+      <div id="individualContent" style="display:none;">
 
-    function rankingCardHtml(m, rank) {
-      const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
-      const medal = rank <= 3 ? ['🥇','🥈','🥉'][rank - 1] + ' ' : '';
-      const b = m.breakdown || {};
-      const barHtml = [
-        { score: b.tower?.score, color: '#8b5cf6', title: 'Tower' },
-        { score: b.tinman?.score, color: '#3b82f6', title: 'Tinman' },
-        { score: b.crypts?.score, color: '#ef4444', title: 'Crypts' },
-        { score: b.ragnarok?.score, color: '#f97316', title: 'Ragnarok' },
-        { score: b.ragnarokPts?.score, color: '#a855f7', title: 'Rag Pts' },
-        { score: b.carter?.score, color: '#eab308', title: 'Carter' },
-        { score: b.hero?.score, color: '#14b8a6', title: 'Hero' }
-      ].map(bar => {
-        const w = bar.score !== null && bar.score !== undefined ? Math.max(2, bar.score * 0.5) : 0;
-        return w > 0 ? '<div class="ranking-bar" style="background:' + bar.color + '44;width:' + w + 'px;" title="' + bar.title + ': ' + (bar.score ?? '—') + '"></div>' : '';
-      }).join('');
-      const metaParts = [m.rating];
-      if (m.joinDate) metaParts.push('Joined ' + m.joinDate);
-      if (b.tower?.total > 0) metaParts.push('Tower ' + b.tower.participated + '/' + b.tower.total);
-      if (b.tinman?.total > 0) metaParts.push('Tinman ' + b.tinman.participated + '/' + b.tinman.total);
-      return '<div class="ranking-card">'
-        + '<div class="ranking-rank ' + rankClass + '">#' + rank + '</div>'
-        + '<div class="ranking-info">'
-        + '<div class="ranking-name" onclick="jumpToProfile(\'' + escapeAttr(m.name) + '\')">' + medal + escapeHtml(m.name) + '</div>'
-        + '<div class="ranking-meta">' + metaParts.join(' · ') + '</div>'
-        + '<div class="ranking-bars">' + barHtml + '</div>'
-        + '</div>'
-        + '<div class="ranking-score-pill" style="background:' + scoreBg(m.overallScore) + ';color:' + scoreColor(m.overallScore) + ';">' + m.overallScore + '</div>'
-        + '</div>';
-    }
+        <!-- Score Ring + Breakdown -->
+        <h2>Performance Score</h2>
+        <div class="score-section">
+          <div class="score-ring-container">
+            <svg viewBox="0 0 120 120">
+              <circle class="score-ring-bg" cx="60" cy="60" r="50"/>
+              <circle class="score-ring-fill" id="scoreRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
+            </svg>
+            <div class="score-ring-label">
+              <div class="score-value" id="scoreValue">—</div>
+              <div class="score-rating" id="scoreRating"></div>
+            </div>
+          </div>
+          <div class="score-breakdown" id="scoreBreakdown"></div>
+        </div>
 
-    const HIGHLIGHT_COUNT = 5;
-    const NEW_MEMBER_DAYS = 5;
-    const today = new Date();
-    const seasoned = sorted.filter(m => {
-      if (!m.joinDate) return true;
-      const jd = new Date(m.joinDate + 'T00:00:00Z');
-      return (today - jd) / 86400000 >= NEW_MEMBER_DAYS;
-    });
-    const top = seasoned.slice(0, HIGHLIGHT_COUNT);
-    const bottom = seasoned.length > HIGHLIGHT_COUNT ? seasoned.slice(-HIGHLIGHT_COUNT).reverse() : [];
+        <!-- Metric Detail Cards -->
+        <h2>Metric Details</h2>
+        <div class="info-grid" id="metricCards"></div>
 
-    let html = '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">';
-    html += '<div style="flex:1;min-width:280px;">'
-      + '<div class="ranking-section-title">🏆 Top Performers' + metaNote + '</div>' + eventNote;
-    top.forEach((m, i) => { html += rankingCardHtml(m, i + 1); });
-    html += '</div>';
+        <!-- Breakdown Table -->
+        <h2>Full Breakdown</h2>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Metric</th><th>Score</th><th>Weight</th><th>Detail</th></tr></thead>
+            <tbody id="breakdownBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    if (bottom.length > 0) {
-      html += '<div style="flex:1;min-width:280px;">'
-        + '<div class="ranking-section-title">⚠️ Needs Attention</div>';
-      bottom.forEach((m) => {
-        const globalRank = sorted.indexOf(m) + 1;
-        html += rankingCardHtml(m, globalRank);
+  <script>
+    let profilingData = null;
+
+    function runGASFunction(functionName, ...args) {
+      return new Promise((resolve, reject) => {
+        google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(reject)[functionName](...args);
       });
+    }
+
+    async function loadProfilingData() {
+      const loading = document.getElementById('rankingsLoading');
+      const content = document.getElementById('rankingsContent');
+      loading.style.display = 'block';
+      content.innerHTML = '';
+
+      try {
+        const res = await runGASFunction('getProfilingBundle');
+        if (res && res.success) {
+          profilingData = res;
+          populateSelect();
+          renderRankings();
+        } else {
+          content.innerHTML = '<div class="empty-state"><p>Failed to load profiling data: ' + (res?.message || 'Unknown error') + '</p></div>';
+        }
+      } catch (e) {
+        content.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>';
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    function populateSelect() {
+      const select = document.getElementById('memberSelect');
+      if (!profilingData || !profilingData.members) return;
+      const sorted = [...profilingData.members].sort((a, b) => a.name.localeCompare(b.name));
+      sorted.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.name;
+        opt.textContent = m.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // ─── Tab switching (with browser history so Back button works) ───
+    function switchSubTab(tab, pushHistory) {
+      document.querySelectorAll('.tabs .tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+      document.getElementById('tabRankings').style.display = tab === 'rankings' ? '' : 'none';
+      document.getElementById('tabIndividual').style.display = tab === 'individual' ? '' : 'none';
+      if (pushHistory !== false) {
+        history.pushState({ tab: tab }, '', '#' + tab);
+      }
+    }
+
+    window.addEventListener('popstate', function(e) {
+      if (e.state && e.state.tab) {
+        switchSubTab(e.state.tab, false);
+      } else {
+        switchSubTab('rankings', false);
+      }
+    });
+
+    // ─── Score color ───
+    function scoreColor(score) {
+      if (score >= 90) return '#22c55e';
+      if (score >= 75) return '#4ade80';
+      if (score >= 60) return '#4f46e5';
+      if (score >= 40) return '#f59e0b';
+      if (score >= 20) return '#ea580c';
+      return '#ef4444';
+    }
+    function scoreBg(score) {
+      return scoreColor(score) + '18';
+    }
+
+    // ─── Rankings ───
+    function renderRankings() {
+      if (!profilingData || !profilingData.members || profilingData.members.length === 0) {
+        document.getElementById('rankingsContent').innerHTML = '<div class="empty-state"><p>No profiling data available yet.</p></div>';
+        return;
+      }
+
+      const sorted = [...profilingData.members].sort((a, b) => b.overallScore - a.overallScore);
+      const W = profilingData.weights || {};
+      const metaNote = profilingData.lastUpdated ? '<span style="font-size:11px;color:#9ca3af;font-weight:400;margin-left:8px;">Updated: ' + profilingData.lastUpdated + '</span>' : '';
+      const eventNote = profilingData.eventCounts
+        ? '<span style="font-size:11px;color:#9ca3af;font-weight:400;display:block;margin-top:4px;">Events tracked: Tower (' + profilingData.eventCounts.tower + ') · Tinman (' + profilingData.eventCounts.tinman + ') · Ragnarok (' + (profilingData.eventCounts.ragnarok || 0) + ') · Rag Pts (' + (profilingData.eventCounts.ragnarokPts || 0) + ')</span>'
+        : '';
+
+      function rankingCardHtml(m, rank) {
+        const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
+        const medal = rank <= 3 ? ['🥇','🥈','🥉'][rank - 1] + ' ' : '';
+        const b = m.breakdown || {};
+        const barHtml = [
+          { score: b.tower?.score, color: '#8b5cf6', title: 'Tower' },
+          { score: b.tinman?.score, color: '#3b82f6', title: 'Tinman' },
+          { score: b.crypts?.score, color: '#ef4444', title: 'Crypts' },
+          { score: b.ragnarok?.score, color: '#f97316', title: 'Ragnarok' },
+          { score: b.ragnarokPts?.score, color: '#a855f7', title: 'Rag Pts' },
+          { score: b.carter?.score, color: '#eab308', title: 'Carter' },
+          { score: b.hero?.score, color: '#14b8a6', title: 'Hero' }
+        ].map(bar => {
+          const w = bar.score !== null && bar.score !== undefined ? Math.max(2, bar.score * 0.5) : 0;
+          return w > 0 ? '<div class="ranking-bar" style="background:' + bar.color + '44;width:' + w + 'px;" title="' + bar.title + ': ' + (bar.score ?? '—') + '"></div>' : '';
+        }).join('');
+        const metaParts = [m.rating];
+        if (m.joinDate) metaParts.push('Joined ' + m.joinDate);
+        if (b.tower?.total > 0) metaParts.push('Tower ' + b.tower.participated + '/' + b.tower.total);
+        if (b.tinman?.total > 0) metaParts.push('Tinman ' + b.tinman.participated + '/' + b.tinman.total);
+        return '<div class="ranking-card">'
+          + '<div class="ranking-rank ' + rankClass + '">#' + rank + '</div>'
+          + '<div class="ranking-info">'
+          + '<div class="ranking-name" onclick="jumpToProfile(\'' + escapeAttr(m.name) + '\')">' + medal + escapeHtml(m.name) + '</div>'
+          + '<div class="ranking-meta">' + metaParts.join(' · ') + '</div>'
+          + '<div class="ranking-bars">' + barHtml + '</div>'
+          + '</div>'
+          + '<div class="ranking-score-pill" style="background:' + scoreBg(m.overallScore) + ';color:' + scoreColor(m.overallScore) + ';">' + m.overallScore + '</div>'
+          + '</div>';
+      }
+
+      const HIGHLIGHT_COUNT = 5;
+      const NEW_MEMBER_DAYS = 5;
+      const today = new Date();
+      const seasoned = sorted.filter(m => {
+        if (!m.joinDate) return true;
+        const jd = new Date(m.joinDate + 'T00:00:00Z');
+        return (today - jd) / 86400000 >= NEW_MEMBER_DAYS;
+      });
+      const top = seasoned.slice(0, HIGHLIGHT_COUNT);
+      const bottom = seasoned.length > HIGHLIGHT_COUNT ? seasoned.slice(-HIGHLIGHT_COUNT).reverse() : [];
+
+      let html = '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">';
+      html += '<div style="flex:1;min-width:280px;">'
+        + '<div class="ranking-section-title">🏆 Top Performers' + metaNote + '</div>' + eventNote;
+      top.forEach((m, i) => { html += rankingCardHtml(m, i + 1); });
       html += '</div>';
+
+      if (bottom.length > 0) {
+        html += '<div style="flex:1;min-width:280px;">'
+          + '<div class="ranking-section-title">⚠️ Needs Attention</div>';
+        bottom.forEach((m) => {
+          const globalRank = sorted.indexOf(m) + 1;
+          html += rankingCardHtml(m, globalRank);
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+
+      html += '<details style="margin-top:8px;"><summary style="cursor:pointer;font-size:14px;font-weight:600;color:#a5b4fc;padding:8px 0;">📋 Full Rankings (' + sorted.length + ' members)</summary>'
+        + '<div style="margin-top:8px;">';
+      sorted.forEach((m, i) => { html += rankingCardHtml(m, i + 1); });
+      html += '</div></details>';
+
+      document.getElementById('rankingsContent').innerHTML = html;
     }
-    html += '</div>';
 
-    html += '<details style="margin-top:8px;"><summary style="cursor:pointer;font-size:0.95em;font-weight:600;color:var(--accent);padding:8px 0;">📋 Full Rankings (' + sorted.length + ' members)</summary>'
-      + '<div style="margin-top:8px;">';
-    sorted.forEach((m, i) => { html += rankingCardHtml(m, i + 1); });
-    html += '</div></details>';
-
-    document.getElementById('rankingsContent').innerHTML = html;
-  }
-
-  function jumpToProfile(name) {
-    const select = document.getElementById('memberSelect');
-    select.value = name;
-    switchSubTab('individual');
-    showIndividual();
-  }
-
-  // ─── Individual Profile ───
-  function showIndividual() {
-    const name = document.getElementById('memberSelect').value;
-    if (!name || !profilingData) {
-      document.getElementById('individualContent').style.display = 'none';
-      document.getElementById('individualEmpty').style.display = 'block';
-      return;
+    function jumpToProfile(name) {
+      const select = document.getElementById('memberSelect');
+      select.value = name;
+      switchSubTab('individual');
+      showIndividual();
     }
-    const member = profilingData.members.find(m => m.name === name);
-    if (!member) {
-      document.getElementById('individualContent').style.display = 'none';
-      document.getElementById('individualEmpty').style.display = 'block';
-      return;
-    }
-    document.getElementById('individualEmpty').style.display = 'none';
-    renderIndividual(member);
-    document.getElementById('individualContent').style.display = 'block';
-  }
 
-  function renderIndividual(m) {
-    const W = profilingData.weights || {};
-    const b = m.breakdown || {};
+    // ─── Individual Profile ───
+    function showIndividual() {
+      const name = document.getElementById('memberSelect').value;
+      if (!name || !profilingData) {
+        document.getElementById('individualContent').style.display = 'none';
+        document.getElementById('individualEmpty').style.display = 'block';
+        return;
+      }
+      const member = profilingData.members.find(m => m.name === name);
+      if (!member) {
+        document.getElementById('individualContent').style.display = 'none';
+        document.getElementById('individualEmpty').style.display = 'block';
+        return;
+      }
+      document.getElementById('individualEmpty').style.display = 'none';
+      renderIndividual(member);
+      document.getElementById('individualContent').style.display = 'block';
+    }
 
-    // Score ring
-    const ring = document.getElementById('scoreRing');
-    const circumference = 314.16;
-    const offset = circumference - (m.overallScore / 100) * circumference;
-    ring.style.strokeDashoffset = offset;
-    ring.style.stroke = scoreColor(m.overallScore);
-    document.getElementById('scoreValue').textContent = m.overallScore;
-    document.getElementById('scoreValue').style.color = scoreColor(m.overallScore);
-    document.getElementById('scoreRating').textContent = m.rating;
+    function renderIndividual(m) {
+      const W = profilingData.weights || {};
+      const b = m.breakdown || {};
 
-    // Breakdown bars (no Essence for CLO)
-    const items = [
-      { label: 'Crypts (' + W.crypts + '%)', score: b.crypts?.score, color: '#ef4444' },
-      { label: 'Tinman (' + W.tinman + '%)', score: b.tinman?.score, color: '#3b82f6' },
-      { label: 'Ragnarok (' + W.ragnarok + '%)', score: b.ragnarok?.score, color: '#f97316' },
-      { label: 'Rag Pts (' + W.ragnarokPts + '%)', score: b.ragnarokPts?.score, color: '#a855f7' },
-      { label: 'Tower (' + W.tower + '%)', score: b.tower?.score, color: '#8b5cf6' },
-      { label: 'Carter (' + W.carter + '%)', score: b.carter?.score, color: '#eab308' },
-      { label: 'Hero (' + W.hero + '%)', score: b.hero?.score, color: '#14b8a6' }
-    ];
-    document.getElementById('scoreBreakdown').innerHTML = items.map(item => {
-      const val = item.score !== null && item.score !== undefined ? item.score : 0;
-      const display = item.score !== null && item.score !== undefined ? item.score : '—';
-      return '<div class="breakdown-row">'
-        + '<span class="label">' + item.label + '</span>'
-        + '<div class="bar-bg"><div class="bar-fill" style="width:' + val + '%;background:' + item.color + '"></div></div>'
-        + '<span class="bar-value">' + display + '</span>'
-        + '</div>';
-    }).join('');
+      // Score ring
+      const ring = document.getElementById('scoreRing');
+      const circumference = 314.16;
+      const offset = circumference - (m.overallScore / 100) * circumference;
+      ring.style.strokeDashoffset = offset;
+      ring.style.stroke = scoreColor(m.overallScore);
+      document.getElementById('scoreValue').textContent = m.overallScore;
+      document.getElementById('scoreValue').style.color = scoreColor(m.overallScore);
+      document.getElementById('scoreRating').textContent = m.rating;
 
-    // Metric detail cards
-    const cards = [];
-    if (b.crypts) {
-      const cSub = b.crypts.periods > 0
-        ? b.crypts.score + '% avg target across ' + b.crypts.periods + ' period' + (b.crypts.periods !== 1 ? 's' : '')
-        : 'No completed periods';
-      cards.push(card('🏚️ Crypts', formatNumber(b.crypts.points) + ' pts', cSub));
-    }
-    if (b.tinman) {
-      const rate = b.tinman.total > 0 ? Math.round((b.tinman.participated / b.tinman.total) * 100) + '%' : 'N/A';
-      cards.push(card('🤖 Tinman', rate, b.tinman.participated + ' of ' + b.tinman.total + ' events'));
-    }
-    if (b.ragnarok) {
-      const rate = b.ragnarok.total > 0 ? Math.round((b.ragnarok.participated / b.ragnarok.total) * 100) + '%' : 'N/A';
-      cards.push(card('⚔️ Ragnarok', rate, b.ragnarok.participated + ' of ' + b.ragnarok.total + ' events'));
-    }
-    if (b.ragnarokPts) {
-      const rate = b.ragnarokPts.total > 0 ? Math.round((b.ragnarokPts.participated / b.ragnarokPts.total) * 100) + '%' : 'N/A';
-      cards.push(card('🗡️ Ragnarok Pts', rate, b.ragnarokPts.participated + ' of ' + b.ragnarokPts.total + ' events'));
-    }
-    if (b.tower) {
-      const rate = b.tower.total > 0 ? Math.round((b.tower.participated / b.tower.total) * 100) + '%' : 'N/A';
-      cards.push(card('🏰 Tower', rate, b.tower.participated + ' of ' + b.tower.total + ' events'));
-    }
-    if (b.carter) {
-      const lvl = b.carter.currentLevel !== null ? 'Lvl ' + b.carter.currentLevel : 'No data';
-      const growth = b.carter.growth > 0 ? '+' + b.carter.growth : (b.carter.growth === 0 && b.carter.currentLevel !== null ? '±0' : '—');
-      cards.push(card('🏗️ Carter (C)', lvl, 'Growth: ' + growth));
-    }
-    if (b.hero) {
-      const lvl = b.hero.currentLevel !== null ? 'Lvl ' + b.hero.currentLevel : 'No data';
-      const growth = b.hero.growth > 0 ? '+' + b.hero.growth : (b.hero.growth === 0 && b.hero.currentLevel !== null ? '±0' : '—');
-      cards.push(card('🦸 Hero', lvl, 'Growth: ' + growth));
-    }
-    if (m.joinDate) {
-      cards.push(card('📅 Joined', m.joinDate, ''));
-    }
-    document.getElementById('metricCards').innerHTML = cards.join('');
+      // Breakdown bars
+      const items = [
+        { label: 'Crypts (' + W.crypts + '%)', score: b.crypts?.score, color: '#ef4444' },
+        { label: 'Tinman (' + W.tinman + '%)', score: b.tinman?.score, color: '#3b82f6' },
+        { label: 'Ragnarok (' + W.ragnarok + '%)', score: b.ragnarok?.score, color: '#f97316' },
+        { label: 'Rag Pts (' + W.ragnarokPts + '%)', score: b.ragnarokPts?.score, color: '#a855f7' },
+        { label: 'Tower (' + W.tower + '%)', score: b.tower?.score, color: '#8b5cf6' },
+        { label: 'Carter (' + W.carter + '%)', score: b.carter?.score, color: '#eab308' },
+        { label: 'Hero (' + W.hero + '%)', score: b.hero?.score, color: '#14b8a6' }
+      ];
+      document.getElementById('scoreBreakdown').innerHTML = items.map(item => {
+        const val = item.score !== null && item.score !== undefined ? item.score : 0;
+        const display = item.score !== null && item.score !== undefined ? item.score : '—';
+        return '<div class="breakdown-row">'
+          + '<span class="label">' + item.label + '</span>'
+          + '<div class="bar-bg"><div class="bar-fill" style="width:' + val + '%;background:' + item.color + '"></div></div>'
+          + '<span class="bar-value">' + display + '</span>'
+          + '</div>';
+      }).join('');
 
-    // Breakdown table
-    const rows = [
-      metricRow('Crypt Contribution', b.crypts, W.crypts, b.crypts ? formatNumber(b.crypts.points) + ' pts (' + (b.crypts.periods || 0) + ' period' + ((b.crypts.periods || 0) !== 1 ? 's' : '') + ', ' + (b.crypts.score ?? '—') + '% avg)' : '—'),
-      metricRow('Tinman Performance', b.tinman, W.tinman, b.tinman ? b.tinman.participated + '/' + b.tinman.total + ' events' : '—'),
-      metricRow('Ragnarok', b.ragnarok, W.ragnarok, b.ragnarok ? b.ragnarok.participated + '/' + b.ragnarok.total + ' events' : '—'),
-      metricRow('Ragnarok Points', b.ragnarokPts, W.ragnarokPts, b.ragnarokPts ? b.ragnarokPts.participated + '/' + b.ragnarokPts.total + ' events' : '—'),
-      metricRow('Tower Registration', b.tower, W.tower, b.tower ? b.tower.participated + '/' + b.tower.total + ' events' : '—'),
-      metricRow('Carter (C) Growth', b.carter, W.carter, b.carter && b.carter.currentLevel !== null ? 'Lvl ' + (b.carter.startLevel ?? '?') + ' → ' + b.carter.currentLevel + ' (+' + b.carter.growth + ')' : '—'),
-      metricRow('Hero Level Growth', b.hero, W.hero, b.hero && b.hero.currentLevel !== null ? 'Lvl ' + (b.hero.startLevel ?? '?') + ' → ' + b.hero.currentLevel + ' (+' + b.hero.growth + ')' : '—')
-    ];
-    document.getElementById('breakdownBody').innerHTML = rows.join('');
-  }
+      // Metric detail cards
+      const cards = [];
+      if (b.crypts) {
+        const cSub = b.crypts.periods > 0
+          ? b.crypts.score + '% avg target across ' + b.crypts.periods + ' period' + (b.crypts.periods !== 1 ? 's' : '')
+          : 'No completed periods';
+        cards.push(card('🏚️ Crypts', formatNumber(b.crypts.points) + ' pts', cSub));
+      }
+      if (b.tinman) {
+        const rate = b.tinman.total > 0 ? Math.round((b.tinman.participated / b.tinman.total) * 100) + '%' : 'N/A';
+        cards.push(card('🤖 Tinman', rate, b.tinman.participated + ' of ' + b.tinman.total + ' events'));
+      }
+      if (b.ragnarok) {
+        const rate = b.ragnarok.total > 0 ? Math.round((b.ragnarok.participated / b.ragnarok.total) * 100) + '%' : 'N/A';
+        cards.push(card('⚔️ Ragnarok', rate, b.ragnarok.participated + ' of ' + b.ragnarok.total + ' events'));
+      }
+      if (b.ragnarokPts) {
+        const rate = b.ragnarokPts.total > 0 ? Math.round((b.ragnarokPts.participated / b.ragnarokPts.total) * 100) + '%' : 'N/A';
+        cards.push(card('🗡️ Ragnarok Pts', rate, b.ragnarokPts.participated + ' of ' + b.ragnarokPts.total + ' events'));
+      }
+      if (b.tower) {
+        const rate = b.tower.total > 0 ? Math.round((b.tower.participated / b.tower.total) * 100) + '%' : 'N/A';
+        cards.push(card('🏰 Tower', rate, b.tower.participated + ' of ' + b.tower.total + ' events'));
+      }
+      if (b.carter) {
+        const lvl = b.carter.currentLevel !== null ? 'Lvl ' + b.carter.currentLevel : 'No data';
+        const growth = b.carter.growth > 0 ? '+' + b.carter.growth : (b.carter.growth === 0 && b.carter.currentLevel !== null ? '±0' : '—');
+        cards.push(card('🏗️ Carter (C)', lvl, 'Growth: ' + growth));
+      }
+      if (b.hero) {
+        const lvl = b.hero.currentLevel !== null ? 'Lvl ' + b.hero.currentLevel : 'No data';
+        const growth = b.hero.growth > 0 ? '+' + b.hero.growth : (b.hero.growth === 0 && b.hero.currentLevel !== null ? '±0' : '—');
+        cards.push(card('🦸 Hero', lvl, 'Growth: ' + growth));
+      }
+      if (m.joinDate) {
+        cards.push(card('📅 Joined', m.joinDate, ''));
+      }
+      document.getElementById('metricCards').innerHTML = cards.join('');
 
-  function metricRow(label, metric, weight, detail) {
-    const score = metric && metric.score !== null && metric.score !== undefined ? metric.score : '—';
-    const badgeClass = typeof score === 'number'
-      ? (score >= 75 ? 'badge-green' : score >= 40 ? 'badge-orange' : 'badge-red')
-      : 'badge-gray';
-    return '<tr>'
-      + '<td>' + label + '</td>'
-      + '<td><span class="badge ' + badgeClass + '">' + score + '</span></td>'
-      + '<td style="text-align:center;">' + weight + '%</td>'
-      + '<td style="font-size:0.8em;color:var(--text-muted);">' + detail + '</td>'
-      + '</tr>';
-  }
+      // Breakdown table
+      const rows = [
+        metricRow('Crypt Contribution', b.crypts, W.crypts, b.crypts ? formatNumber(b.crypts.points) + ' pts (' + (b.crypts.periods || 0) + ' period' + ((b.crypts.periods || 0) !== 1 ? 's' : '') + ', ' + (b.crypts.score ?? '—') + '% avg)' : '—'),
+        metricRow('Tinman Performance', b.tinman, W.tinman, b.tinman ? b.tinman.participated + '/' + b.tinman.total + ' events' : '—'),
+        metricRow('Ragnarok', b.ragnarok, W.ragnarok, b.ragnarok ? b.ragnarok.participated + '/' + b.ragnarok.total + ' events' : '—'),
+        metricRow('Ragnarok Points', b.ragnarokPts, W.ragnarokPts, b.ragnarokPts ? b.ragnarokPts.participated + '/' + b.ragnarokPts.total + ' events' : '—'),
+        metricRow('Tower Registration', b.tower, W.tower, b.tower ? b.tower.participated + '/' + b.tower.total + ' events' : '—'),
+        metricRow('Carter (C) Growth', b.carter, W.carter, b.carter && b.carter.currentLevel !== null ? 'Lvl ' + (b.carter.startLevel ?? '?') + ' → ' + b.carter.currentLevel + ' (+' + b.carter.growth + ')' : '—'),
+        metricRow('Hero Level Growth', b.hero, W.hero, b.hero && b.hero.currentLevel !== null ? 'Lvl ' + (b.hero.startLevel ?? '?') + ' → ' + b.hero.currentLevel + ' (+' + b.hero.growth + ')' : '—')
+      ];
+      document.getElementById('breakdownBody').innerHTML = rows.join('');
+    }
 
-  // ─── Helpers ───
-  function card(label, value, sub) {
-    return '<div class="info-card"><div class="card-label">' + label + '</div><div class="card-value">' + value + '</div>' + (sub ? '<div class="card-sub">' + sub + '</div>' : '') + '</div>';
-  }
-  function formatNumber(n) {
-    if (n == null) return '—';
-    return Number(n).toLocaleString();
-  }
-  function escapeHtml(text) {
-    const div = document.createElement('div'); div.textContent = text; return div.innerHTML;
-  }
-  function escapeAttr(str) {
-    return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  }
-</script>
+    function metricRow(label, metric, weight, detail) {
+      const score = metric && metric.score !== null && metric.score !== undefined ? metric.score : '—';
+      const badgeClass = typeof score === 'number'
+        ? (score >= 75 ? 'badge-green' : score >= 40 ? 'badge-orange' : 'badge-red')
+        : 'badge-gray';
+      return '<tr>'
+        + '<td>' + label + '</td>'
+        + '<td><span class="badge ' + badgeClass + '">' + score + '</span></td>'
+        + '<td style="text-align:center;">' + weight + '%</td>'
+        + '<td style="font-size:12px;color:#9ca3af;">' + detail + '</td>'
+        + '</tr>';
+    }
 
+    // ─── Helpers ───
+    function card(label, value, sub) {
+      return '<div class="info-card"><div class="card-label">' + label + '</div><div class="card-value">' + value + '</div>' + (sub ? '<div class="card-sub">' + sub + '</div>' : '') + '</div>';
+    }
+    function formatNumber(n) {
+      if (n == null) return '—';
+      return Number(n).toLocaleString();
+    }
+    function escapeHtml(text) {
+      const div = document.createElement('div'); div.textContent = text; return div.innerHTML;
+    }
+    function escapeAttr(str) {
+      return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+  </script>
 </body>
 </html>
