@@ -39,59 +39,12 @@
     .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
     .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
-    .tab-buttons {
-      display: flex;
-      gap: 4px;
-      flex: 1;
-      overflow-x: auto;
-      overflow-y: hidden;
-      align-items: center;
-      height: 100px;
-    }
-    .tab-btn {
-      padding: 12px 16px;
-      background: none;
-      border: none;
-      color: #c7cce0;
-      font-size: 28px;
-      font-weight: 500;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
-      white-space: nowrap;
-      text-decoration: none;
-      display: block;
-      cursor: pointer;
-      position: relative;
-    }
+    .tab-buttons { display: flex; gap: 4px; flex: 1; overflow-x: auto; overflow-y: hidden; align-items: center; height: 100px; }
+    .tab-btn { padding: 12px 16px; background: none; border: none; color: #c7cce0; font-size: 28px; font-weight: 500; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; text-decoration: none; display: block; cursor: pointer; position: relative; }
     .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
     .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
-    .tab-btn[title]:hover::after {
-      content: attr(title);
-      position: absolute;
-      top: -42px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #f0f2f5;
-      color: #4f46e5;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 12px;
-      white-space: nowrap;
-      z-index: 1001;
-      border: 1px solid #c0c4d8;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .tab-btn .tab-icon {
-      display: block;
-      margin: 0 auto;
-      height: 40px;
-      width: auto;
-      font-size: 16px;
-      line-height: 1.2;
-      font-weight: 500;
-      white-space: nowrap;
-      filter: drop-shadow(0 2px 8px #000a);
-    }
+    .tab-btn[title]:hover::after { content: attr(title); position: absolute; top: -42px; left: 50%; transform: translateX(-50%); background: #f0f2f5; color: #4f46e5; padding: 6px 12px; border-radius: 4px; font-size: 12px; white-space: nowrap; z-index: 1001; border: 1px solid #c0c4d8; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .tab-btn .tab-icon { display: block; margin: 0 auto; height: 40px; width: auto; font-size: 16px; line-height: 1.2; font-weight: 500; white-space: nowrap; filter: drop-shadow(0 2px 8px #000a); }
 
     /* Tab Content */
     .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
@@ -103,34 +56,20 @@
     .spinner { border: 4px solid #c0c4d8; border-top: 4px solid #4f46e5; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Header */
     .header { margin-bottom: 16px; }
     .header p { color: #d8dce8; font-size: 14px; margin-top: 8px; }
 
-    /* Sub-tabs (internal tabs) */
+    .section-note { font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 4px; }
+
+    /* Sub-tabs */
     .tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid rgba(255,255,255,0.25); flex-wrap: wrap; padding-bottom: 12px; }
-    .tab {
-      padding: 8px 12px;
-      background: none;
-      border: none;
-      color: #d8dce8;
-      font-size: 14px;
-      font-weight: 500;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .tab { padding: 8px 12px; background: none; border: none; color: #d8dce8; font-size: 14px; font-weight: 500; border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
     .tab:hover { color: #f0f2f5; }
     .tab.active { color: #f0f2f5; border-bottom-color: #f0f2f5; }
 
     /* Member Selector */
     .selector-container { display: flex; gap: 12px; align-items: center; margin: 12px 0; flex-wrap: wrap; }
-    .selector-container select {
-      flex: 1; min-width: 220px; padding: 10px 12px;
-      border: 1px solid #c0c4d8; border-radius: 6px; font-size: 14px;
-      background: #f0f2f5; color: #2c2f45; font-family: inherit;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
+    .selector-container select { flex: 1; min-width: 220px; padding: 10px 12px; border: 1px solid #c0c4d8; border-radius: 6px; font-size: 14px; background: #f0f2f5; color: #2c2f45; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; }
     .selector-container select:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
 
     /* Score Ring */
@@ -144,7 +83,7 @@
     .score-ring-label .score-rating { font-size: 11px; color: #d1d5e6; margin-top: 2px; }
     .score-breakdown { flex: 1; min-width: 200px; }
     .breakdown-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .breakdown-row .label { font-size: 12px; color: #d1d5e6; width: 140px; text-align: left; }
+    .breakdown-row .label { font-size: 12px; color: #d1d5e6; width: 160px; text-align: left; }
     .breakdown-row .bar-bg { flex: 1; height: 8px; background: rgba(165,180,252,0.12); border-radius: 4px; overflow: hidden; }
     .breakdown-row .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
     .breakdown-row .bar-value { font-size: 12px; color: #d1d5e6; width: 36px; text-align: right; font-weight: 600; }
@@ -184,165 +123,43 @@
     .table-container { margin-top: 12px; margin-bottom: 12px; overflow: auto; max-height: 70vh; position: relative; border-radius: 8px; border: 1px solid #c0c4d8; }
     table { width: 100%; border-collapse: collapse; background: #f0f2f5; }
     thead { background: #e8eaf2; }
-    th {
-      padding: 12px 8px;
-      font-weight: 600;
-      font-size: 11px;
-      color: #4f46e5;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 2px solid #c0c4d8;
-      text-align: left;
-      position: sticky;
-      top: 0;
-      background: #e8eaf2;
-      z-index: 10;
-    }
-    td {
-      padding: 12px 8px;
-      border-bottom: 1px solid #c0c4d8;
-      color: #2c2f45;
-      font-size: 13px;
-    }
+    th { padding: 12px 8px; font-weight: 600; font-size: 11px; color: #4f46e5; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #c0c4d8; text-align: left; position: sticky; top: 0; background: #e8eaf2; z-index: 10; }
+    td { padding: 12px 8px; border-bottom: 1px solid #c0c4d8; color: #2c2f45; font-size: 13px; }
     tr:hover { background: #e2e5ef; }
 
-    /* Empty State */
     .empty-state { text-align: center; padding: 40px; color: #d1d5e6; font-size: 14px; }
 
     /* Read-only Mode */
-    .read-only-mode input,
-    .read-only-mode select,
-    .read-only-mode textarea,
-    .read-only-mode button:not(.tab-btn):not(.tab):not(.hamburger) {
-      pointer-events: none !important;
-      background: #f5f5f5 !important;
-      color: #6b6f85 !important;
-      cursor: not-allowed !important;
-      opacity: 0.7 !important;
-      border-color: #c0c4d8 !important;
-    }
+    .read-only-mode input, .read-only-mode select, .read-only-mode textarea, .read-only-mode button:not(.tab-btn):not(.tab):not(.hamburger) { pointer-events: none !important; background: #f5f5f5 !important; color: #6b6f85 !important; cursor: not-allowed !important; opacity: 0.7 !important; border-color: #c0c4d8 !important; }
 
-    /* Hamburger menu */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 3px;
-      background: #a5b4fc;
-      border-radius: 2px;
-      transition: all 0.2s;
-    }
+    .hamburger { display: none; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; padding: 8px; }
+    .hamburger span { display: block; width: 24px; height: 3px; background: #a5b4fc; border-radius: 2px; transition: all 0.2s; }
 
-    /* Responsive navigation */
     .tab-label.mobile-only { display: none; }
     .tab-icon.desktop-only { display: block; margin: 0 auto; height: 40px; width: auto; }
 
     @media (max-width: 800px) {
-      .tab-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        z-index: 9999;
-      }
-      .tab-nav-container {
-        flex-wrap: wrap;
-        padding: 8px;
-      }
-      .nav-brand {
-        flex: 1;
-        margin-right: 8px;
-        font-size: 16px;
-        padding: 8px 0;
-      }
-      .nav-brand img {
-        height: 24px;
-        width: 24px;
-      }
-      .hamburger {
-        display: flex;
-        order: 2;
-      }
-      .tab-buttons {
-        flex-direction: column;
-        align-items: stretch;
-        max-height: 60vh;
-        overflow-y: auto;
-        background: #f0f2f5;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        width: 100%;
-        z-index: 10000;
-        border-bottom-left-radius: 12px;
-        border-bottom-right-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-        display: none;
-        order: 10;
-      }
-      .tab-buttons.open {
-        display: flex;
-      }
-      .tab-btn {
-        font-size: 18px;
-        padding: 18px 24px;
-        border-bottom: 1px solid #c0c4d8;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        background: none;
-        height: auto;
-      }
+      .tab-nav { position: fixed; top: 0; left: 0; right: 0; width: 100%; z-index: 9999; }
+      .tab-nav-container { flex-wrap: wrap; padding: 8px; }
+      .nav-brand { flex: 1; margin-right: 8px; font-size: 16px; padding: 8px 0; }
+      .nav-brand img { height: 24px; width: 24px; }
+      .hamburger { display: flex; order: 2; }
+      .tab-buttons { flex-direction: column; align-items: stretch; max-height: 60vh; overflow-y: auto; background: #f0f2f5; position: absolute; top: 60px; left: 0; right: 0; width: 100%; z-index: 10000; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: none; order: 10; }
+      .tab-buttons.open { display: flex; }
+      .tab-btn { font-size: 18px; padding: 18px 24px; border-bottom: 1px solid #c0c4d8; display: flex; align-items: center; justify-content: flex-start; background: none; height: auto; }
       .tab-btn:last-child { border-bottom: none; }
       .tab-label.mobile-only { display: inline; }
       .tab-icon.desktop-only { display: none; }
-      #readOnlyBadge,
-      #signedInUserBadge,
-      #logoutBtn,
-      #signInManageBtn {
-        order: 3;
-        margin: 4px 0 4px auto !important;
-        font-size: 11px !important;
-        padding: 6px 8px !important;
-      }
-      body {
-        padding-top: 100px;
-      }
+      #readOnlyBadge, #signedInUserBadge, #logoutBtn, #signInManageBtn { order: 3; margin: 4px 0 4px auto !important; font-size: 11px !important; padding: 6px 8px !important; }
+      body { padding-top: 100px; }
       .score-section { flex-direction: column; align-items: center; }
       .info-grid { grid-template-columns: 1fr 1fr; }
     }
-
     @media (min-width: 801px) {
       .tab-label.mobile-only { display: none; }
       .tab-icon.desktop-only { display: block; }
-      .tab-buttons {
-        flex-direction: row;
-        align-items: center;
-        position: static;
-        max-height: none;
-        overflow-y: visible;
-        background: none;
-        box-shadow: none;
-        border-radius: 0;
-        display: flex !important;
-      }
-      .tab-btn {
-        font-size: 28px;
-        padding: 12px 16px;
-        border-bottom: 3px solid transparent;
-        display: block;
-        justify-content: center;
-      }
+      .tab-buttons { flex-direction: row; align-items: center; position: static; max-height: none; overflow-y: visible; background: none; box-shadow: none; border-radius: 0; display: flex !important; }
+      .tab-btn { font-size: 28px; padding: 12px 16px; border-bottom: 3px solid transparent; display: block; justify-content: center; }
       .hamburger { display: none; }
     }
   </style>
@@ -353,292 +170,73 @@
   <button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">🌐</button>
   <style>
     @media (max-width: 800px) {
-      #google_translate_element {
-        max-width: 0;
-        overflow: hidden;
-        opacity: 0;
-        pointer-events: none;
-        transition: max-width 0.2s ease, opacity 0.2s ease;
-      }
-      body.translate-open #google_translate_element {
-        max-width: 260px;
-        opacity: 1;
-        pointer-events: auto;
-      }
+      #google_translate_element { max-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: max-width 0.2s ease, opacity 0.2s ease; }
+      body.translate-open #google_translate_element { max-width: 260px; opacity: 1; pointer-events: auto; }
       #translateToggleBtn { display: inline-flex !important; }
     }
-    @media (min-width: 801px) {
-      #translateToggleBtn { display: none !important; }
-    }
+    @media (min-width: 801px) { #translateToggleBtn { display: none !important; } }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const translateToggleBtn = document.getElementById('translateToggleBtn');
-      const translateWidget = document.getElementById('google_translate_element');
-      if (!translateToggleBtn || !translateWidget) return;
-      translateToggleBtn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        document.body.classList.toggle('translate-open');
-      });
-      document.addEventListener('click', function (e) {
-        if (!document.body.classList.contains('translate-open')) return;
-        if (translateWidget.contains(e.target) || translateToggleBtn.contains(e.target)) return;
-        document.body.classList.remove('translate-open');
-      });
+      const tb = document.getElementById('translateToggleBtn'), tw = document.getElementById('google_translate_element');
+      if (!tb || !tw) return;
+      tb.addEventListener('click', function (e) { e.stopPropagation(); document.body.classList.toggle('translate-open'); });
+      document.addEventListener('click', function (e) { if (!document.body.classList.contains('translate-open')) return; if (tw.contains(e.target) || tb.contains(e.target)) return; document.body.classList.remove('translate-open'); });
     });
   </script>
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-    }
-  </script>
+  <script type="text/javascript">function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');}</script>
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <!-- Google Sign-In integration -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
-    // --- Google Sign-In for edit access ---
     const BACKEND_VERIFY_URL = window.GAS_WEB_APP_URL;
     const AUTH_KEY = 'clo_portal_google_auth';
     const AUTH_EMAIL_KEY = 'clo_portal_google_email';
 
-    function setReadOnlyMode(enabled) {
-      if (enabled) {
-        document.documentElement.classList.add('read-only-mode');
-        if (document.body) document.body.classList.add('read-only-mode');
-      } else {
-        document.documentElement.classList.remove('read-only-mode');
-        if (document.body) document.body.classList.remove('read-only-mode');
-      }
-    }
-
-    function updateSignedInBadge(email) {
-      const badge = document.getElementById('signedInUserBadge');
-      const logoutBtn = document.getElementById('logoutBtn');
-      const signInBtn = document.getElementById('signInManageBtn');
-      if (!badge) return;
-      if (email) {
-        badge.innerHTML = email;
-        badge.style.display = 'inline-block';
-        if (logoutBtn) logoutBtn.style.display = 'inline-block';
-        if (signInBtn) signInBtn.style.display = 'none';
-      } else {
-        badge.textContent = '';
-        badge.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-        if (signInBtn) signInBtn.style.display = 'inline-block';
-      }
-    }
-
-    function handleLogout() {
-      try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
-      try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {}
-      setReadOnlyMode(true);
-      updateSignedInBadge(null);
-      setTimeout(() => { window.location.reload(); }, 200);
-    }
-
-    function showGoogleLogin() {
-      const loginDiv = document.createElement('div');
-      loginDiv.id = 'login-overlay';
-      loginDiv.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
-      loginDiv.innerHTML = `
-        <div style="background:#f0f2f5;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #c0c4d8;">
-          <h2 style="margin-bottom:8px;color:#4f46e5;">Sign in to Manage</h2>
-          <p style="font-size:14px;color:#2c2f45;text-align:center;margin:0 0 8px 0;">Use your Google account to access management features</p>
-          <div id="g_id_onload" data-client_id="47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com" data-callback="onGoogleSignIn" data-auto_prompt="false" data-ux_mode="popup"></div>
-          <div id="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
-          <div style="width:100%;height:1px;background:#c0c4d8;margin:8px 0;"></div>
-          <button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button>
-          <div id="login-error" style="color:#ff5252;font-size:13px;display:none;"></div>
-        </div>
-      `;
-      document.body.appendChild(loginDiv);
-      setTimeout(() => {
-        const guestBtn = document.getElementById('guest-btn');
-        if (guestBtn) {
-          guestBtn.onclick = function() {
-            document.getElementById('login-overlay').remove();
-            setReadOnlyMode(true);
-            try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
-            try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {}
-            updateSignedInBadge(null);
-          };
-        }
-        if (window.google && google.accounts && google.accounts.id) {
-          try {
-            google.accounts.id.initialize({
-              client_id: '47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com',
-              callback: onGoogleSignIn,
-              auto_select: false,
-              ux_mode: 'popup'
-            });
-            google.accounts.id.renderButton(document.getElementById('g_id_signin'),
-              { type: 'standard', size: 'large', theme: 'outline', text: 'signin', shape: 'rectangular', logo_alignment: 'left' });
-          } catch (e) { console.error('Error rendering Google Sign-In button:', e); }
-        }
-      }, 100);
-    }
-
-    window.onGoogleSignIn = async function(response) {
-      const idToken = response.credential;
-      try {
-        const cfWorkerUrl = window.CLOUDFLARE_WORKER_URL || window.GAS_WEB_APP_URL;
-        let tokenRes = await fetch(cfWorkerUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idToken })
-        });
-        let tokenData = await tokenRes.json();
-        if (!tokenData.success || !tokenData.token_verified) {
-          throw new Error(tokenData.error || 'Token verification failed');
-        }
-        const email = tokenData.email;
-        const res = await fetch(BACKEND_VERIFY_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'verifyUserPermission', email })
-        });
-        const data = await res.json();
-        const isAllowed = Boolean(data && (data.isAllowedEditor === true || data.allowed === true));
-        if (isAllowed) {
-          try { localStorage.setItem(AUTH_KEY, idToken); } catch (e) {}
-          try { localStorage.setItem(AUTH_EMAIL_KEY, email); } catch (e) {}
-          setReadOnlyMode(false);
-          updateSignedInBadge(email);
-          const overlay = document.getElementById('login-overlay');
-          if (overlay) overlay.style.display = 'none';
-          setTimeout(() => { window.location.reload(); }, 200);
-        } else {
-          setReadOnlyMode(true);
-          const errorDiv = document.getElementById('login-error');
-          if (errorDiv) {
-            errorDiv.style.display = 'block';
-            errorDiv.textContent = 'Your account does not have editor access';
-          }
-        }
-      } catch (error) {
-        console.error('Error during sign-in:', error);
-        const errorDiv = document.getElementById('login-error');
-        if (errorDiv) {
-          errorDiv.style.display = 'block';
-          errorDiv.textContent = 'Sign-in failed: ' + error.message;
-        }
-      }
-    };
+    function setReadOnlyMode(enabled) { if (enabled) { document.documentElement.classList.add('read-only-mode'); if (document.body) document.body.classList.add('read-only-mode'); } else { document.documentElement.classList.remove('read-only-mode'); if (document.body) document.body.classList.remove('read-only-mode'); } }
+    function updateSignedInBadge(email) { const badge = document.getElementById('signedInUserBadge'), logoutBtn = document.getElementById('logoutBtn'), signInBtn = document.getElementById('signInManageBtn'); if (!badge) return; if (email) { badge.innerHTML = email; badge.style.display = 'inline-block'; if (logoutBtn) logoutBtn.style.display = 'inline-block'; if (signInBtn) signInBtn.style.display = 'none'; } else { badge.textContent = ''; badge.style.display = 'none'; if (logoutBtn) logoutBtn.style.display = 'none'; if (signInBtn) signInBtn.style.display = 'inline-block'; } }
+    function handleLogout() { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {} setReadOnlyMode(true); updateSignedInBadge(null); setTimeout(() => { window.location.reload(); }, 200); }
+    function showGoogleLogin() { const d = document.createElement('div'); d.id='login-overlay'; d.style='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;'; d.innerHTML='<div style="background:#f0f2f5;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #c0c4d8;"><h2 style="margin-bottom:8px;color:#4f46e5;">Sign in to Manage</h2><p style="font-size:14px;color:#2c2f45;text-align:center;margin:0 0 8px 0;">Use your Google account to access management features</p><div id="g_id_onload" data-client_id="47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com" data-callback="onGoogleSignIn" data-auto_prompt="false" data-ux_mode="popup"></div><div id="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div><div style="width:100%;height:1px;background:#c0c4d8;margin:8px 0;"></div><button id="guest-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Continue as Guest (Read-Only)</button><div id="login-error" style="color:#ff5252;font-size:13px;display:none;"></div></div>'; document.body.appendChild(d); setTimeout(() => { const gb = document.getElementById('guest-btn'); if (gb) { gb.onclick = function() { document.getElementById('login-overlay').remove(); setReadOnlyMode(true); try{localStorage.removeItem(AUTH_KEY);}catch(e){} try{localStorage.removeItem(AUTH_EMAIL_KEY);}catch(e){} updateSignedInBadge(null); }; } if (window.google && google.accounts && google.accounts.id) { try { google.accounts.id.initialize({ client_id: '47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com', callback: onGoogleSignIn, auto_select: false, ux_mode: 'popup' }); google.accounts.id.renderButton(document.getElementById('g_id_signin'), { type:'standard', size:'large', theme:'outline', text:'signin', shape:'rectangular', logo_alignment:'left' }); } catch (e) { console.error(e); } } }, 100); }
+    window.onGoogleSignIn = async function(response) { const idToken = response.credential; try { const cfUrl = window.CLOUDFLARE_WORKER_URL || window.GAS_WEB_APP_URL; let tr = await fetch(cfUrl, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({idToken}) }); let td = await tr.json(); if (!td.success || !td.token_verified) throw new Error(td.error || 'Token verification failed'); const email = td.email; const r = await fetch(BACKEND_VERIFY_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'verifyUserPermission', email}) }); const data = await r.json(); if (Boolean(data && (data.isAllowedEditor === true || data.allowed === true))) { try{localStorage.setItem(AUTH_KEY,idToken);}catch(e){} try{localStorage.setItem(AUTH_EMAIL_KEY,email);}catch(e){} setReadOnlyMode(false); updateSignedInBadge(email); const ov=document.getElementById('login-overlay'); if(ov) ov.style.display='none'; setTimeout(()=>{window.location.reload();},200); } else { setReadOnlyMode(true); const ed=document.getElementById('login-error'); if(ed){ed.style.display='block';ed.textContent='Your account does not have editor access';} } } catch(err) { console.error(err); const ed=document.getElementById('login-error'); if(ed){ed.style.display='block';ed.textContent='Sign-in failed: '+err.message;} } };
 
     window.addEventListener('DOMContentLoaded', () => {
-      const setRestrictedTabsVisibility = (isVisible) => {
-        const displayValue = isVisible ? '' : 'none';
-        ['events.html', 'members.html', 'troops.html', 'profile.html', 'warnings.html'].forEach((href) => {
-          document.querySelectorAll(`.tab-buttons .tab-btn[href="${href}"]`).forEach((link) => {
-            link.style.display = displayValue;
-          });
-        });
-      };
-      const token = (() => { try { return localStorage.getItem(AUTH_KEY); } catch (e) { return null; } })();
-      const email = (() => { try { return localStorage.getItem(AUTH_EMAIL_KEY); } catch (e) { return null; } })();
-      if (token && email) {
-        setReadOnlyMode(false);
-        updateSignedInBadge(email);
-        setRestrictedTabsVisibility(true);
-        const bankTab = document.getElementById('bankTabBtn');
-        if (bankTab) bankTab.style.display = 'flex';
-      } else {
-        setReadOnlyMode(true);
-        updateSignedInBadge(null);
-        setRestrictedTabsVisibility(false);
-        const bankTab = document.getElementById('bankTabBtn');
-        if (bankTab) bankTab.style.display = 'none';
-        let nav = document.querySelector('.tab-nav-container');
-        if (nav && !document.getElementById('signInManageBtn')) {
-          const btn = document.createElement('button');
-          btn.id = 'signInManageBtn';
-          btn.textContent = '🔑 Sign in to Manage';
-          btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
-          btn.onclick = showGoogleLogin;
-          nav.appendChild(btn);
-        }
-      }
-
-      // Hamburger toggle
-      const navHamburger = document.getElementById('navHamburger');
-      const navTabs = document.getElementById('navTabs');
-      if (navHamburger && navTabs) {
-        navHamburger.addEventListener('click', function(e) {
-          e.stopPropagation();
-          navTabs.classList.toggle('open');
-        });
-        document.addEventListener('click', function(e) {
-          if (navTabs.classList.contains('open') && !navTabs.contains(e.target) && !navHamburger.contains(e.target)) {
-            navTabs.classList.remove('open');
-          }
-        });
-      }
-
-      // Load profiling data
+      const setRestrictedTabsVisibility = (isVisible) => { const d = isVisible ? '' : 'none'; ['events.html','members.html','troops.html','profile.html','warnings.html'].forEach(h => { document.querySelectorAll(`.tab-buttons .tab-btn[href="${h}"]`).forEach(l => { l.style.display = d; }); }); };
+      const token = (() => { try { return localStorage.getItem(AUTH_KEY); } catch(e) { return null; } })();
+      const email = (() => { try { return localStorage.getItem(AUTH_EMAIL_KEY); } catch(e) { return null; } })();
+      if (token && email) { setReadOnlyMode(false); updateSignedInBadge(email); setRestrictedTabsVisibility(true); const bt = document.getElementById('bankTabBtn'); if (bt) bt.style.display = 'flex'; }
+      else { setReadOnlyMode(true); updateSignedInBadge(null); setRestrictedTabsVisibility(false); const bt = document.getElementById('bankTabBtn'); if (bt) bt.style.display = 'none'; let nav = document.querySelector('.tab-nav-container'); if (nav && !document.getElementById('signInManageBtn')) { const btn = document.createElement('button'); btn.id = 'signInManageBtn'; btn.textContent = '🔑 Sign in to Manage'; btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;'; btn.onclick = showGoogleLogin; nav.appendChild(btn); } }
+      const hb = document.getElementById('navHamburger'), nt = document.getElementById('navTabs');
+      if (hb && nt) { hb.addEventListener('click', e => { e.stopPropagation(); nt.classList.toggle('open'); }); document.addEventListener('click', e => { if (nt.classList.contains('open') && !nt.contains(e.target) && !hb.contains(e.target)) nt.classList.remove('open'); }); }
       loadProfilingData();
     });
   </script>
 
   <nav class="tab-nav">
     <div class="tab-nav-container">
-      <div class="nav-brand" id="navBrand"><img src="favicon.png" alt="" style="height: 32px; width: 32px; vertical-align: middle; margin-right: 8px;"> cCc League One</div>
-      <button class="hamburger" id="navHamburger" aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="nav-brand" id="navBrand"><img src="favicon.png" alt="" style="height:32px;width:32px;vertical-align:middle;margin-right:8px;"> cCc League One</div>
+      <button class="hamburger" id="navHamburger" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
       <div class="tab-buttons" id="navTabs">
-        <a href="dashboard.html" class="tab-btn" title="Dashboard">
-          <img src="chests.png" alt="Dashboard" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Dashboard</span>
-        </a>
-        <a href="events.html" class="tab-btn" title="Events">
-          <img src="events.png" alt="Events" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Events</span>
-        </a>
-        <a href="members.html" class="tab-btn" title="Members">
-          <img src="members.png" alt="Members" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Members</span>
-        </a>
-        <a href="troops.html" class="tab-btn" title="Troops">
-          <img src="troops.png" alt="Troops" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Troops</span>
-        </a>
-        <a href="profile.html" class="tab-btn active" title="Profiling">
-          <img src="profile.png" alt="Profiling" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Profiling</span>
-        </a>
-        <a href="warnings.html" class="tab-btn" title="Warnings">
-          <img src="warning.png" alt="Warnings" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Warnings</span>
-        </a>
-        <a href="competition.html" class="tab-btn" title="Competition">
-          <img src="competition.png" alt="Competition" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Competition</span>
-        </a>
-        <a href="calendar.html" class="tab-btn" title="Calendar">
-          <img src="calendar.png" alt="Calendar" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Calendar</span>
-        </a>
-        <a href="bank.html" class="tab-btn" id="bankTabBtn" title="Bank" style="display:none;">
-          <img src="bank.png" alt="Bank" class="tab-icon desktop-only">
-          <span class="tab-label mobile-only">Bank</span>
-        </a>
+        <a href="dashboard.html" class="tab-btn" title="Dashboard"><img src="chests.png" alt="Dashboard" class="tab-icon desktop-only"><span class="tab-label mobile-only">Dashboard</span></a>
+        <a href="events.html" class="tab-btn" title="Events"><img src="events.png" alt="Events" class="tab-icon desktop-only"><span class="tab-label mobile-only">Events</span></a>
+        <a href="members.html" class="tab-btn" title="Members"><img src="members.png" alt="Members" class="tab-icon desktop-only"><span class="tab-label mobile-only">Members</span></a>
+        <a href="troops.html" class="tab-btn" title="Troops"><img src="troops.png" alt="Troops" class="tab-icon desktop-only"><span class="tab-label mobile-only">Troops</span></a>
+        <a href="profile.html" class="tab-btn active" title="Profiling"><img src="profile.png" alt="Profiling" class="tab-icon desktop-only"><span class="tab-label mobile-only">Profiling</span></a>
+        <a href="warnings.html" class="tab-btn" title="Warnings"><img src="warning.png" alt="Warnings" class="tab-icon desktop-only"><span class="tab-label mobile-only">Warnings</span></a>
+        <a href="competition.html" class="tab-btn" title="Competition"><img src="competition.png" alt="Competition" class="tab-icon desktop-only"><span class="tab-label mobile-only">Competition</span></a>
+        <a href="calendar.html" class="tab-btn" title="Calendar"><img src="calendar.png" alt="Calendar" class="tab-icon desktop-only"><span class="tab-label mobile-only">Calendar</span></a>
+        <a href="bank.html" class="tab-btn" id="bankTabBtn" title="Bank" style="display:none;"><img src="bank.png" alt="Bank" class="tab-icon desktop-only"><span class="tab-label mobile-only">Bank</span></a>
       </div>
-      <div id="readOnlyBadge" style="display: none; padding: 8px 12px; background: #fff3cd; border-radius: 4px; font-size: 12px; color: #856404;">🔒 Read-Only Mode</div>
-      <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
-      <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
+      <div id="readOnlyBadge" style="display:none;padding:8px 12px;background:#fff3cd;border-radius:4px;font-size:12px;color:#856404;">🔒 Read-Only Mode</div>
+      <div id="signedInUserBadge" style="display:none;margin-left:auto;padding:8px 12px;background:#e8eaf2;border-radius:4px;font-size:12px;color:#4f46e5;border:1px solid #c0c4d8;"></div>
+      <button id="logoutBtn" onclick="handleLogout()" style="display:none;margin-left:8px;padding:8px 10px;background:#c62828;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer;">Log out</button>
     </div>
   </nav>
 
   <div id="profiling" class="tab-content active">
     <div class="header">
-      <h1><img src="profile.png" alt="Profiling" class="tab-icon" style="height: 64px; vertical-align: middle; margin-right: 8px;"> Member Profiling</h1>
-      <p>Performance scoring based on Crypts, Tinman, Ragnarok, Tower, Carter &amp; Hero metrics</p>
+      <h1><img src="profile.png" alt="Profiling" class="tab-icon" style="height:64px;vertical-align:middle;margin-right:8px;"> Member Profiling</h1>
+      <p>Performance scoring based on Target Hit Rate, Event Participation, Consistency &amp; Warnings</p>
     </div>
 
-    <!-- Sub-tabs -->
     <div class="tabs">
       <button class="tab active" data-tab="rankings" onclick="switchSubTab('rankings')">🏆 Rankings</button>
       <button class="tab" data-tab="individual" onclick="switchSubTab('individual')">👤 Individual</button>
@@ -653,40 +251,34 @@
     <!-- Individual Tab -->
     <div id="tabIndividual" style="display:none;">
       <div class="selector-container">
-        <select id="memberSelect" onchange="showIndividual()">
-          <option value="">— Select a member —</option>
-        </select>
+        <select id="memberSelect" onchange="showIndividual()"><option value="">— Select a member —</option></select>
       </div>
       <div id="individualEmpty" class="empty-state"><p>Select a member above to view their profile.</p></div>
       <div id="individualContent" style="display:none;">
 
-        <!-- Score Ring + Breakdown -->
         <h2>Performance Score</h2>
         <div class="score-section">
           <div class="score-ring-container">
-            <svg viewBox="0 0 120 120">
-              <circle class="score-ring-bg" cx="60" cy="60" r="50"/>
-              <circle class="score-ring-fill" id="scoreRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/>
-            </svg>
-            <div class="score-ring-label">
-              <div class="score-value" id="scoreValue">—</div>
-              <div class="score-rating" id="scoreRating"></div>
-            </div>
+            <svg viewBox="0 0 120 120"><circle class="score-ring-bg" cx="60" cy="60" r="50"/><circle class="score-ring-fill" id="scoreRing" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
+            <div class="score-ring-label"><div class="score-value" id="scoreValue">—</div><div class="score-rating" id="scoreRating"></div></div>
           </div>
           <div class="score-breakdown" id="scoreBreakdown"></div>
         </div>
 
-        <!-- Metric Detail Cards -->
-        <h2>Metric Details</h2>
-        <div class="info-grid" id="metricCards"></div>
+        <h2>Chest Statistics <span id="chestStatsNote" class="section-note"></span></h2>
+        <div class="info-grid" id="chestStatsInfo"></div>
 
-        <!-- Breakdown Table -->
+        <h2>Target Completion</h2>
+        <div class="info-grid" id="targetInfo"></div>
+
+        <h2>Recent Periods</h2>
+        <div class="table-container">
+          <table><thead><tr><th>Period</th><th>Points</th><th>Target</th><th>Status</th></tr></thead><tbody id="periodTableBody"></tbody></table>
+        </div>
+
         <h2>Full Breakdown</h2>
         <div class="table-container">
-          <table>
-            <thead><tr><th>Metric</th><th>Score</th><th>Weight</th><th>Detail</th></tr></thead>
-            <tbody id="breakdownBody"></tbody>
-          </table>
+          <table><thead><tr><th>Metric</th><th>Score</th><th>Weight</th><th>Detail</th></tr></thead><tbody id="breakdownBody"></tbody></table>
         </div>
       </div>
     </div>
@@ -696,66 +288,37 @@
     let profilingData = null;
 
     function runGASFunction(functionName, ...args) {
-      return new Promise((resolve, reject) => {
-        google.script.run
-          .withSuccessHandler(resolve)
-          .withFailureHandler(reject)[functionName](...args);
-      });
+      return new Promise((resolve, reject) => { google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[functionName](...args); });
     }
 
     async function loadProfilingData() {
       const loading = document.getElementById('rankingsLoading');
       const content = document.getElementById('rankingsContent');
-      loading.style.display = 'block';
-      content.innerHTML = '';
-
+      loading.style.display = 'block'; content.innerHTML = '';
       try {
         const res = await runGASFunction('getProfilingBundle');
-        if (res && res.success) {
-          profilingData = res;
-          populateSelect();
-          renderRankings();
-        } else {
-          content.innerHTML = '<div class="empty-state"><p>Failed to load profiling data: ' + (res?.message || 'Unknown error') + '</p></div>';
-        }
-      } catch (e) {
-        content.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>';
-      } finally {
-        loading.style.display = 'none';
-      }
+        if (res && res.success) { profilingData = res; populateSelect(); renderRankings(); }
+        else { content.innerHTML = '<div class="empty-state"><p>Failed to load profiling data: ' + (res?.message || 'Unknown error') + '</p></div>'; }
+      } catch (e) { content.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>'; }
+      finally { loading.style.display = 'none'; }
     }
 
     function populateSelect() {
       const select = document.getElementById('memberSelect');
       if (!profilingData || !profilingData.members) return;
-      const sorted = [...profilingData.members].sort((a, b) => a.name.localeCompare(b.name));
-      sorted.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.name;
-        opt.textContent = m.name;
-        select.appendChild(opt);
+      [...profilingData.members].sort((a, b) => a.name.localeCompare(b.name)).forEach(m => {
+        const opt = document.createElement('option'); opt.value = m.name; opt.textContent = m.name; select.appendChild(opt);
       });
     }
 
-    // ─── Tab switching (with browser history so Back button works) ───
     function switchSubTab(tab, pushHistory) {
       document.querySelectorAll('.tabs .tab').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
       document.getElementById('tabRankings').style.display = tab === 'rankings' ? '' : 'none';
       document.getElementById('tabIndividual').style.display = tab === 'individual' ? '' : 'none';
-      if (pushHistory !== false) {
-        history.pushState({ tab: tab }, '', '#' + tab);
-      }
+      if (pushHistory !== false) history.pushState({ tab }, '', '#' + tab);
     }
+    window.addEventListener('popstate', e => { switchSubTab(e.state && e.state.tab ? e.state.tab : 'rankings', false); });
 
-    window.addEventListener('popstate', function(e) {
-      if (e.state && e.state.tab) {
-        switchSubTab(e.state.tab, false);
-      } else {
-        switchSubTab('rankings', false);
-      }
-    });
-
-    // ─── Score color ───
     function scoreColor(score) {
       if (score >= 90) return '#22c55e';
       if (score >= 75) return '#4ade80';
@@ -764,112 +327,73 @@
       if (score >= 20) return '#ea580c';
       return '#ef4444';
     }
-    function scoreBg(score) {
-      return scoreColor(score) + '18';
-    }
+    function scoreBg(score) { return scoreColor(score) + '18'; }
 
     // ─── Rankings ───
     function renderRankings() {
       if (!profilingData || !profilingData.members || profilingData.members.length === 0) {
-        document.getElementById('rankingsContent').innerHTML = '<div class="empty-state"><p>No profiling data available yet.</p></div>';
-        return;
+        document.getElementById('rankingsContent').innerHTML = '<div class="empty-state"><p>No profiling data available yet.</p></div>'; return;
       }
-
       const sorted = [...profilingData.members].sort((a, b) => b.overallScore - a.overallScore);
       const W = profilingData.weights || {};
       const metaNote = profilingData.lastUpdated ? '<span style="font-size:11px;color:#9ca3af;font-weight:400;margin-left:8px;">Updated: ' + profilingData.lastUpdated + '</span>' : '';
-      const eventNote = profilingData.eventCounts
-        ? '<span style="font-size:11px;color:#9ca3af;font-weight:400;display:block;margin-top:4px;">Events tracked: Tower (' + profilingData.eventCounts.tower + ') · Tinman (' + profilingData.eventCounts.tinman + ') · Ragnarok (' + (profilingData.eventCounts.ragnarok || 0) + ') · Rag Pts (' + (profilingData.eventCounts.ragnarokPts || 0) + ')</span>'
-        : '';
 
       function rankingCardHtml(m, rank) {
         const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
         const medal = rank <= 3 ? ['🥇','🥈','🥉'][rank - 1] + ' ' : '';
         const b = m.breakdown || {};
         const barHtml = [
-          { score: b.tower?.score, color: '#8b5cf6', title: 'Tower' },
-          { score: b.tinman?.score, color: '#3b82f6', title: 'Tinman' },
-          { score: b.crypts?.score, color: '#ef4444', title: 'Crypts' },
-          { score: b.ragnarok?.score, color: '#f97316', title: 'Ragnarok' },
-          { score: b.ragnarokPts?.score, color: '#a855f7', title: 'Rag Pts' },
-          { score: b.carter?.score, color: '#eab308', title: 'Carter' },
-          { score: b.hero?.score, color: '#14b8a6', title: 'Hero' }
+          { score: b.targetHitRate?.score, color: '#8bc34a', title: 'Target' },
+          { score: b.eventParticipation?.score, color: '#42a5f5', title: 'Events' },
+          { score: b.consistency?.score, color: '#ff9800', title: 'Consistency' },
+          { score: b.warnings?.score, color: b.warnings && b.warnings.score < 100 ? '#ef5350' : '#4caf50', title: 'Warnings' }
         ].map(bar => {
-          const w = bar.score !== null && bar.score !== undefined ? Math.max(2, bar.score * 0.5) : 0;
+          const w = bar.score != null ? Math.max(2, bar.score * 0.5) : 0;
           return w > 0 ? '<div class="ranking-bar" style="background:' + bar.color + '44;width:' + w + 'px;" title="' + bar.title + ': ' + (bar.score ?? '—') + '"></div>' : '';
         }).join('');
+        const tc = m.targetCompletion || {};
         const metaParts = [m.rating];
+        if (tc.total > 0) metaParts.push(tc.met + '/' + tc.total + ' targets met');
         if (m.joinDate) metaParts.push('Joined ' + m.joinDate);
-        if (b.tower?.total > 0) metaParts.push('Tower ' + b.tower.participated + '/' + b.tower.total);
-        if (b.tinman?.total > 0) metaParts.push('Tinman ' + b.tinman.participated + '/' + b.tinman.total);
+        if (b.warnings && b.warnings.count > 0) metaParts.push('⚠️ ' + b.warnings.count + ' warning' + (b.warnings.count > 1 ? 's' : ''));
         return '<div class="ranking-card">'
           + '<div class="ranking-rank ' + rankClass + '">#' + rank + '</div>'
           + '<div class="ranking-info">'
           + '<div class="ranking-name" onclick="jumpToProfile(\'' + escapeAttr(m.name) + '\')">' + medal + escapeHtml(m.name) + '</div>'
           + '<div class="ranking-meta">' + metaParts.join(' · ') + '</div>'
-          + '<div class="ranking-bars">' + barHtml + '</div>'
-          + '</div>'
-          + '<div class="ranking-score-pill" style="background:' + scoreBg(m.overallScore) + ';color:' + scoreColor(m.overallScore) + ';">' + m.overallScore + '</div>'
-          + '</div>';
+          + '<div class="ranking-bars">' + barHtml + '</div></div>'
+          + '<div class="ranking-score-pill" style="background:' + scoreBg(m.overallScore) + ';color:' + scoreColor(m.overallScore) + ';">' + m.overallScore + '</div></div>';
       }
 
-      const HIGHLIGHT_COUNT = 5;
-      const NEW_MEMBER_DAYS = 5;
-      const today = new Date();
-      const seasoned = sorted.filter(m => {
-        if (!m.joinDate) return true;
-        const jd = new Date(m.joinDate + 'T00:00:00Z');
-        return (today - jd) / 86400000 >= NEW_MEMBER_DAYS;
-      });
-      const top = seasoned.slice(0, HIGHLIGHT_COUNT);
-      const bottom = seasoned.length > HIGHLIGHT_COUNT ? seasoned.slice(-HIGHLIGHT_COUNT).reverse() : [];
+      const HIGHLIGHT = 5, NEW_DAYS = 5, today = new Date();
+      const seasoned = sorted.filter(m => { if (!m.joinDate) return true; return (today - new Date(m.joinDate + 'T00:00:00Z')) / 86400000 >= NEW_DAYS; });
+      const top = seasoned.slice(0, HIGHLIGHT);
+      const bottom = seasoned.length > HIGHLIGHT ? seasoned.slice(-HIGHLIGHT).reverse() : [];
 
       let html = '<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">';
-      html += '<div style="flex:1;min-width:280px;">'
-        + '<div class="ranking-section-title">🏆 Top Performers' + metaNote + '</div>' + eventNote;
+      html += '<div style="flex:1;min-width:280px;"><div class="ranking-section-title">🏆 Top Performers' + metaNote + '</div>';
       top.forEach((m, i) => { html += rankingCardHtml(m, i + 1); });
       html += '</div>';
-
       if (bottom.length > 0) {
-        html += '<div style="flex:1;min-width:280px;">'
-          + '<div class="ranking-section-title">⚠️ Needs Attention</div>';
-        bottom.forEach((m) => {
-          const globalRank = sorted.indexOf(m) + 1;
-          html += rankingCardHtml(m, globalRank);
-        });
+        html += '<div style="flex:1;min-width:280px;"><div class="ranking-section-title">⚠️ Needs Attention</div>';
+        bottom.forEach(m => { html += rankingCardHtml(m, sorted.indexOf(m) + 1); });
         html += '</div>';
       }
       html += '</div>';
-
-      html += '<details style="margin-top:8px;"><summary style="cursor:pointer;font-size:14px;font-weight:600;color:#a5b4fc;padding:8px 0;">📋 Full Rankings (' + sorted.length + ' members)</summary>'
-        + '<div style="margin-top:8px;">';
+      html += '<details style="margin-top:8px;"><summary style="cursor:pointer;font-size:14px;font-weight:600;color:#a5b4fc;padding:8px 0;">📋 Full Rankings (' + sorted.length + ' members)</summary><div style="margin-top:8px;">';
       sorted.forEach((m, i) => { html += rankingCardHtml(m, i + 1); });
       html += '</div></details>';
-
       document.getElementById('rankingsContent').innerHTML = html;
     }
 
-    function jumpToProfile(name) {
-      const select = document.getElementById('memberSelect');
-      select.value = name;
-      switchSubTab('individual');
-      showIndividual();
-    }
+    function jumpToProfile(name) { document.getElementById('memberSelect').value = name; switchSubTab('individual'); showIndividual(); }
 
     // ─── Individual Profile ───
     function showIndividual() {
       const name = document.getElementById('memberSelect').value;
-      if (!name || !profilingData) {
-        document.getElementById('individualContent').style.display = 'none';
-        document.getElementById('individualEmpty').style.display = 'block';
-        return;
-      }
+      if (!name || !profilingData) { document.getElementById('individualContent').style.display = 'none'; document.getElementById('individualEmpty').style.display = 'block'; return; }
       const member = profilingData.members.find(m => m.name === name);
-      if (!member) {
-        document.getElementById('individualContent').style.display = 'none';
-        document.getElementById('individualEmpty').style.display = 'block';
-        return;
-      }
+      if (!member) { document.getElementById('individualContent').style.display = 'none'; document.getElementById('individualEmpty').style.display = 'block'; return; }
       document.getElementById('individualEmpty').style.display = 'none';
       renderIndividual(member);
       document.getElementById('individualContent').style.display = 'block';
@@ -882,112 +406,88 @@
       // Score ring
       const ring = document.getElementById('scoreRing');
       const circumference = 314.16;
-      const offset = circumference - (m.overallScore / 100) * circumference;
-      ring.style.strokeDashoffset = offset;
+      ring.style.strokeDashoffset = circumference - (m.overallScore / 100) * circumference;
       ring.style.stroke = scoreColor(m.overallScore);
       document.getElementById('scoreValue').textContent = m.overallScore;
       document.getElementById('scoreValue').style.color = scoreColor(m.overallScore);
       document.getElementById('scoreRating').textContent = m.rating;
 
-      // Breakdown bars
+      // Breakdown bars (4 metrics — Champions approach)
       const items = [
-        { label: 'Crypts (' + W.crypts + '%)', score: b.crypts?.score, color: '#ef4444' },
-        { label: 'Tinman (' + W.tinman + '%)', score: b.tinman?.score, color: '#3b82f6' },
-        { label: 'Ragnarok (' + W.ragnarok + '%)', score: b.ragnarok?.score, color: '#f97316' },
-        { label: 'Rag Pts (' + W.ragnarokPts + '%)', score: b.ragnarokPts?.score, color: '#a855f7' },
-        { label: 'Tower (' + W.tower + '%)', score: b.tower?.score, color: '#8b5cf6' },
-        { label: 'Carter (' + W.carter + '%)', score: b.carter?.score, color: '#eab308' },
-        { label: 'Hero (' + W.hero + '%)', score: b.hero?.score, color: '#14b8a6' }
+        { label: 'Target Hit Rate (' + W.target + '%)', score: b.targetHitRate?.score, color: '#8bc34a' },
+        { label: 'Event Participation (' + W.events + '%)', score: b.eventParticipation?.score, color: '#42a5f5' },
+        { label: 'Consistency (' + W.consistency + '%)', score: b.consistency?.score, color: '#ff9800' },
+        { label: 'No Warnings (' + W.warnings + '%)', score: b.warnings?.score, color: b.warnings && b.warnings.score < 100 ? '#ef5350' : '#4caf50' }
       ];
       document.getElementById('scoreBreakdown').innerHTML = items.map(item => {
-        const val = item.score !== null && item.score !== undefined ? item.score : 0;
-        const display = item.score !== null && item.score !== undefined ? item.score : '—';
-        return '<div class="breakdown-row">'
-          + '<span class="label">' + item.label + '</span>'
-          + '<div class="bar-bg"><div class="bar-fill" style="width:' + val + '%;background:' + item.color + '"></div></div>'
-          + '<span class="bar-value">' + display + '</span>'
-          + '</div>';
+        const val = item.score != null ? item.score : 0;
+        const display = item.score != null ? item.score : '—';
+        return '<div class="breakdown-row"><span class="label">' + item.label + '</span><div class="bar-bg"><div class="bar-fill" style="width:' + val + '%;background:' + item.color + '"></div></div><span class="bar-value">' + display + '</span></div>';
       }).join('');
 
-      // Metric detail cards
-      const cards = [];
-      if (b.crypts) {
-        const cSub = b.crypts.periods > 0
-          ? b.crypts.score + '% avg target across ' + b.crypts.periods + ' period' + (b.crypts.periods !== 1 ? 's' : '')
-          : 'No completed periods';
-        cards.push(card('🏚️ Crypts', formatNumber(b.crypts.points) + ' pts', cSub));
-      }
-      if (b.tinman) {
-        const rate = b.tinman.total > 0 ? Math.round((b.tinman.participated / b.tinman.total) * 100) + '%' : 'N/A';
-        cards.push(card('🤖 Tinman', rate, b.tinman.participated + ' of ' + b.tinman.total + ' events'));
-      }
-      if (b.ragnarok) {
-        const rate = b.ragnarok.total > 0 ? Math.round((b.ragnarok.participated / b.ragnarok.total) * 100) + '%' : 'N/A';
-        cards.push(card('⚔️ Ragnarok', rate, b.ragnarok.participated + ' of ' + b.ragnarok.total + ' events'));
-      }
-      if (b.ragnarokPts) {
-        const rate = b.ragnarokPts.total > 0 ? Math.round((b.ragnarokPts.participated / b.ragnarokPts.total) * 100) + '%' : 'N/A';
-        cards.push(card('🗡️ Ragnarok Pts', rate, b.ragnarokPts.participated + ' of ' + b.ragnarokPts.total + ' events'));
-      }
-      if (b.tower) {
-        const rate = b.tower.total > 0 ? Math.round((b.tower.participated / b.tower.total) * 100) + '%' : 'N/A';
-        cards.push(card('🏰 Tower', rate, b.tower.participated + ' of ' + b.tower.total + ' events'));
-      }
-      if (b.carter) {
-        const lvl = b.carter.currentLevel !== null ? 'Lvl ' + b.carter.currentLevel : 'No data';
-        const growth = b.carter.growth > 0 ? '+' + b.carter.growth : (b.carter.growth === 0 && b.carter.currentLevel !== null ? '±0' : '—');
-        cards.push(card('🏗️ Carter (C)', lvl, 'Growth: ' + growth));
-      }
-      if (b.hero) {
-        const lvl = b.hero.currentLevel !== null ? 'Lvl ' + b.hero.currentLevel : 'No data';
-        const growth = b.hero.growth > 0 ? '+' + b.hero.growth : (b.hero.growth === 0 && b.hero.currentLevel !== null ? '±0' : '—');
-        cards.push(card('🦸 Hero', lvl, 'Growth: ' + growth));
-      }
-      if (m.joinDate) {
-        cards.push(card('📅 Joined', m.joinDate, ''));
-      }
-      document.getElementById('metricCards').innerHTML = cards.join('');
+      // Chest Statistics
+      const cs = m.chestStats || {};
+      document.getElementById('chestStatsInfo').innerHTML = [
+        card('Total Chests', formatNumber(cs.totalChests)),
+        card('Total Points', formatNumber(cs.totalPoints)),
+        card('Point Chests', formatNumber(cs.pointChests)),
+        card('Event Chests', formatNumber(cs.eventChests)),
+        m.joinDate ? card('Joined', m.joinDate) : '',
+        cs.lastSeen ? card('Last Seen', cs.lastSeen) : ''
+      ].filter(Boolean).join('');
 
-      // Breakdown table
-      const rows = [
-        metricRow('Crypt Contribution', b.crypts, W.crypts, b.crypts ? formatNumber(b.crypts.points) + ' pts (' + (b.crypts.periods || 0) + ' period' + ((b.crypts.periods || 0) !== 1 ? 's' : '') + ', ' + (b.crypts.score ?? '—') + '% avg)' : '—'),
-        metricRow('Tinman Performance', b.tinman, W.tinman, b.tinman ? b.tinman.participated + '/' + b.tinman.total + ' events' : '—'),
-        metricRow('Ragnarok', b.ragnarok, W.ragnarok, b.ragnarok ? b.ragnarok.participated + '/' + b.ragnarok.total + ' events' : '—'),
-        metricRow('Ragnarok Points', b.ragnarokPts, W.ragnarokPts, b.ragnarokPts ? b.ragnarokPts.participated + '/' + b.ragnarokPts.total + ' events' : '—'),
-        metricRow('Tower Registration', b.tower, W.tower, b.tower ? b.tower.participated + '/' + b.tower.total + ' events' : '—'),
-        metricRow('Carter (C) Growth', b.carter, W.carter, b.carter && b.carter.currentLevel !== null ? 'Lvl ' + (b.carter.startLevel ?? '?') + ' → ' + b.carter.currentLevel + ' (+' + b.carter.growth + ')' : '—'),
-        metricRow('Hero Level Growth', b.hero, W.hero, b.hero && b.hero.currentLevel !== null ? 'Lvl ' + (b.hero.startLevel ?? '?') + ' → ' + b.hero.currentLevel + ' (+' + b.hero.growth + ')' : '—')
-      ];
-      document.getElementById('breakdownBody').innerHTML = rows.join('');
+      // Target Completion
+      const tc = m.targetCompletion || {};
+      const hitPct = tc.total > 0 ? Math.round((tc.met / tc.total) * 100) : 0;
+      const hitColor = hitPct >= 80 ? 'badge-green' : hitPct >= 50 ? 'badge-orange' : 'badge-red';
+      document.getElementById('targetInfo').innerHTML = [
+        card('Hit Rate', '<span class="badge ' + hitColor + '">' + hitPct + '%</span>', tc.met + ' of ' + tc.total + ' periods'),
+        card('Targets Met', tc.met),
+        card('Targets Missed', tc.missed)
+      ].join('');
+
+      // Recent Periods table
+      const ps = m.periodStats || [];
+      const tbody = document.getElementById('periodTableBody');
+      if (ps.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#9ca3af;">No period data available</td></tr>';
+      } else {
+        tbody.innerHTML = ps.map(p => {
+          const target = p.targetPoints ? formatNumber(p.targetPoints) : '—';
+          let statusBadge;
+          if (p.isActive) {
+            const pctColor = p.percentComplete >= 100 ? 'badge-green' : p.percentComplete >= 70 ? 'badge-blue' : p.percentComplete >= 40 ? 'badge-orange' : 'badge-gray';
+            statusBadge = '<span class="badge ' + pctColor + '">⏳ ' + (p.percentComplete != null ? p.percentComplete + '%' : '—') + '</span>';
+          } else if (p.metTarget === true) {
+            statusBadge = '<span class="badge badge-green">✓ Met</span>';
+          } else if (p.metTarget === false) {
+            statusBadge = '<span class="badge badge-red">✗ Missed (' + p.percentComplete + '%)</span>';
+          } else {
+            statusBadge = '<span class="badge badge-gray">N/A</span>';
+          }
+          return '<tr><td>' + (p.periodName || p.startDate) + (p.isActive ? ' <span style="font-size:10px;color:#4f46e5;">(active)</span>' : '') + '</td><td>' + formatNumber(p.totalPoints) + '</td><td>' + target + '</td><td>' + statusBadge + '</td></tr>';
+        }).join('');
+      }
+
+      // Full Breakdown table
+      document.getElementById('breakdownBody').innerHTML = [
+        metricRow('Target Hit Rate', b.targetHitRate, W.target, b.targetHitRate ? b.targetHitRate.met + '/' + b.targetHitRate.total + ' periods met' : '—'),
+        metricRow('Event Participation', b.eventParticipation, W.events, b.eventParticipation ? b.eventParticipation.participated + '/' + b.eventParticipation.applicable + ' events' : '—'),
+        metricRow('Consistency', b.consistency, W.consistency, b.consistency ? b.consistency.activePeriods + '/' + b.consistency.checkedPeriods + ' recent periods active' : '—'),
+        metricRow('No Warnings', b.warnings, W.warnings, b.warnings ? (b.warnings.count === 0 ? 'Clean record' : b.warnings.count + ' warning' + (b.warnings.count > 1 ? 's' : '') + ' (−25% each)') : '—')
+      ].join('');
     }
 
     function metricRow(label, metric, weight, detail) {
-      const score = metric && metric.score !== null && metric.score !== undefined ? metric.score : '—';
-      const badgeClass = typeof score === 'number'
-        ? (score >= 75 ? 'badge-green' : score >= 40 ? 'badge-orange' : 'badge-red')
-        : 'badge-gray';
-      return '<tr>'
-        + '<td>' + label + '</td>'
-        + '<td><span class="badge ' + badgeClass + '">' + score + '</span></td>'
-        + '<td style="text-align:center;">' + weight + '%</td>'
-        + '<td style="font-size:12px;color:#9ca3af;">' + detail + '</td>'
-        + '</tr>';
+      const score = metric && metric.score != null ? metric.score : '—';
+      const badgeClass = typeof score === 'number' ? (score >= 75 ? 'badge-green' : score >= 40 ? 'badge-orange' : 'badge-red') : 'badge-gray';
+      return '<tr><td>' + label + '</td><td><span class="badge ' + badgeClass + '">' + score + '</span></td><td style="text-align:center;">' + weight + '%</td><td style="font-size:12px;color:#9ca3af;">' + detail + '</td></tr>';
     }
 
-    // ─── Helpers ───
-    function card(label, value, sub) {
-      return '<div class="info-card"><div class="card-label">' + label + '</div><div class="card-value">' + value + '</div>' + (sub ? '<div class="card-sub">' + sub + '</div>' : '') + '</div>';
-    }
-    function formatNumber(n) {
-      if (n == null) return '—';
-      return Number(n).toLocaleString();
-    }
-    function escapeHtml(text) {
-      const div = document.createElement('div'); div.textContent = text; return div.innerHTML;
-    }
-    function escapeAttr(str) {
-      return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    }
+    function card(label, value, sub) { return '<div class="info-card"><div class="card-label">' + label + '</div><div class="card-value">' + value + '</div>' + (sub ? '<div class="card-sub">' + sub + '</div>' : '') + '</div>'; }
+    function formatNumber(n) { if (n == null) return '—'; return Number(n).toLocaleString(); }
+    function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function escapeAttr(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
   </script>
 </body>
 </html>
