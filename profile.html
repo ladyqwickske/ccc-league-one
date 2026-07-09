@@ -549,7 +549,14 @@
     function metricRow(label, metric, weight, detail) {
       const score = metric && metric.score != null ? metric.score : '—';
       const badgeClass = typeof score === 'number' ? (score >= 75 ? 'badge-green' : score >= 40 ? 'badge-orange' : 'badge-red') : 'badge-gray';
-      return '<tr><td>' + label + '</td><td><span class="badge ' + badgeClass + '">' + score + '</span></td><td style="text-align:center;">' + weight + '%</td><td style="font-size:12px;color:#9ca3af;">' + detail + '</td></tr>';
+      let evList = '';
+      if (metric && metric.events && metric.events.length > 0) {
+        evList = '<div style="margin-top:4px;">' + metric.events.map(function(ev) {
+          var icon = ev.status === 'Yes' ? '✅' : ev.status === 'Partial' ? '⚠️' : '❌';
+          return '<div style="font-size:11px;color:#9ca3af;padding:1px 0;">' + icon + ' ' + escapeHtml(ev.name) + ' <span style="color:#6b7280;">(' + escapeHtml(ev.type) + ')</span></div>';
+        }).join('') + '</div>';
+      }
+      return '<tr><td>' + label + '</td><td><span class="badge ' + badgeClass + '">' + score + '</span></td><td style="text-align:center;">' + weight + '%</td><td style="font-size:12px;color:#9ca3af;">' + detail + evList + '</td></tr>';
     }
 
     function card(label, value, sub) { return '<div class="info-card"><div class="card-label">' + label + '</div><div class="card-value">' + value + '</div>' + (sub ? '<div class="card-sub">' + sub + '</div>' : '') + '</div>'; }
