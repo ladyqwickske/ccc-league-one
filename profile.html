@@ -244,6 +244,10 @@
 
     <!-- Rankings Tab -->
     <div id="tabRankings">
+      <div id="recalcBar" style="display:none;text-align:right;margin-bottom:8px;">
+        <span id="recalcNote" style="font-size:11px;color:#9ca3af;margin-right:12px;">Rankings are refreshed daily.</span>
+        <button id="recalcBtn" onclick="recalculateRankings()" style="padding:6px 14px;background:#4f46e5;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.2s;">🔄 Recalculate</button>
+      </div>
       <div id="rankingsLoading" class="loading"><div class="spinner"></div><p>Loading profiling data...</p></div>
       <div id="rankingsContent"></div>
     </div>
@@ -299,13 +303,49 @@
       loading.style.display = 'block'; content.innerHTML = '';
       try {
         const res = await runGASFunction('getProfilingRankings');
-        if (res && res.success) { rankingsData = res; populateSelect(); renderRankings(); }
+        if (res && res.success) {
+          rankingsData = res; populateSelect(); renderRankings();
+          // Show recalculate bar for signed-in editors
+          if (!document.body.classList.contains('read-only-mode')) {
+            document.getElementById('recalcBar').style.display = 'block';
+          }
+        }
         else if (res && res.empty) {
-          content.innerHTML = '<div class="empty-state"><p>' + (res.message || 'Rankings not yet calculated.') + '</p></div>';
+          let emptyHtml = '<div class="empty-state"><p>' + (res.message || 'Rankings not yet calculated.') + '</p>';
+          if (!document.body.classList.contains('read-only-mode')) {
+            emptyHtml += '<br><button onclick="recalculateRankings()" style="margin-top:12px;padding:10px 20px;background:#4f46e5;color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;">🔄 Calculate Now</button>';
+          }
+          emptyHtml += '</div>';
+          content.innerHTML = emptyHtml;
         }
         else { content.innerHTML = '<div class="empty-state"><p>Failed to load rankings: ' + (res?.message || 'Unknown error') + '</p></div>'; }
       } catch (e) { content.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>'; }
       finally { loading.style.display = 'none'; }
+    }
+
+    // ─── Recalculate all rankings (admin action) ───
+    async function recalculateRankings() {
+      const btn = document.getElementById('recalcBtn');
+      const origText = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ Recalculating...'; btn.style.opacity = '0.7'; }
+      try {
+        const res = await runGASFunction('recalculateProfileRankings');
+        if (res && res.success) {
+          if (btn) { btn.textContent = '✅ Done! (' + res.processed + ' members)'; btn.style.background = '#22c55e'; }
+          // Reload rankings from fresh cache
+          setTimeout(async () => {
+            if (btn) { btn.textContent = origText; btn.style.background = '#4f46e5'; btn.style.opacity = '1'; btn.disabled = false; }
+            document.getElementById('memberSelect').innerHTML = '<option value="">— Select a member —</option>';
+            await loadProfilingData();
+          }, 1500);
+        } else {
+          alert('Recalculation failed: ' + (res?.message || 'Unknown error'));
+          if (btn) { btn.textContent = origText; btn.style.opacity = '1'; btn.disabled = false; }
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+        if (btn) { btn.textContent = origText; btn.style.opacity = '1'; btn.disabled = false; }
+      }
     }
 
     function populateSelect() {
@@ -346,9 +386,13 @@
       function rankingCardHtml(m, rank) {
         const rankClass = rank === 1 ? 'top1' : rank === 2 ? 'top2' : rank === 3 ? 'top3' : '';
         const medal = rank <= 3 ? ['🥇','🥈','🥉'][rank - 1] + ' ' : '';
+        const cats = rankingsData.categories || {};
         const barHtml = [
           { score: m.targetHitRate, color: '#8bc34a', title: 'Target' },
-          { score: m.eventRate, color: '#42a5f5', title: 'Events' },
+          { score: m.ancients, color: cats.ancients?.color || '#42a5f5', title: 'Ancients' },
+          { score: m.ragnarok, color: cats.ragnarok?.color || '#ef5350', title: 'Ragnarok' },
+          { score: m.olympusDO, color: cats.olympusDO?.color || '#ab47bc', title: 'Olympus/DO' },
+          { score: m.otherEvents, color: cats.other?.color || '#78909c', title: 'Other' },
           { score: m.consistency, color: '#ff9800', title: 'Consistency' },
           { score: m.warningScore, color: m.warningScore < 100 ? '#ef5350' : '#4caf50', title: 'Warnings' }
         ].map(bar => {
@@ -429,10 +473,14 @@
       document.getElementById('scoreValue').style.color = scoreColor(m.overallScore);
       document.getElementById('scoreRating').textContent = m.rating;
 
-      // Breakdown bars (4 metrics — Champions approach)
+      // Breakdown bars (7 metrics — event categories split)
+      const cats = m.categories || {};
       const items = [
         { label: 'Target Hit Rate (' + W.target + '%)', score: b.targetHitRate?.score, color: '#8bc34a' },
-        { label: 'Event Participation (' + W.events + '%)', score: b.eventParticipation?.score, color: '#42a5f5' },
+        { label: (cats.ancients?.label || 'Ancients') + ' (' + W.ancients + '%)', score: b.ancients?.score, color: cats.ancients?.color || '#42a5f5' },
+        { label: (cats.ragnarok?.label || 'Ragnarok') + ' (' + W.ragnarok + '%)', score: b.ragnarok?.score, color: cats.ragnarok?.color || '#ef5350' },
+        { label: (cats.olympusDO?.label || 'Olympus & DO') + ' (' + W.olympusDO + '%)', score: b.olympusDO?.score, color: cats.olympusDO?.color || '#ab47bc' },
+        { label: (cats.other?.label || 'Other Events') + ' (' + W.other + '%)', score: b.other?.score, color: cats.other?.color || '#78909c' },
         { label: 'Consistency (' + W.consistency + '%)', score: b.consistency?.score, color: '#ff9800' },
         { label: 'No Warnings (' + W.warnings + '%)', score: b.warnings?.score, color: b.warnings && b.warnings.score < 100 ? '#ef5350' : '#4caf50' }
       ];
@@ -489,7 +537,10 @@
       // Full Breakdown table
       document.getElementById('breakdownBody').innerHTML = [
         metricRow('Target Hit Rate', b.targetHitRate, W.target, b.targetHitRate ? b.targetHitRate.met + '/' + b.targetHitRate.total + ' periods met' : '—'),
-        metricRow('Event Participation', b.eventParticipation, W.events, b.eventParticipation ? b.eventParticipation.participated + '/' + b.eventParticipation.applicable + ' events' : '—'),
+        metricRow(cats.ancients?.label || 'Ancients', b.ancients, W.ancients, b.ancients ? b.ancients.participated + '/' + b.ancients.applicable + ' events' : '—'),
+        metricRow(cats.ragnarok?.label || 'Ragnarok', b.ragnarok, W.ragnarok, b.ragnarok ? b.ragnarok.participated + '/' + b.ragnarok.applicable + ' events' : '—'),
+        metricRow(cats.olympusDO?.label || 'Olympus & DO', b.olympusDO, W.olympusDO, b.olympusDO ? b.olympusDO.participated + '/' + b.olympusDO.applicable + ' events' : '—'),
+        metricRow(cats.other?.label || 'Other Events', b.other, W.other, b.other ? b.other.participated + '/' + b.other.applicable + ' events' : '—'),
         metricRow('Consistency', b.consistency, W.consistency, b.consistency ? b.consistency.activePeriods + '/' + b.consistency.checkedPeriods + ' recent periods active' : '—'),
         metricRow('No Warnings', b.warnings, W.warnings, b.warnings ? (b.warnings.count === 0 ? 'Clean record' : b.warnings.count + ' warning' + (b.warnings.count > 1 ? 's' : '') + ' (−25% each)') : '—')
       ].join('');
