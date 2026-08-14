@@ -820,7 +820,7 @@
           <div><label for="troopEventSelect">Event</label><select id="troopEventSelect" onchange="EventsTab.onTroopEventSelected()"><option value="">-- Select Troop Event --</option></select></div>
         </div>
         <div id="troopEventActions" style="display:none; margin-bottom:12px;">
-          <p style="color:#2c2f45; font-size:13px; margin-bottom:12px;">Event configured with category-based targets (G7/G8/T8/G9/T9). Enter points for each member below.</p>
+          <p style="color:#2c2f45; font-size:13px; margin-bottom:12px;">Event configured with category-based targets (G4/G5/G6/G7/G8/T8/G9/T9). Enter points for each member below.</p>
           <div class="form-grid" style="margin-bottom:12px;">
             <div><label for="troopMember">Member</label><select id="troopMember"><option value="">-- Select Member --</option></select></div>
             <div><label for="troopPoints">Points Achieved</label><input type="number" id="troopPoints" placeholder="Enter points" onkeypress="if(event.key==='Enter'){var bp=document.getElementById('troopBatchPanel');if(bp&&bp.style.display!=='none'){EventsTab.addToBatchEntry();}else{EventsTab.submitTroopEntry();}}"></div>
@@ -905,7 +905,7 @@
           <div id="chestTypeSection" style="display:none; margin-bottom:12px;"><label>Chest Types for This Event Type</label><div id="chestTypesList" style="max-height:200px; overflow-y:auto; border:1px solid #c0c4d8; border-radius:6px; padding:8px; background:#f0f2f5;"><div class="loading" style="padding:20px; text-align:center; color: #d1d5e6;">Loading chest types...</div></div><div class="note">Select which chest types count for this event type.</div></div>
           <div id="troopTargetSection" style="display:none; margin-bottom:12px;">
             <label style="display:block; margin-bottom:8px;">Category Targets</label>
-            <p style="color:#2c2f45; font-size:12px; margin-bottom:12px;">Set target points for each troop category (G7, G8, T8, G9, T9).</p>
+            <p style="color:#2c2f45; font-size:12px; margin-bottom:12px;">Set target points for each troop category (G4, G5, G6, G7, G8, T8, G9, T9).</p>
             <div id="troopTargetsList" style="border:1px solid #c0c4d8; border-radius:6px; padding:12px; background:#f0f2f5; margin-bottom:12px; max-height:250px; overflow-y:auto;"></div>
             <button type="button" class="btn" style="width:100%; margin-bottom:12px;" onclick="EventsTab.addTroopTargetRow()">➕ Add Category Target</button>
           </div>
@@ -2002,7 +2002,7 @@
             achieved: pts,
             status: statusIcon,
             _statusSort: statusSort,
-            _categorySort: category ? ['G7','G8','T8','G9','T9'].indexOf(category) : -1
+            _categorySort: category ? ['G4','G5','G6','G7','G8','T8','G9','T9'].indexOf(category) : -1
           };
         });
         // Sorting
@@ -2091,7 +2091,7 @@
             achieved: pts,
             status: statusIcon,
             _statusSort: statusSort,
-            _categorySort: category ? ['G7','G8','T8','G9','T9'].indexOf(category) : -1
+            _categorySort: category ? ['G4','G5','G6','G7','G8','T8','G9','T9'].indexOf(category) : -1
           };
         });
         // Sorting
@@ -2271,7 +2271,7 @@
         row.className = 'troop-target-row';
         row.id = rowId;
         row.style.cssText = 'display:grid; grid-template-columns:1fr 2fr auto; gap:8px; margin-bottom:8px;';
-        const categories = ['G7', 'G8', 'T8', 'G9', 'T9'];
+        const categories = ['G4', 'G5', 'G6', 'G7', 'G8', 'T8', 'G9', 'T9'];
         const options = categories.map(cat =>
           `<option value="${cat}" ${level === cat ? 'selected' : ''}>${cat}</option>`
         ).join('');
@@ -2324,7 +2324,7 @@
         row.className = 'evt-troop-target-row';
         row.id = rowId;
         row.style.cssText = 'display:grid; grid-template-columns:1fr 2fr auto; gap:8px; margin-bottom:8px;';
-        const categories = ['G7', 'G8', 'T8', 'G9', 'T9'];
+        const categories = ['G4', 'G5', 'G6', 'G7', 'G8', 'T8', 'G9', 'T9'];
         const options = categories.map(cat =>
           '<option value="' + cat + '"' + (level === cat ? ' selected' : '') + '>' + cat + '</option>'
         ).join('');
