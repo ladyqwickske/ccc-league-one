@@ -753,25 +753,17 @@
     <div class="header"><h1><img src="members.png" alt="Members" class="tab-icon" style="height: 64px; vertical-align: middle; margin-right: 8px;"> Member Management</h1><p>View and manage clan members</p></div>
     <div class="stats-cards" id="memberStatsCards">
       <div class="stat-card"><h3>Total Members</h3><div class="value" id="memberTotal">-</div></div>
-      <div class="stat-card"><h3>Total Might</h3><div class="value" id="memberTotalMight">-</div></div>
-      <div class="stat-card"><h3>Average Might</h3><div class="value" id="memberAverageMight">-</div></div>
     </div>
     <div class="controls"><div class="search-box"><input type="text" id="memberSearchInput" placeholder="🔍 Search by member name..."></div><button class="btn" onclick="MembersTab.loadMembers()">🔄 Refresh</button></div>
 
     <div class="tabs-container">
       <div class="tabs">
-        <button class="tab active" onclick="MembersTab.switchTab('mightTab', event)">📊 Track Might</button>
         <button class="tab" onclick="MembersTab.switchTab('heroTab', event)">🦸 Hero Level</button>
         <button class="tab" onclick="MembersTab.switchTab('addMemberTab', event)">➕ Add Member</button>
         <button class="tab" onclick="MembersTab.switchTab('nameTab', event)">✏️ Change Name</button>
         <button class="tab" onclick="MembersTab.switchTab('removeMemberTab', event)">🚪 Remove Member</button>
         <button class="tab" onclick="MembersTab.switchTab('chestPointsTab', event)">📦 Chest Points</button>
         <button class="tab" onclick="MembersTab.switchTab('altAccountsTab', event)">🔄 Alt Accounts</button>
-      </div>
-      <div id="mightTab" class="tab-content active">
-        <h3 style="margin:0 0 12px 0;">Track Member Might</h3>
-        <div class="form-grid might-form-grid"><div><label for="mightMemberSelect">Member</label><select id="mightMemberSelect"></select></div><div><label for="mightValue">Might</label><input type="number" id="mightValue" placeholder="Enter current might" onkeypress="if(event.key==='Enter'){MembersTab.submitMightEntry();}"></div><div><label for="mightDate">Date</label><input type="date" id="mightDate"><div class="note">Defaults to today</div></div></div>
-        <button class="btn" onclick="MembersTab.submitMightEntry()">💾 Save Might</button><div id="mightStatus" class="status"></div>
       </div>
       <div id="heroTab" class="tab-content">
         <h3 style="margin:0 0 12px 0;">Track Hero Level</h3>
@@ -801,10 +793,6 @@
           <div>
             <label for="newMemberNameInput">Member Name</label>
             <input type="text" id="newMemberNameInput" placeholder="Enter member name">
-          </div>
-          <div>
-            <label for="startMight">Starting Might</label>
-            <input type="number" id="startMight" placeholder="Enter starting might" onkeypress="if(event.key==='Enter'){MembersTab.submitAddMember();}">
           </div>
           <div>
             <label for="joinDate">Join Date</label>
@@ -931,11 +919,6 @@
             <th class="sortable" data-column="name">Name</th>
             <th class="sortable" data-column="joinDate">Join Date</th>
             <th class="sortable" data-column="heroLevel" title="Latest recorded hero level">Hero Level</th>
-            <th class="sortable" data-column="startMight">Starting Might</th>
-            <th class="sortable" data-column="latestMight">Current Might</th>
-            <th class="sortable" data-column="latestMightDate">Current Might Date</th>
-            <th class="sortable" data-column="growth" title="Total growth from start to latest (all-time)">Growth %</th>
-            <th class="sortable" data-column="recentGrowth" title="Growth between last 2 might records only">Recent Growth %</th>
             <th class="sortable" data-column="accounts" title="Number of tracked alt accounts">Accounts</th>
           </tr>
         </thead>
@@ -1454,17 +1437,15 @@
         membersData = membersList;
         filteredData = [...membersData];
         filteredData.sort((a, b) => {
-          const aRecent = a.recentGrowthPercent || 0;
-          const bRecent = b.recentGrowthPercent || 0;
-          return bRecent - aRecent;
+          return a.name.localeCompare(b.name);
         });
-        currentSort = { column: 'recentGrowth', direction: 'desc' };
+        currentSort = { column: 'name', direction: 'asc' };
         populateMemberSelect();
         if (membersData.length === 0) { showEmpty(); return; }
         updateStats();
         renderTable();
-        const recentGrowthHeader = document.querySelector('#members th[data-column="recentGrowth"]');
-        if (recentGrowthHeader) recentGrowthHeader.classList.add('sorted-desc');
+        const nameHeader = document.querySelector('#members th[data-column="name"]');
+        if (nameHeader) nameHeader.classList.add('sorted-asc');
         showTable();
       }
 
@@ -1477,11 +1458,7 @@
 
       function updateStats() {
         const total = membersData.length;
-        const totalMight = membersData.reduce((sum, m) => sum + (m.startMight || 0), 0);
-        const avg = total > 0 ? Math.round(totalMight / total) : 0;
         document.getElementById('memberTotal').textContent = total.toLocaleString();
-        document.getElementById('memberTotalMight').textContent = formatMight(totalMight);
-        document.getElementById('memberAverageMight').textContent = formatMight(avg);
       }
 
       function filterMembers(searchTerm) {
@@ -1505,12 +1482,7 @@
             case 'name': aVal = a.name.toLowerCase(); bVal = b.name.toLowerCase(); break;
             case 'accounts': aVal = a.altAccountCount || 0; bVal = b.altAccountCount || 0; break;
             case 'joinDate': aVal = parseDateUTC(a.joinDate); bVal = parseDateUTC(b.joinDate); break;
-            case 'startMight': aVal = a.startMight || 0; bVal = b.startMight || 0; break;
-            case 'latestMight': aVal = a.latestMight || 0; bVal = b.latestMight || 0; break;
-            case 'latestMightDate': aVal = parseDateUTC(a.latestMightDate) || new Date(0); bVal = parseDateUTC(b.latestMightDate) || new Date(0); break;
             case 'heroLevel': aVal = a.heroLevel !== null && a.heroLevel !== undefined ? a.heroLevel : -1; bVal = b.heroLevel !== null && b.heroLevel !== undefined ? b.heroLevel : -1; break;
-            case 'growth': aVal = (a.startMight && a.latestMight && a.startMight > 0) ? ((a.latestMight - a.startMight) / a.startMight) * 100 : -Infinity; bVal = (b.startMight && b.latestMight && b.startMight > 0) ? ((b.latestMight - b.startMight) / b.startMight) * 100 : -Infinity; break;
-            case 'recentGrowth': aVal = a.recentGrowthPercent || 0; bVal = b.recentGrowthPercent || 0; break;
             default: aVal = 0; bVal = 0;
           }
           if (aVal < bVal) return currentSort.direction === 'asc' ? -1 : 1;
@@ -1527,17 +1499,6 @@
         const tbody = document.getElementById('membersTableBody');
         tbody.innerHTML = '';
         filteredData.forEach(member => {
-          // Growth % = Total growth from start to latest (all-time)
-          let growthPercent = '-';
-          if (member.startMight && member.latestMight && member.startMight > 0) {
-            const g = ((member.latestMight - member.startMight) / member.startMight) * 100;
-            growthPercent = g.toFixed(1) + '%';
-          }
-          // Recent Growth % = Growth between last two might records only
-          let recentGrowthPercent = '-';
-          if (member.recentGrowthPercent !== undefined && member.recentGrowthPercent !== null) {
-            recentGrowthPercent = (member.recentGrowthPercent).toFixed(1) + '%';
-          }
           const row = document.createElement('tr');
           const heroLevelDisplay = member.heroLevel !== null && member.heroLevel !== undefined
             ? (() => { const lvl = member.heroLevel; let bg, fg; if (lvl > 500) { bg='#4a148c'; fg='#e1bee7'; } else if (lvl > 400) { bg='#0d47a1'; fg='#bbdefb'; } else if (lvl > 300) { bg='#1b5e20'; fg='#c8e6c9'; } else if (lvl > 200) { bg='#827717'; fg='#fff9c4'; } else if (lvl > 100) { bg='#37474f'; fg='#eceff1'; } else { bg='#4e342e'; fg='#d7ccc8'; } return `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${bg};color:${fg};" title="Updated: ${member.heroLevelDate || '?'}">${lvl}</span>`; })()
@@ -1548,7 +1509,7 @@
             : altCount === 1
               ? '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#e65100;color:#fff3e0;" title="Only 1 account tracked">1</span>'
               : `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#1b5e20;color:#c8e6c9;" title="${altCount} accounts tracked">${altCount}</span>`;
-          row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td style="text-align:center;">${heroLevelDisplay}</td><td class="might-value">${formatMight(member.startMight)}</td><td class="might-value">${formatMight(member.latestMight)}</td><td class="date-value">${formatDate(member.latestMightDate)}</td><td class="might-value">${growthPercent}</td><td class="might-value">${recentGrowthPercent}</td><td style="text-align:center;">${accountsBadge}</td>`;
+          row.innerHTML = `<td class="member-name">${escapeHtml(member.name)}</td><td class="date-value">${formatDate(member.joinDate)}</td><td style="text-align:center;">${heroLevelDisplay}</td><td style="text-align:center;">${accountsBadge}</td>`;
           tbody.appendChild(row);
         });
       }
@@ -1779,29 +1740,25 @@
       function submitAddMember() {
         const name = document.getElementById('newMemberNameInput').value.trim();
         const joinDate = document.getElementById('joinDate').value;
-        const startMightRaw = document.getElementById('startMight').value;
         const status = document.getElementById('addMemberStatus');
         status.textContent = '';
         status.className = 'status';
         if (!name) { status.textContent = 'Please enter a name.'; status.classList.add('err'); return; }
         if (!joinDate) { status.textContent = 'Please select a join date.'; status.classList.add('err'); return; }
-        const startMight = parseInt(startMightRaw, 10);
-        if (isNaN(startMight) || startMight <= 0) { status.textContent = 'Enter a valid starting might (>0).'; status.classList.add('err'); return; }
         status.textContent = 'Adding member...';
         fetch(window.GAS_WEB_APP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'addMember', name, joinDate, startMight })
+          body: JSON.stringify({ action: 'addMember', name, joinDate })
         })
           .then(res => res.json())
           .then(result => {
             if (result && result.success) {
-              status.textContent = `Added "${name}" with ${formatMight(startMight)} might.`;
+              status.textContent = `Added "${name}".`;
               status.classList.add('ok');
               document.getElementById('newMemberNameInput').value = '';
-              document.getElementById('startMight').value = '';
               // Update client-side state immediately (no stale-cache reload needed)
-              const newMember = { name: name, joinDate: joinDate, startMight: startMight, latestMight: startMight, latestMightDate: null, recentGrowthPercent: 0 };
+              const newMember = { name: name, joinDate: joinDate };
               membersData.push(newMember);
               filteredData = [...membersData];
               populateMemberSelect();
