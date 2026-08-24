@@ -54,7 +54,7 @@
       overflow: visible;
       flex-wrap: wrap;
     }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
+    .nav-brand { font-size: 20px; font-weight: 700; color: #4f46e5; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
     .nav-brand img { height: 32px; width: auto; }
     .tab-buttons {
       display: flex;
@@ -69,7 +69,7 @@
       padding: 12px 16px; 
       background: none; 
       border: none; 
-      color: #c7cce0; 
+      color: #2c2f45; 
       font-size: 28px; 
       font-weight: 500; 
       border-bottom: 3px solid transparent; 
@@ -81,7 +81,7 @@
       position: relative; 
     }
     .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
-    .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
+    .tab-btn.active { color: #4f46e5; border-bottom-color: #4f46e5; }
     .tab-btn[title]:hover::after {
       content: attr(title);
       position: absolute;
@@ -112,12 +112,12 @@
     }
 
     /* Tab Content */
-    .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(82, 90, 114, 0.93); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
+    .tab-content { display: none; padding: 16px; max-width: 1400px; margin: 0 auto; background: rgba(70, 80, 105, 0.92); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
     .tab-content.active { display: block; }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #a5b4fc; text-shadow: 0 2px 8px #000a; }
-    h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #d1d5e6; }
-    .loading { text-align: center; padding: 32px; color: #d1d5e6; }
-    .note { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: #4f46e5; text-shadow: 0 2px 8px #000a; }
+    h2 { font-size: 18px; font-weight: 500; margin-top: 24px; margin-bottom: 12px; color: #2c2f45; }
+    .loading { text-align: center; padding: 32px; color: #2c2f45; }
+    .note { font-size: 12px; color: #2c2f45; margin-top: 4px; }
 
     /* Countdown Timer */
     .countdown-panel { background: linear-gradient(135deg, #dde0ef 0%, #e2e5ef 100%); border: 2px solid #4f46e5; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; box-shadow: 0 0 20px rgba(79, 70, 229, 0.2); }
@@ -265,7 +265,7 @@
       display: block;
       width: 24px;
       height: 3px;
-      background: #a5b4fc;
+      background: #4f46e5;
       border-radius: 2px;
       transition: all 0.2s;
     }
@@ -1346,7 +1346,17 @@ function filterPlayerTable() {
           });
         }
       });
-      const sortedTypes = Object.entries(typeData).sort((a,b)=>b[1].total-a[1].total).map(([name,data])=>({ name, levels: Array.from(data.levels).map(l=>parseInt(l)).sort((a,b)=>a-b) }));
+      const sortedTypes = Object.entries(typeData).sort((a,b)=>{
+        // Fixed display order: Epic Crypt, Rare Crypt, Common Crypt first, then others alphabetically
+        const CHEST_ORDER = ['Epic Crypt', 'Rare Crypt', 'Common Crypt'];
+        const idxA = CHEST_ORDER.indexOf(a[0]);
+        const idxB = CHEST_ORDER.indexOf(b[0]);
+        const orderA = idxA >= 0 ? idxA : CHEST_ORDER.length;
+        const orderB = idxB >= 0 ? idxB : CHEST_ORDER.length;
+        if (orderA !== orderB) return orderA - orderB;
+        // Both are non-priority types: sort alphabetically
+        return a[0].localeCompare(b[0]);
+      }).map(([name,data])=>({ name, levels: Array.from(data.levels).map(l=>parseInt(l)).sort((a,b)=>a-b) }));
       let headerHtml = '<div class="table-header">';
       // Add sort icons and tooltips to sortable headers
       const sortIcon = (col, dir) => `<span class="sort-icon" style="font-size:13px;vertical-align:middle;user-select:none;">${dir === 'asc' ? '▲' : dir === 'desc' ? '▼' : '▲▼'}</span>`;
