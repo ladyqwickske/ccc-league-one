@@ -1356,7 +1356,7 @@ function filterPlayerTable() {
         if (orderA !== orderB) return orderA - orderB;
         // Both are non-priority types: sort alphabetically
         return a[0].localeCompare(b[0]);
-      }).map(([name,data])=>({ name, levels: Array.from(data.levels).map(l=>parseInt(l)).sort((a,b)=>a-b) }));
+      }).map(([name,data])=>({ name, levels: Array.from(data.levels).map(String).sort((a,b)=>{ const aNum = Number(a); const bNum = Number(b); if (Number.isFinite(aNum) && Number.isFinite(bNum)) return aNum-bNum; if (Number.isFinite(aNum)) return -1; if (Number.isFinite(bNum)) return 1; return a.localeCompare(b); }) }));
       let headerHtml = '<div class="table-header">';
       // Add sort icons and tooltips to sortable headers
       const sortIcon = (col, dir) => `<span class="sort-icon" style="font-size:13px;vertical-align:middle;user-select:none;">${dir === 'asc' ? '▲' : dir === 'desc' ? '▼' : '▲▼'}</span>`;
@@ -1364,7 +1364,7 @@ function filterPlayerTable() {
       headerHtml += `<div class="header-cell sortable" data-sort="player">Player ${sortIcon('player')}</div>`;
       headerHtml += `<div class="header-cell sortable" data-sort="pts">Pts ${sortIcon('pts')}</div>`;
       headerHtml += `<div class="header-cell sortable" data-sort="total">Total ${sortIcon('total')}</div>`;
-      sortedTypes.forEach(type=>{ headerHtml += `<div class="header-cell type-total-header" onclick="toggleType('${type.name}')" data-type="${type.name}"><span class="toggle-icon">▶</span>${type.name}</div>`; type.levels.forEach(level=>{ headerHtml += `<div class="header-cell level-header" data-type="${type.name}" data-level="${level}">Lvl ${level}</div>`;}); });
+      sortedTypes.forEach(type=>{ headerHtml += `<div class="header-cell type-total-header" onclick="toggleType('${type.name}')" data-type="${type.name}"><span class="toggle-icon">▶</span>${type.name}</div>`; type.levels.forEach(level=>{ const levelLabel = /^\d+$/.test(String(level)) ? `Lvl ${level}` : level; headerHtml += `<div class="header-cell level-header" data-type="${type.name}" data-level="${level}">${levelLabel}</div>`;}); });
       headerHtml += '</div>';
       let rowsHtml = '';
       playerArray.forEach((player,idx)=>{
@@ -1410,7 +1410,8 @@ function filterPlayerTable() {
           rowsHtml += `<div class="cell" data-type="${type.name}"><span class="${totalCount===0?'count-zero':''} ${totalClass}">${totalCount||'-'}</span></div>`;
           type.levels.forEach(level=>{
             const levelCount = typeInfo?.levels?.[level] || 0;
-            const badCrypt = (type.name === 'Common Crypt' && (level === 5 || level === 10) && levelCount > 0) ? 'player-red' : '';
+            const levelNumber = parseInt(level, 10);
+            const badCrypt = (type.name === 'Common Crypt' && (levelNumber === 5 || levelNumber === 10) && levelCount > 0) ? 'player-red' : '';
             rowsHtml += `<div class="cell level-cell" data-type="${type.name}" data-level="${level}"><span class="${levelCount===0?'count-zero':''} ${badCrypt}">${levelCount||'-'}</span></div>`;
           });
         });
