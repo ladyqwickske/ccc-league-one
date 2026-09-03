@@ -162,6 +162,12 @@
     .player-orange { color: #4f46e5; font-weight: 500; }
     .player-green { color: #8bc34a; font-weight: 600; }
     .new-member-row .cell:nth-child(2) { color: #e040fb; font-style: italic; }
+    .troop-category { font-size: 10px; font-style: normal; font-weight: 700; letter-spacing: 0.5px; }
+    .troop-category.cat-T9 { color: #9c5de8; }
+    .troop-category.cat-G9 { color: #42a5f5; }
+    .troop-category.cat-T8 { color: #66bb6a; }
+    .troop-category.cat-G8 { color: #ffa726; }
+    .troop-category.cat-G7 { color: #78909c; }
     .date-filter {
       background: #f0f2f5;
       border-radius: 8px;
@@ -1185,6 +1191,12 @@ function filterPlayerTable() {
           
           // 5. Render splits + player stats
           window.currentSplits = bundle.splits || {};
+          window.troopCategoriesByPlayer = {};
+          const troopRows = Array.isArray(bundle.troopCategories?.data) ? bundle.troopCategories.data : [];
+          troopRows.forEach(row => {
+            const name = String(row?.playerName || '').trim().toLowerCase();
+            if (name && row.category) window.troopCategoriesByPlayer[name] = row.category;
+          });
           if (bundle.playerStats) {
             displayPlayerStats(bundle.playerStats);
           }
@@ -1366,7 +1378,17 @@ function filterPlayerTable() {
       headerHtml += `<div class="header-cell sortable" data-sort="total">Total ${sortIcon('total')}</div>`;
       const expandableTypes = new Set(['Epic Crypt', 'Rare Crypt', 'Common Crypt', 'Epic Squad']);
       let chestCellIndex = 4;
-      sortedTypes.forEach(type=>{ const isExpandable = expandableTypes.has(type.name); const toggleIcon = isExpandable ? `<span class="toggle-icon" onclick="event.stopPropagation(); toggleType('${type.name}')">▶</span>` : ''; headerHtml += `<div class="header-cell type-total-header sortable" data-sort="chest-${chestCellIndex}" data-type="${type.name}">${toggleIcon}${type.name} ${sortIcon(`chest-${chestCellIndex}`)}</div>`; chestCellIndex += 1 + type.levels.length; type.levels.forEach(level=>{ const levelLabel = /^\d+$/.test(String(level)) ? `Lvl ${level}` : level; headerHtml += `<div class="header-cell level-header" data-type="${type.name}" data-level="${level}">${levelLabel}</div>`;}); });
+      sortedTypes.forEach(type => {
+        const isExpandable = expandableTypes.has(type.name);
+        const toggleIcon = isExpandable ? `<span class="toggle-icon" onclick="event.stopPropagation(); toggleType('${type.name}')">▶</span>` : '';
+        headerHtml += `<div class="header-cell type-total-header sortable" data-sort="chest-${chestCellIndex}" data-type="${type.name}">${toggleIcon}${type.name} ${sortIcon(`chest-${chestCellIndex}`)}</div>`;
+        chestCellIndex++;
+        type.levels.forEach(level => {
+          const levelLabel = /^\d+$/.test(String(level)) ? `Lvl ${level}` : level;
+          headerHtml += `<div class="header-cell level-header sortable" data-sort="chest-${chestCellIndex}" data-type="${type.name}" data-level="${level}">${levelLabel} ${sortIcon(`chest-${chestCellIndex}`)}</div>`;
+          chestCellIndex++;
+        });
+      });
       headerHtml += '</div>';
       let rowsHtml = '';
       playerArray.forEach((player,idx)=>{
@@ -1393,13 +1415,17 @@ function filterPlayerTable() {
         }
 
         const effectiveDefaultTarget = getPlayerTarget('__no_match__', currentViewingPeriodName, currentPeriodTargetPoints);
+        const troopCategory = window.troopCategoriesByPlayer?.[String(player.player || '').trim().toLowerCase()];
+        const troopLabel = troopCategory
+          ? ` <span class="troop-category cat-${escapeHtmlDash(troopCategory)}">${escapeHtmlDash(troopCategory)}</span>`
+          : '';
         const targetLabel = playerTarget !== effectiveDefaultTarget
           ? ` <span style="font-size:10px;opacity:0.75;color:#4f46e5;">(◎ ${playerTarget.toLocaleString()})</span>`
           : '';
 
         const rowClass = isNewMember ? 'player-row new-member-row' : 'player-row';
         rowsHtml += `<div class="${rowClass}">`;
-        rowsHtml += `<div class="cell rank-col">${idx+1}</div><div class="cell ${pointsClass}">${player.player}${joinDateLabel}${targetLabel}</div><div class="cell">${totalPointsVal || '-'}</div>`;
+        rowsHtml += `<div class="cell rank-col">${idx+1}</div><div class="cell ${pointsClass}">${escapeHtmlDash(player.player)}${troopLabel}${targetLabel}${joinDateLabel}</div><div class="cell">${totalPointsVal || '-'}</div>`;
         // Calculate total chests: use totalChests if available, otherwise sum from chestsByTypeGrouped (don't double-count eventChests!)
         let totalChests = player.totalChests || 0;
         if (totalChests === 0 && player.chestsByTypeGrouped) {
