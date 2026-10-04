@@ -1,47 +1,32 @@
-﻿/**
- * cCc League One Site Configuration
+/**
+ * cCc Masters Of Battle Site Configuration
  */
 
 const SITE_CONFIG = {
   // Clan Identity
-  clanName: 'cCc League One',
-  clanAbbr: 'clo',
+  clanName: 'cCc Masters Of Battle',
+  clanAbbr: 'mob',
 
-  // Progress ranking weights (must sum to 100)
-  rankingWeights: {
-    chestPoints: 35,
-    growth: 30,
-    events: 25,
-    troopUpgrades: 10
-  },
-  
-  // Branding
-  primaryColor: '#2563eb',
-  secondaryColor: '#f0f2f5',
-  favicon: 'favicon.png',
-  
+  // Branding: the League One look (purple / indigo, League One icons)
+  primaryColor: '#6c47d9',
+  secondaryColor: '#1e1b4b',
+  favicon: 'logo.png',
+
   // Authentication
+  // Same Google sign-in client as the other cCc sites: add this site's address as an
+  // authorized JavaScript origin on it (Google Cloud console → Credentials).
   googleClientId: '47674606892-0m90hd0cd01kijo69ssuqtn1j3igp32i.apps.googleusercontent.com',
-  
-  // Members hidden from progress stats when not logged in (e.g. leaders with special privileges)
-  // Names must match exactly as they appear in the Members sheet (case-insensitive match applied at runtime)
+
+  // Members hidden from progress stats when not logged in
   maskedMembers: [
-    'LION S 5',
-    'MerdO LH', 
-    'Otto S4',
-    '01ASENA sk5',
-    'cCc CP City',
-    // 'AnotherSpecialMember'
+    // e.g. the clan's own city account
   ],
 
   // Navigation Pages
   pages: [
-    { name: 'Dashboard', file: 'dashboard.html', icon: 'chests.png' },
+    { name: 'Dashboard', file: 'dashboard.html', icon: 'chest.png' },
     { name: 'Events', file: 'events.html', icon: 'events.png' },
     { name: 'Members', file: 'members.html', icon: 'members.png' },
-    { name: 'Troops', file: 'troops.html', icon: 'troops.png' },
-    { name: 'Progress', file: 'progress.html', icon: 'progress.png' },
-    { name: 'Profile', file: 'profile.html', icon: 'profile.png' },
     { name: 'Warnings', file: 'warnings.html', icon: 'warning.png' },
     { name: 'Calendar', file: 'calendar.html', icon: 'calendar.png' }
   ]

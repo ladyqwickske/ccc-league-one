@@ -3,80 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cCc League One - Warnings</title>
-  <link rel="icon" href="favicon.png" type="image/png">
+  <title>cCc Masters Of Battle - Warnings</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <script src="perf-debug.js"></script>
   <script src="config.js"></script>
+  <script src="translate.js"></script>
+  <script src="site-config.js"></script>
   <script src="portal-shim.js"></script>
+  <script src="portal-auth.js"></script>
   <style>
+    :root {
+      --primary: #6c47d9;
+      --primary-soft: #a78bfa;
+      --primary-strong: #4f46e5;
+      --primary-hover: #3730a3;
+      --accent: #ffd24d;
+      --accent-light: #efe7ff;
+      --accent-strong: #e6a418;
+      --accent-deep: #c57a00;
+      --bg-dark: #1e1b4b;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card-soft: #ece9f8;
+      --bg-page: #e4e2f0;
+      --bg-page-alt: #ffffff;
+      --text: #1e1b4b;
+      --text-muted: #3730a3;
+      --success: #4f46e5;
+      --danger: #8a5b00;
+      --border: #a78bfa;
+      --warn-bg: linear-gradient(180deg, #ffffff 0%, var(--bg-card-soft) 100%);
+      --warn-border: #ffd24d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
-      background: linear-gradient(135deg, #f0f2f5 0%, #d8dce8 100%);
-      color: #1a1c2e;
-      text-align: center;
-      padding: 32px 16px 60px 16px;
-      min-height: 100vh;
-      background-attachment: fixed;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-page-alt) 0%, var(--bg-page) 55%, var(--accent-light) 100%);
+      color: var(--text); min-height: 100vh;
+      background-attachment: fixed; padding: 60px 8px 80px 8px;
     }
-    body { top: 0 !important; }
-    .goog-te-banner-frame.skiptranslate { display: none !important; }
-    .goog-te-balloon-frame { display: none !important; }
-    html, body { margin-top: 0 !important; top: 0 !important; }
-    body.translated-ltr, body.translated-rtl { margin-top: 0 !important; top: 0 !important; }
-    .goog-te-banner-frame, iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate { display: none !important; visibility: hidden !important; height: 0 !important; }
-    #goog-gt-tt, .goog-te-balloon-frame { display: none !important; visibility: hidden !important; }
-    .goog-text-highlight { background: transparent !important; box-shadow: none !important; }
-    #google_translate_element, #translateToggleBtn { top: auto !important; right: 8px !important; bottom: 8px !important; }
 
-    /* Top Tabs */
+    /* Nav */
     .tab-nav {
-      background: rgba(70, 80, 105, 0.92);
-      border-bottom: 1px solid #c0c4d8;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-      position: sticky; top: 0; z-index: 1000;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; justify-content: center; gap: 0;
+      background: rgba(255,255,255,0.96); border-bottom: 2px solid var(--primary-soft);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 0;
     }
-    .tab-nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; padding: 0 16px; overflow: visible; flex-wrap: wrap; }
-    .nav-brand { font-size: 20px; font-weight: 700; color: #a5b4fc; padding: 16px 0; margin-right: 32px; white-space: nowrap; display: flex; align-items: center; gap: 8px; text-shadow: 0 2px 8px #000a; }
-    .nav-brand img { height: 32px; width: auto; }
-    .tab-buttons {
-      display: flex; gap: 4px; flex: 1; overflow-x: auto; overflow-y: hidden; align-items: center; height: 100px;
+    .tab-nav a {
+      color: var(--text-muted); text-decoration: none;
+      padding: 12px 18px; font-size: 0.95em; font-weight: 500;
+      border-bottom: 3px solid transparent; transition: all 0.2s;
     }
-    .tab-btn {
-      padding: 12px 16px; background: none; border: none; color: #c7cce0;
-      font-size: 28px; font-weight: 500; border-bottom: 3px solid transparent;
-      transition: all 0.2s; white-space: nowrap; text-decoration: none; display: block;
-      cursor: pointer; position: relative;
+    .tab-nav a:hover { color: var(--primary); }
+    .tab-nav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .nav-icon { width: 18px; height: 18px; vertical-align: middle; margin-right: 4px; }
+    .login-bar {
+      position: fixed; top: 0; right: 8px; z-index: 1001;
+      display: flex; align-items: center; gap: 8px; padding: 8px;
     }
-    .tab-btn:hover { color: #4f46e5; background: #f0f2f5; }
-    .tab-btn.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
-    .tab-btn[title]:hover::after {
-      content: attr(title); position: absolute; top: -42px; left: 50%; transform: translateX(-50%);
-      background: #f0f2f5; color: #4f46e5; padding: 6px 12px; border-radius: 4px;
-      font-size: 12px; white-space: nowrap; z-index: 1001; border: 1px solid #c0c4d8; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    .login-bar .user-email { font-size: 0.8em; color: var(--primary); }
+    .login-bar button {
+      background: var(--primary); color: #ffffff; border: none; border-radius: 6px;
+      padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: 0.85em;
     }
-    .tab-btn .tab-icon { display: block; margin: 0 auto; height: 40px; width: auto; font-size: 16px; line-height: 1.2; font-weight: 500; white-space: nowrap; filter: drop-shadow(0 2px 8px #000a); }
+    .login-bar button:hover { background: var(--primary-hover); }
+    .login-bar .logout-btn { background: var(--accent-light); color: var(--accent-deep); }
+    .nav-links { display: flex; }
+    .hamburger {
+      display: none; background: none; border: none; cursor: pointer; padding: 8px;
+      flex-direction: column; gap: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px; background: var(--primary); border-radius: 2px;
+    }
 
     /* Container */
-    .main-content {
-      max-width: 900px; margin: 0 auto; padding: 16px;
-      background: rgba(82, 90, 114, 0.93); border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.25); text-align: left;
+    .container {
+      max-width: 900px; margin: 0 auto; background: var(--bg-card);
+      border-radius: 16px; box-shadow: 0 12px 30px rgba(30,27,75,0.12); padding: 20px 16px; border: 1px solid rgba(167,139,250,0.45);
     }
-    h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; color: #a5b4fc; text-shadow: 0 2px 8px #000a; text-align: center; }
+    h1 { color: var(--primary); text-align: center; margin-bottom: 4px; font-size: 1.6em; }
     .site-logo { width: 56px; height: 56px; display: block; margin: 0 auto 6px auto; }
-    .subtitle { text-align: center; color: #d1d5e6; margin-bottom: 16px; font-size: 0.85em; }
+    .subtitle { text-align: center; color: var(--text-muted); margin-bottom: 16px; font-size: 0.85em; }
 
     /* Content Tabs */
     .content-tabs {
-      display: flex; gap: 0; margin-bottom: 18px; border-bottom: 2px solid rgba(255,255,255,0.25);
+      display: flex; gap: 0; margin-bottom: 18px; border-bottom: 2px solid var(--border);
     }
     .content-tabs button {
       flex: 1; background: none; border: none; padding: 12px 8px; cursor: pointer;
-      font-size: 0.92em; font-weight: 600; color: #d8dce8;
+      font-size: 0.92em; font-weight: 600; color: var(--text-muted);
       border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
     }
-    .content-tabs button:hover { color: #a5b4fc; background: rgba(79,70,229,0.08); }
-    .content-tabs button.active { color: #a5b4fc; border-bottom-color: #a5b4fc; }
+    .content-tabs button:hover { color: var(--primary); background: rgba(167,139,250,0.14); }
+    .content-tabs button.active { color: var(--primary); border-bottom-color: var(--primary); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -84,82 +104,84 @@
 
     /* Warning Form */
     .warn-form {
-      background: rgba(255,248,225,0.1); border: 1px solid #ffb300;
+      background: var(--warn-bg); border: 1px solid var(--warn-border);
       border-radius: 12px; padding: 16px; margin-bottom: 20px;
     }
-    .warn-form h3 { color: #ff5252; margin-bottom: 12px; font-size: 1em; }
+    .warn-form h3 { color: var(--danger); margin-bottom: 12px; font-size: 1em; }
     .form-grid {
-      display: grid; gap: 10px; margin-bottom: 12px; grid-template-columns: 1fr 1fr;
+      display: grid; gap: 10px; margin-bottom: 12px;
+      grid-template-columns: 1fr 1fr;
     }
     .form-grid.full { grid-template-columns: 1fr; }
     .form-grid label {
-      display: block; font-size: 0.72em; font-weight: 700; color: #a5b4fc;
+      display: block; font-size: 0.72em; font-weight: 700; color: var(--primary);
       margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px;
     }
     .form-grid select, .form-grid input, .form-grid textarea {
-      width: 100%; padding: 10px 12px; border: 1px solid #c0c4d8; border-radius: 8px;
-      font-size: 1em; background: #f0f2f5; color: #2c2f45;
-      -webkit-appearance: none; appearance: none;
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 1em; background: #fff; color: var(--text);
+      -webkit-appearance: none;
+      appearance: none;
     }
     .form-grid textarea { resize: vertical; min-height: 60px; font-family: inherit; }
     .form-grid select:focus, .form-grid input:focus, .form-grid textarea:focus {
-      outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79,70,229,0.2);
+      outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(108,71,217,0.18);
     }
     .btn {
-      background: #4f46e5; color: #f0f2f5; border: none; border-radius: 8px;
+      background: var(--primary); color: #fff; border: none; border-radius: 8px;
       padding: 12px 24px; cursor: pointer; font-weight: 700; font-size: 1em;
       width: 100%; touch-action: manipulation;
     }
-    .btn:hover { background: #6366f1; }
+    .btn:hover { background: var(--primary-hover); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn.danger { background: #c62828; }
-    .btn.danger:hover { background: #b71c1c; }
+    .btn.danger { background: var(--danger); }
+    .btn.danger:hover { background: #a93226; }
 
     /* Summary Cards */
     .summary-section { margin-top: 20px; }
-    .summary-section h3 { color: #a5b4fc; margin-bottom: 10px; font-size: 1em; }
+    .summary-section h3 { color: var(--primary); margin-bottom: 10px; font-size: 1em; }
     .summary-table-wrap { overflow-x: auto; }
     .summary-table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
     .summary-table th {
-      background: rgba(79,70,229,0.2); color: #a5b4fc; padding: 10px 8px;
-      text-align: left; border-bottom: 2px solid #4f46e5; cursor: pointer;
+      background: var(--bg-card-soft); color: var(--primary-hover); padding: 10px 8px;
+      text-align: left; border-bottom: 2px solid var(--accent); cursor: pointer;
       white-space: nowrap; user-select: none; -webkit-user-select: none;
     }
-    .summary-table th:hover { background: rgba(79,70,229,0.3); }
+    .summary-table th:hover { background: var(--accent-light); }
     .summary-table th .sort-arrow { font-size: 0.7em; margin-left: 4px; opacity: 0.4; }
     .summary-table th.sorted .sort-arrow { opacity: 1; }
-    .summary-table td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #d8dce8; }
-    .summary-table tr:hover { background: rgba(79,70,229,0.08); }
+    .summary-table td { padding: 8px; border-bottom: 1px solid #eee; }
+    .summary-table tr:hover { background: rgba(167,139,250,0.14); }
     .summary-table .warn-badge {
       display: inline-block; padding: 2px 10px; border-radius: 10px;
       font-size: 0.8em; font-weight: 700; color: #fff; min-width: 28px; text-align: center;
     }
-    .warn-badge.w1 { background: #ffa000; }
+    .warn-badge.w1 { background: var(--accent); }
     .warn-badge.w2 { background: #e67e22; }
-    .warn-badge.w3 { background: #c62828; }
+    .warn-badge.w3 { background: var(--danger); }
     .warn-badge.w4 { background: #7b1fa2; }
     .summary-table .action-btns { display: flex; gap: 4px; }
     .summary-table .action-btns button {
-      background: none; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+      background: none; border: 1px solid var(--border); border-radius: 4px;
       padding: 3px 6px; cursor: pointer; font-size: 0.8em;
     }
-    .summary-table .action-btns .clear-btn { border-color: #c62828; color: #ff5252; }
-    .summary-table .action-btns button:hover { background: rgba(79,70,229,0.15); }
-    .summary-table .type-tags { font-size: 0.75em; color: #d1d5e6; }
+    .summary-table .action-btns .clear-btn { border-color: var(--danger); color: var(--danger); }
+    .summary-table .action-btns button:hover { background: var(--accent-light); }
+    .summary-table .type-tags { font-size: 0.75em; color: var(--text-muted); }
 
     /* Warning History */
     .history-section { margin-top: 24px; }
-    .history-section h3 { color: #a5b4fc; margin-bottom: 10px; font-size: 1em; }
+    .history-section h3 { color: var(--primary); margin-bottom: 10px; font-size: 1em; }
     .filter-row {
       display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;
     }
     .filter-row select, .filter-row input {
-      padding: 8px 10px; border: 1px solid #c0c4d8; border-radius: 6px;
-      font-size: 0.9em; background: #f0f2f5; color: #2c2f45; flex: 1; min-width: 140px;
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+      font-size: 0.9em; background: #fff; color: var(--text); flex: 1; min-width: 140px;
     }
-    .warn-list { list-style: none; padding: 0; }
+    .warn-list { list-style: none; }
     .warn-item {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
       padding: 12px 14px; margin-bottom: 8px; position: relative;
     }
     .warn-item .warn-header {
@@ -169,197 +191,89 @@
       display: inline-block; padding: 2px 10px; border-radius: 10px;
       font-size: 0.75em; font-weight: 700; color: #fff;
     }
-    .warn-num.w1 { background: #ffa000; }
+    .warn-num.w1 { background: var(--accent); }
     .warn-num.w2 { background: #e67e22; }
-    .warn-num.w3 { background: #c62828; }
+    .warn-num.w3 { background: var(--danger); }
     .warn-num.w4 { background: #7b1fa2; }
-    .warn-item .warn-name { font-weight: 700; font-size: 0.95em; color: #f0f2f5; }
+    .warn-item .warn-name { font-weight: 700; font-size: 0.95em; }
     .warn-item .warn-type {
       display: inline-block; padding: 2px 8px; border-radius: 6px;
-      font-size: 0.75em; background: rgba(79,70,229,0.2); color: #a5b4fc; font-weight: 600;
+      font-size: 0.75em; background: var(--accent-light); color: var(--accent-deep); font-weight: 600;
     }
-    .warn-item .warn-detail { font-size: 0.82em; color: #d1d5e6; margin-top: 4px; }
-    .warn-item .warn-comment { font-size: 0.85em; color: #f0f2f5; margin-top: 6px; padding: 6px 10px; background: rgba(255,255,255,0.06); border-radius: 6px; font-style: italic; }
+    .warn-item .warn-detail { font-size: 0.82em; color: var(--text-muted); margin-top: 4px; }
+    .warn-item .warn-comment { font-size: 0.85em; color: var(--text); margin-top: 6px; padding: 6px 10px; background: #f9f6ee; border-radius: 6px; font-style: italic; }
     .warn-item .delete-btn {
       position: absolute; top: 10px; right: 10px; background: none; border: none;
-      color: rgba(255,255,255,0.3); cursor: pointer; font-size: 1.1em; padding: 4px;
+      color: #ccc; cursor: pointer; font-size: 1.1em; padding: 4px;
     }
-    .warn-item .delete-btn:hover { color: #ff5252; }
-
-    /* Login Gate */
-    .login-gate {
-      max-width: 500px; margin: 80px auto; text-align: center;
-      background: rgba(82, 90, 114, 0.93); border-radius: 16px;
-      padding: 40px 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-    }
-    .login-gate h2 { color: #a5b4fc; margin-bottom: 12px; }
-    .login-gate p { color: #d1d5e6; margin-bottom: 20px; }
+    .warn-item .delete-btn:hover { color: var(--danger); }
 
     /* Loading & Toast */
-    .loading { text-align: center; padding: 30px; color: #d1d5e6; }
+    .loading { text-align: center; padding: 30px; color: var(--text-muted); }
     .spinner {
       display: inline-block; width: 24px; height: 24px;
-      border: 3px solid rgba(255,255,255,0.2); border-top-color: #4f46e5;
+      border: 3px solid var(--border); border-top-color: var(--primary);
       border-radius: 50%; animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .toast {
       position: fixed; bottom: 20px; right: 20px; z-index: 3000;
-      background: #f0f2f5; color: #2c2f45; padding: 12px 20px;
+      background: #fff; color: var(--text); padding: 12px 20px;
       border-radius: 8px; font-size: 0.9em; display: none;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     }
-    .toast.success { border-left: 4px solid #2e7d32; }
-    .toast.error { border-left: 4px solid #c62828; }
-    .no-data { text-align: center; color: #d1d5e6; padding: 20px; font-style: italic; }
-
-    /* Responsive navigation */
-    .tab-label.mobile-only { display: none; }
-    .tab-icon.desktop-only { display: block; margin: 0 auto; height: 40px; width: auto; }
-    .hamburger {
-      display: none; flex-direction: column; gap: 4px;
-      background: none; border: none; cursor: pointer; padding: 8px;
-    }
-    .hamburger span { display: block; width: 24px; height: 3px; background: #a5b4fc; border-radius: 2px; transition: all 0.2s; }
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .no-data { text-align: center; color: var(--text-muted); padding: 20px; font-style: italic; }
 
     /* Mobile */
-    @media (max-width: 800px) {
-      .tab-nav { position: fixed; top: 0; left: 0; right: 0; width: 100%; z-index: 9999; }
-      .tab-nav-container { flex-wrap: wrap; padding: 8px; }
-      .nav-brand { flex: 1; margin-right: 8px; font-size: 16px; padding: 8px 0; }
-      .nav-brand img { height: 24px; width: 24px; }
-      .hamburger { display: flex; order: 2; }
-      .tab-buttons {
-        flex-direction: column; align-items: stretch; max-height: 60vh; overflow-y: auto;
-        background: #f0f2f5; position: absolute; top: 60px; left: 0; right: 0; width: 100%;
-        z-index: 10000; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.25); display: none; order: 10;
+    @media (max-width: 600px) {
+      body { padding: 50px 4px 70px 4px; }
+      .tab-nav { flex-wrap: wrap; padding: 0 8px; align-items: center; }
+      .hamburger { display: flex; }
+      .login-bar {
+        position: static; flex: 1; justify-content: flex-end;
+        padding: 4px 0; gap: 6px;
       }
-      .tab-buttons.open { display: flex; }
-      .tab-btn {
-        font-size: 18px; padding: 18px 24px; border-bottom: 1px solid #c0c4d8;
-        display: flex; align-items: center; justify-content: flex-start; background: none; height: auto;
-      }
-      .tab-btn:last-child { border-bottom: none; }
-      .tab-label.mobile-only { display: inline; }
-      .tab-icon.desktop-only { display: none; }
-      #signedInUserBadge, #logoutBtn, #signInManageBtn {
-        order: 3; margin: 4px 0 4px auto !important; font-size: 11px !important; padding: 6px 8px !important;
-      }
-      body { padding-top: 100px; }
-      .main-content { padding: 14px 10px; border-radius: 12px; }
+      .nav-links { display: none; width: 100%; flex-direction: column; order: 10; }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 10px 12px; font-size: 0.9em; border-bottom: 1px solid var(--border); }
+      .container { padding: 14px 10px; border-radius: 12px; }
       h1 { font-size: 1.3em; }
       .form-grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
       .btn { padding: 14px 24px; font-size: 1.05em; }
-    }
-
-    @media (min-width: 801px) {
-      .tab-label.mobile-only { display: none; }
-      .tab-icon.desktop-only { display: block; }
-      .tab-buttons {
-        flex-direction: row; align-items: center; position: static; max-height: none;
-        overflow-y: visible; background: none; box-shadow: none; border-radius: 0; display: flex !important;
-      }
-      .tab-btn { font-size: 28px; padding: 12px 16px; border-bottom: 3px solid transparent; display: block; justify-content: center; }
-      .hamburger { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- Google Translate Widget -->
-<div id="google_translate_element" style="position:fixed;bottom:8px;right:8px;z-index:7000;"></div>
-<button id="translateToggleBtn" type="button" aria-label="Toggle translation" style="position:fixed;bottom:8px;right:8px;z-index:7001;display:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #c0c4d8;border-radius:8px;background:#f0f2f5;color:#4f46e5;font-size:18px;cursor:pointer;">🌐</button>
-<style>
-  @media (max-width: 800px) {
-    #google_translate_element { max-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transition: max-width 0.2s ease, opacity 0.2s ease; }
-    body.translate-open #google_translate_element { max-width: 260px; opacity: 1; pointer-events: auto; }
-    #translateToggleBtn { display: inline-flex !important; }
-  }
-  @media (min-width: 801px) { #translateToggleBtn { display: none !important; } }
-</style>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const translateToggleBtn = document.getElementById('translateToggleBtn');
-    const translateWidget = document.getElementById('google_translate_element');
-    if (!translateToggleBtn || !translateWidget) return;
-    translateToggleBtn.addEventListener('click', function (e) { e.stopPropagation(); document.body.classList.toggle('translate-open'); });
-    document.addEventListener('click', function (e) {
-      if (!document.body.classList.contains('translate-open')) return;
-      if (translateWidget.contains(e.target) || translateToggleBtn.contains(e.target)) return;
-      document.body.classList.remove('translate-open');
-    });
-  });
-</script>
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-  }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<!-- Google Sign-In integration -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-  const BACKEND_VERIFY_URL = window.GAS_WEB_APP_URL;
-  const AUTH_KEY = 'clo_portal_google_auth';
-  const AUTH_EMAIL_KEY = 'clo_portal_google_email';
-</script>
-
 <nav class="tab-nav">
-  <div class="tab-nav-container">
-    <div class="nav-brand" id="navBrand"><img src="favicon.png" alt="" style="height: 32px; width: 32px; vertical-align: middle; margin-right: 8px;"> cCc League One</div>
-    <button class="hamburger" id="navHamburger" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
-    <div class="tab-buttons" id="navTabs">
-      <a href="dashboard.html" class="tab-btn" title="Dashboard">
-        <img src="chests.png" alt="Dashboard" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Dashboard</span>
-      </a>
-      <a href="events.html" class="tab-btn" title="Events">
-        <img src="events.png" alt="Events" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Events</span>
-      </a>
-      <a href="members.html" class="tab-btn" title="Members">
-        <img src="members.png" alt="Members" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Members</span>
-      </a>
-      <a href="troops.html" class="tab-btn" title="Troops">
-        <img src="troops.png" alt="Troops" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Troops</span>
-      </a>
-      <a href="profile.html" class="tab-btn" title="Profiling">
-        <img src="profile.png" alt="Profiling" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Profiling</span>
-      </a>
-      <a href="warnings.html" class="tab-btn active" title="Warnings">
-        <img src="warning.png" alt="Warnings" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Warnings</span>
-      </a>
-      <a href="competition.html" class="tab-btn" title="Competition">
-        <img src="competition.png" alt="Competition" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Competition</span>
-      </a>
-      <a href="calendar.html" class="tab-btn" title="Calendar">
-        <img src="calendar.png" alt="Calendar" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Calendar</span>
-      </a>
-      <a href="bank.html" class="tab-btn" id="bankTabBtn" title="Bank" style="display:none;">
-        <img src="bank.png" alt="Bank" class="tab-icon desktop-only">
-        <span class="tab-label mobile-only">Bank</span>
-      </a>
-    </div>
-    <div id="signedInUserBadge" style="display: none; margin-left: auto; padding: 8px 12px; background: #e8eaf2; border-radius: 4px; font-size: 12px; color: #4f46e5; border: 1px solid #c0c4d8;"></div>
-    <button id="logoutBtn" onclick="handleLogout()" style="display: none; margin-left: 8px; padding: 8px 10px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 12px; cursor: pointer;">Log out</button>
+  <button class="hamburger" id="hamburgerBtn" onclick="document.getElementById('navLinks').classList.toggle('open')"><span></span><span></span><span></span></button>
+  <div class="login-bar" id="loginBar">
+    <span class="user-email" id="userEmail" style="display:none"></span>
+    <button id="loginBtn" onclick="handleLogin()">🔑 Login</button>
+    <button id="logoutBtn" class="logout-btn" style="display:none" onclick="handleLogout()">Logout</button>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="dashboard.html"><img src="chest.png" class="nav-icon" alt=""> Dashboard</a>
+    <a href="events.html"><img src="events.png" class="nav-icon" alt=""> Events</a>
+    <a href="members.html"><img src="members.png" class="nav-icon" alt=""> Members</a>
+    <a href="profiling.html"><img src="profiling.png" class="nav-icon" alt=""> Profiling</a>
+    <a href="warnings.html" class="active"><img src="warning.png" class="nav-icon" alt=""> Warnings</a>
+    <a href="calendar.html"><img src="calendar.png" class="nav-icon" alt=""> Calendar</a>
+    <a href="bank.html"><img src="bank.png" class="nav-icon" alt=""> Bank</a>
   </div>
 </nav>
 
-<div class="login-gate" id="loginGate">
-  <h2>🔒 Login Required</h2>
-  <p>You need to be logged in to manage warnings.</p>
-  <button class="btn" onclick="showGoogleLogin()" style="max-width:300px;margin:0 auto;">🔑 Sign in to Manage</button>
+<div class="login-gate" id="loginGate" style="max-width:500px;margin:80px auto;text-align:center;background:var(--bg-card);border-radius:16px;padding:40px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+  <h2 style="color:var(--primary);margin-bottom:12px;">🔒 Login Required</h2>
+  <p style="color:var(--text-muted);margin-bottom:20px;">You need to be logged in to manage warnings.</p>
+  <button class="btn" onclick="handleLogin()" style="max-width:300px;margin:0 auto;">🔑 Login</button>
 </div>
 
-<div class="main-content" id="mainContent" style="display:none">
-  <img src="favicon.png" alt="cCc League One" class="site-logo">
+<div class="container" id="mainContent" style="display:none">
+  <img src="warning.png" alt="cCc Masters Of Battle" class="site-logo">
   <h1>Member Warnings</h1>
   <p class="subtitle">Track and manage performance warnings</p>
 
@@ -449,148 +363,72 @@
   let memberNames = [];
   let warningTypes = [];
 
-  // ===== HAMBURGER =====
-  document.addEventListener('DOMContentLoaded', function () {
-    const hamburger = document.getElementById('navHamburger');
-    const navTabs = document.getElementById('navTabs');
-    if (hamburger && navTabs) {
-      hamburger.addEventListener('click', function () { navTabs.classList.toggle('open'); });
-    }
-  });
-
   // ===== AUTH =====
   function checkLoginState() {
-    const token = (() => { try { return localStorage.getItem(AUTH_KEY); } catch (e) { return null; } })();
-    const email = (() => { try { return localStorage.getItem(AUTH_EMAIL_KEY); } catch (e) { return null; } })();
-    if (token && email) {
-      isLoggedIn = true;
-      currentUser = { email: email };
-      updateLoginUI();
-    }
-
-    // Show/hide restricted nav tabs based on login
-    const setRestrictedTabsVisibility = (isVisible) => {
-      const displayValue = isVisible ? '' : 'none';
-      ['events.html', 'members.html', 'troops.html', 'profile.html', 'warnings.html'].forEach((href) => {
-        document.querySelectorAll(`.tab-buttons .tab-btn[href="${href}"]`).forEach((link) => {
-          if (href !== 'warnings.html') link.style.display = isVisible ? '' : 'none';
-          // warnings tab always visible since we're on it, but gate content behind login
-        });
-      });
-    };
-    if (token && email) {
-      setRestrictedTabsVisibility(true);
-      const bankTab = document.getElementById('bankTabBtn');
-      if (bankTab) bankTab.style.display = 'flex';
-    } else {
-      setRestrictedTabsVisibility(false);
-      const bankTab = document.getElementById('bankTabBtn');
-      if (bankTab) bankTab.style.display = 'none';
-      // Add Sign In button to nav if not present
-      let nav = document.querySelector('.tab-nav-container');
-      if (nav && !document.getElementById('signInManageBtn')) {
-        const btn = document.createElement('button');
-        btn.id = 'signInManageBtn';
-        btn.textContent = '🔑 Sign in to Manage';
-        btn.style = 'margin-left:16px;padding:8px 18px;background:#6c5ce7;color:#fff;border:none;border-radius:5px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s;';
-        btn.onclick = showGoogleLogin;
-        nav.appendChild(btn);
-      }
+    const stored = localStorage.getItem('mob_auth');
+    if (stored) {
+      try {
+        const auth = JSON.parse(stored);
+        if (auth.email && auth.allowed) {
+          isLoggedIn = true;
+          currentUser = auth;
+          updateLoginUI();
+        }
+      } catch (e) {}
     }
   }
 
-  function showGoogleLogin() {
-    const loginDiv = document.createElement('div');
-    loginDiv.id = 'login-overlay';
-    loginDiv.style = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
-    loginDiv.innerHTML = `
-      <div style="background:#f0f2f5;padding:32px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;gap:16px;min-width:300px;border:1px solid #c0c4d8;">
-        <h2 style="margin-bottom:8px;color:#4f46e5;">Sign in to Manage</h2>
-        <p style="font-size:14px;color:#2c2f45;text-align:center;margin:0 0 8px 0;">Use your Google account to access warning management</p>
-        <div id="g_id_onload" data-client_id="${SITE_CONFIG ? SITE_CONFIG.googleClientId : ''}" data-callback="onGoogleSignIn" data-auto_prompt="false" data-ux_mode="popup"></div>
-        <div id="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin" data-shape="rectangular" data-logo_alignment="left"></div>
-        <div style="width:100%;height:1px;background:#c0c4d8;margin:8px 0;"></div>
-        <button id="cancel-login-btn" style="width:100%;margin-top:8px;padding:12px 20px;border:1px solid #c0c4d8;background:#f0f2f5;color:#4f46e5;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;">Cancel</button>
-        <div id="login-error" style="color:#ff5252;font-size:13px;display:none;"></div>
-      </div>
-    `;
-    document.body.appendChild(loginDiv);
-    setTimeout(() => {
-      const cancelBtn = document.getElementById('cancel-login-btn');
-      if (cancelBtn) {
-        cancelBtn.onclick = function() { document.getElementById('login-overlay').remove(); };
-      }
-      if (window.google && google.accounts && google.accounts.id) {
-        try {
-          google.accounts.id.initialize({
-            client_id: SITE_CONFIG ? SITE_CONFIG.googleClientId : '',
-            callback: onGoogleSignIn,
-            auto_select: false,
-            ux_mode: 'popup'
-          });
-          google.accounts.id.renderButton(document.getElementById('g_id_signin'),
-            { type: 'standard', size: 'large', theme: 'outline', text: 'signin', shape: 'rectangular', logo_alignment: 'left' });
-        } catch (e) { console.error('Error rendering Google Sign-In button:', e); }
-      }
-    }, 100);
+  function handleLogin() {
+    if (!document.getElementById('gsi-script')) {
+      const script = document.createElement('script');
+      script.id = 'gsi-script';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.onload = () => initGoogleLogin();
+      document.head.appendChild(script);
+    } else { initGoogleLogin(); }
   }
 
-  window.onGoogleSignIn = async function(response) {
-    const idToken = response.credential;
+  function initGoogleLogin() {
+    google.accounts.id.initialize({ client_id: SITE_CONFIG.googleClientId, callback: handleGoogleCallback });
+    google.accounts.id.prompt();
+  }
+
+  async function handleGoogleCallback(response) {
     try {
-      const cfWorkerUrl = window.CLOUDFLARE_WORKER_URL || window.GAS_WEB_APP_URL;
-      let tokenRes = await fetch(cfWorkerUrl, {
+      const res = await fetch(window.GAS_WEB_APP_URL, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken })
-      });
-      let tokenData = await tokenRes.json();
-      if (!tokenData.success || !tokenData.token_verified) {
-        throw new Error(tokenData.error || 'Token verification failed');
-      }
-      const email = tokenData.email;
-      const res = await fetch(BACKEND_VERIFY_URL, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verifyUserPermission', email })
+        body: JSON.stringify({ idToken: response.credential })
       });
       const data = await res.json();
-      const isAllowed = Boolean(data && (data.isAllowedEditor === true || data.allowed === true));
-      if (isAllowed) {
-        try { localStorage.setItem(AUTH_KEY, idToken); } catch (e) {}
-        try { localStorage.setItem(AUTH_EMAIL_KEY, email); } catch (e) {}
-        isLoggedIn = true;
-        currentUser = { email: email };
-        updateLoginUI();
-        const overlay = document.getElementById('login-overlay');
-        if (overlay) overlay.remove();
-        showToast('Logged in as ' + email, 'success');
-      } else {
-        const errorDiv = document.getElementById('login-error');
-        if (errorDiv) { errorDiv.style.display = 'block'; errorDiv.textContent = 'Your account does not have editor access'; }
+      if (data.success && data.email) {
+        const verifyRes = await fetch(window.GAS_WEB_APP_URL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'api', fn: 'verifyGoogleLogin', args: [{ email: data.email }] })
+        });
+        const verifyData = await verifyRes.json();
+        const authResult = verifyData.data || verifyData;
+        if (authResult.success && authResult.allowed) {
+          isLoggedIn = true;
+          currentUser = { email: data.email, allowed: true };
+          localStorage.setItem('mob_auth', JSON.stringify(currentUser));
+          updateLoginUI();
+          showToast('Logged in as ' + data.email, 'success');
+        } else { showToast('Access denied', 'error'); }
       }
-    } catch (error) {
-      console.error('Error during sign-in:', error);
-      const errorDiv = document.getElementById('login-error');
-      if (errorDiv) { errorDiv.style.display = 'block'; errorDiv.textContent = 'Sign-in failed: ' + error.message; }
-    }
-  };
+    } catch (err) { showToast('Login error', 'error'); }
+  }
 
   function handleLogout() {
     isLoggedIn = false; currentUser = null;
-    try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
-    try { localStorage.removeItem(AUTH_EMAIL_KEY); } catch (e) {}
+    localStorage.removeItem('mob_auth');
     window.location.href = 'dashboard.html';
   }
 
   function updateLoginUI() {
-    const badge = document.getElementById('signedInUserBadge');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const signInBtn = document.getElementById('signInManageBtn');
-    if (badge) {
-      badge.textContent = isLoggedIn ? currentUser.email : '';
-      badge.style.display = isLoggedIn ? 'inline-block' : 'none';
-    }
-    if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'inline-block' : 'none';
-    if (signInBtn) signInBtn.style.display = isLoggedIn ? 'none' : 'inline-block';
+    document.getElementById('userEmail').textContent = isLoggedIn ? currentUser.email : '';
+    document.getElementById('userEmail').style.display = isLoggedIn ? 'inline' : 'none';
+    document.getElementById('loginBtn').style.display = isLoggedIn ? 'none' : 'inline';
+    document.getElementById('logoutBtn').style.display = isLoggedIn ? 'inline' : 'none';
     document.getElementById('loginGate').style.display = isLoggedIn ? 'none' : 'block';
     document.getElementById('mainContent').style.display = isLoggedIn ? 'block' : 'none';
     if (isLoggedIn) loadAllData();
@@ -666,8 +504,8 @@
     const comment = document.getElementById('warnComment').value.trim();
     const statusEl = document.getElementById('formStatus');
 
-    if (!member) { statusEl.innerHTML = '<span style="color:#ff5252">Please select a member.</span>'; return; }
-    if (!type) { statusEl.innerHTML = '<span style="color:#ff5252">Please select a reason.</span>'; return; }
+    if (!member) { statusEl.innerHTML = '<span style="color:var(--danger)">Please select a member.</span>'; return; }
+    if (!type) { statusEl.innerHTML = '<span style="color:var(--danger)">Please select a reason.</span>'; return; }
 
     const btn = document.getElementById('submitWarnBtn');
     btn.disabled = true;
@@ -687,6 +525,7 @@
         showToast(result.message, 'success');
         document.getElementById('warnComment').value = '';
         document.getElementById('warnType').value = '';
+        // Reload warnings
         const warnings = await callFunction('getWarnings');
         if (warnings && warnings.success) {
           allWarnings = warnings.warnings || [];
@@ -737,6 +576,7 @@
       return;
     }
 
+    // Sort
     entries.sort((a, b) => {
       let va, vb;
       if (summarySortCol === 'name') { va = a[0].toLowerCase(); vb = b[0].toLowerCase(); return summarySortAsc ? va.localeCompare(vb) : vb.localeCompare(va); }
@@ -859,6 +699,7 @@
         let msg = result.message;
         if (result.added && result.added.length > 0) msg += ': ' + result.added.join(', ');
         showToast(msg, 'success');
+        // Reload warnings
         const warnings = await callFunction('getWarnings');
         if (warnings && warnings.success) {
           allWarnings = warnings.warnings || [];
@@ -873,7 +714,7 @@
       showToast('Error: ' + err.message, 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = '\uD83C\uDFAF Auto-warn Custom Targets';
+      btn.textContent = '\uD83C\uDFAF Auto-warn members with custom targets';
     }
   }
 
